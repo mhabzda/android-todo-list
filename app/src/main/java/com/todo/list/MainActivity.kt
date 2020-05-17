@@ -2,7 +2,7 @@ package com.todo.list
 
 import android.os.Bundle
 import android.util.Log
-import com.todo.list.model.TodoRepository
+import com.todo.list.model.repository.TodoRepository
 import dagger.android.DaggerActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy

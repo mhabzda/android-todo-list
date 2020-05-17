@@ -1,6 +1,7 @@
-package com.todo.list.model
+package com.todo.list.model.repository
 
 import com.google.firebase.firestore.CollectionReference
+import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.mapper.TodoDocumentMapper
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject

@@ -3,8 +3,8 @@ package com.todo.list.di
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.todo.list.model.FirestoreTodoRepository
-import com.todo.list.model.TodoRepository
+import com.todo.list.model.repository.FirestoreTodoRepository
+import com.todo.list.model.repository.TodoRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

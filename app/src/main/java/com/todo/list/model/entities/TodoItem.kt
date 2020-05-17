@@ -1,4 +1,4 @@
-package com.todo.list.model
+package com.todo.list.model.entities
 
 import org.joda.time.DateTime
 
