@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.main_text
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_main.my_toolbar as toolbar
 
 class MainActivity : DaggerActivity() {
   @Inject
@@ -17,6 +18,7 @@ class MainActivity : DaggerActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    setActionBar(toolbar)
 
     todoRepository.getTodoItems()
       .subscribeOn(Schedulers.io())

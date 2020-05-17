@@ -13,8 +13,12 @@ class FirestoreTodoRepository @Inject constructor(
   override fun getTodoItems(): Single<List<TodoItem>> {
     return Single.create { emitter ->
       todoCollection.get()
-        .addOnSuccessListener {
-          emitter.onSuccess(it.documents.map { document -> todoDocumentMapper.map(document) })
+        .addOnSuccessListener { collection ->
+          val items = collection.documents
+            .map { document -> todoDocumentMapper.map(document) }
+            .filter { item -> item.title.isNotEmpty() }
+
+          emitter.onSuccess(items)
         }
         .addOnFailureListener {
           emitter.onError(it)
