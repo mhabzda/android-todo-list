@@ -24,7 +24,19 @@ class ListPresenter @Inject constructor(
           view.displayTodoList(it)
         },
         onError = {
-          Log.e(ListActivity::class.simpleName, "Error", it)
+          Log.e(TAG, "Error", it)
+        }
+      ))
+
+    compositeDisposable.add(todoRepository.fetchTodoItems()
+      .subscribeOn(schedulerProvider.io())
+      .observeOn(schedulerProvider.ui())
+      .subscribeBy(
+        onNext = {
+          Log.d(TAG, "Paged list loaded $it")
+        },
+        onError = {
+          Log.e(TAG, "Error", it)
         }
       ))
   }
@@ -32,5 +44,9 @@ class ListPresenter @Inject constructor(
   override fun onCleared() {
     compositeDisposable.clear()
     super.onCleared()
+  }
+
+  companion object {
+    private val TAG = ListPresenter::class.simpleName
   }
 }
