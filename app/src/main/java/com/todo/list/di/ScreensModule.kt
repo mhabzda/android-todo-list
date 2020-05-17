@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ScreensModule {
-  @ContributesAndroidInjector
+  @ContributesAndroidInjector(modules = [ListViewModule::class])
   abstract fun provideListActivity(): ListActivity
 }

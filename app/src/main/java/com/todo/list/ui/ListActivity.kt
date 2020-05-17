@@ -22,8 +22,6 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
     setActionBar(toolbar)
 
     presenter = ViewModelProvider(this, viewModelFactory).get(ListPresenter::class.java)
-    presenter.attachView(this)
-
     presenter.fetchItems()
   }
 

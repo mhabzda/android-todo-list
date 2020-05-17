@@ -8,7 +8,6 @@ interface ListContract {
   }
 
   interface Presenter {
-    fun attachView(view: View)
     fun fetchItems()
   }
 }
