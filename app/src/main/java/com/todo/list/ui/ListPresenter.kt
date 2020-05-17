@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.ui.schedulers.SchedulerProvider
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 class ListPresenter @Inject constructor(
