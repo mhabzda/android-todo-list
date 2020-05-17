@@ -11,12 +11,13 @@ import javax.inject.Singleton
   modules = [
     AndroidInjectionModule::class,
     ScreensModule::class,
-    RepositoryModule::class
+    RepositoryModule::class,
+    UtilsModule::class
   ]
 )
 interface ApplicationComponent : AndroidInjector<App> {
   companion object {
-    fun initialize(): AndroidInjector<App> {
+    fun create(): AndroidInjector<App> {
       return DaggerApplicationComponent.create()
     }
   }
