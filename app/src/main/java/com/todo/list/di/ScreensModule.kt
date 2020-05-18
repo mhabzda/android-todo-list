@@ -1,5 +1,6 @@
 package com.todo.list.di
 
+import com.todo.list.ui.creation.ItemCreationActivity
 import com.todo.list.ui.list.ListActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -8,4 +9,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class ScreensModule {
   @ContributesAndroidInjector(modules = [ListViewModule::class])
   abstract fun provideListActivity(): ListActivity
+
+  @ContributesAndroidInjector
+  abstract fun provideItemCreationActivity(): ItemCreationActivity
 }

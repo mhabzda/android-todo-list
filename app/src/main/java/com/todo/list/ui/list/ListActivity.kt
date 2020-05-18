@@ -1,5 +1,6 @@
 package com.todo.list.ui.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -8,8 +9,10 @@ import com.todo.list.R
 import com.todo.list.di.ViewModelFactory
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.ui.adapter.ListAdapter
+import com.todo.list.ui.creation.ItemCreationActivity
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_list.floating_action_button as floatingActionButton
 import kotlinx.android.synthetic.main.activity_list.my_toolbar as toolbar
 import kotlinx.android.synthetic.main.activity_list.swipe_refresh as swipeRefresh
 import kotlinx.android.synthetic.main.activity_list.todo_list as todoListView
@@ -32,6 +35,10 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
 
     todoListView.adapter = listAdapter
     swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
+    floatingActionButton.setOnClickListener {
+      val intent = Intent(this, ItemCreationActivity::class.java)
+      startActivity(intent)
+    }
   }
 
   override fun onResume() {

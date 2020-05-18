@@ -8,9 +8,11 @@ import com.todo.list.model.repository.TodoRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
 abstract class RepositoryModule {
+  @Singleton
   @Binds
   abstract fun provideTodoRepository(firestoreTodoRepository: FirestoreTodoRepository): TodoRepository
 
