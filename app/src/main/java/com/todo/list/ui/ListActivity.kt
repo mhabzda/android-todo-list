@@ -32,8 +32,16 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
 
     todoListView.adapter = listAdapter
     swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
+  }
 
-    presenter.fetchItems()
+  override fun onResume() {
+    super.onResume()
+    presenter.observePagedData()
+  }
+
+  override fun onPause() {
+    presenter.stopPagedDataObservation()
+    super.onPause()
   }
 
   override fun displayTodoList(items: PagedList<TodoItem>) {

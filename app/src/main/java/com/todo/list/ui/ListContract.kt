@@ -11,7 +11,8 @@ interface ListContract {
   }
 
   interface Presenter {
-    fun fetchItems()
+    fun observePagedData()
+    fun stopPagedDataObservation()
     fun refreshItems()
   }
 }

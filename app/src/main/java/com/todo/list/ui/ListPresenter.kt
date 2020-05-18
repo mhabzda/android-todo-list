@@ -18,7 +18,7 @@ class ListPresenter @Inject constructor(
 ) : ViewModel(), ListContract.Presenter {
   private val compositeDisposable = CompositeDisposable()
 
-  override fun fetchItems() {
+  override fun observePagedData() {
     val pagingObservable = todoRepository.fetchTodoItems()
     compositeDisposable.add(pagingObservable.pagedList
       .observeOn(schedulerProvider.ui())
@@ -34,6 +34,10 @@ class ListPresenter @Inject constructor(
 
     handleNetworkState(pagingObservable.networkState)
     observeItemsChanges()
+  }
+
+  override fun stopPagedDataObservation() {
+    compositeDisposable.clear()
   }
 
   override fun refreshItems() {
