@@ -13,6 +13,6 @@ abstract class ScreensModule {
   abstract fun provideListActivity(): ListActivity
 
   @ActivityScope
-  @ContributesAndroidInjector
+  @ContributesAndroidInjector(modules = [ItemCreationViewModule::class])
   abstract fun provideItemCreationActivity(): ItemCreationActivity
 }

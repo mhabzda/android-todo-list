@@ -11,9 +11,9 @@ import com.todo.list.ui.list.adapter.ListAdapter
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_list.floating_action_button as floatingActionButton
-import kotlinx.android.synthetic.main.activity_list.my_toolbar as toolbar
 import kotlinx.android.synthetic.main.activity_list.swipe_refresh as swipeRefresh
 import kotlinx.android.synthetic.main.activity_list.todo_list as todoListView
+import kotlinx.android.synthetic.main.toolbar.my_toolbar as toolbar
 
 class ListActivity : DaggerAppCompatActivity(), ListContract.View {
   @Inject
