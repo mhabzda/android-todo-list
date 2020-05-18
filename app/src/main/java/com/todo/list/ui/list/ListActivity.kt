@@ -1,4 +1,4 @@
-package com.todo.list.ui
+package com.todo.list.ui.list
 
 import android.os.Bundle
 import android.widget.Toast

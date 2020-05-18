@@ -1,4 +1,4 @@
-package com.todo.list.ui
+package com.todo.list.ui.list
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -19,7 +19,7 @@ class ListPresenter @Inject constructor(
   private val compositeDisposable = CompositeDisposable()
 
   override fun observePagedData() {
-    val pagingObservable = todoRepository.fetchTodoItems()
+    val pagingObservable = todoRepository.fetchTodoItems(PAGE_SIZE)
     compositeDisposable.add(pagingObservable.pagedList
       .observeOn(schedulerProvider.ui())
       .subscribeBy(
@@ -70,5 +70,6 @@ class ListPresenter @Inject constructor(
 
   companion object {
     private val TAG = ListPresenter::class.simpleName
+    private const val PAGE_SIZE = 5
   }
 }

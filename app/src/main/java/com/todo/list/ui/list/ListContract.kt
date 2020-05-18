@@ -1,4 +1,4 @@
-package com.todo.list.ui
+package com.todo.list.ui.list
 
 import androidx.paging.PagedList
 import com.todo.list.model.entities.TodoItem

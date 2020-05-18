@@ -1,6 +1,6 @@
 package com.todo.list.di
 
-import com.todo.list.ui.ListActivity
+import com.todo.list.ui.list.ListActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

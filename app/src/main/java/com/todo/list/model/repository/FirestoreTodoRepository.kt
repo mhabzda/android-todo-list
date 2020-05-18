@@ -14,10 +14,10 @@ class FirestoreTodoRepository @Inject constructor(
   private val todoItemsDataSourceFactory: TodoItemsDataSourceFactory,
   private val todoCollection: CollectionReference
 ) : TodoRepository {
-  override fun fetchTodoItems(): PagingObservable {
+  override fun fetchTodoItems(pageSize: Int): PagingObservable {
     val pagedListObservable = RxPagedListBuilder(
       todoItemsDataSourceFactory,
-      createPagingConfig()
+      createPagingConfig(pageSize)
     ).buildObservable()
 
     val networkStateObservable = todoItemsDataSourceFactory.networkOperationSubject.hide()
@@ -51,14 +51,10 @@ class FirestoreTodoRepository @Inject constructor(
     }
   }
 
-  private fun createPagingConfig(): PagedList.Config {
+  private fun createPagingConfig(pageSize: Int): PagedList.Config {
     return PagedList.Config.Builder()
       .setEnablePlaceholders(false)
-      .setPageSize(PAGE_SIZE)
+      .setPageSize(pageSize)
       .build()
-  }
-
-  companion object {
-    private const val PAGE_SIZE = 5
   }
 }
