@@ -16,29 +16,22 @@ class ListPresenter @Inject constructor(
   private val compositeDisposable = CompositeDisposable()
 
   override fun fetchItems() {
-    compositeDisposable.add(todoRepository.getTodoItems()
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
-      .subscribeBy(
-        onSuccess = {
-          view.displayTodoList(it)
-        },
-        onError = {
-          Log.e(TAG, "Error", it)
-        }
-      ))
-
     compositeDisposable.add(todoRepository.fetchTodoItems()
       .subscribeOn(schedulerProvider.io())
       .observeOn(schedulerProvider.ui())
       .subscribeBy(
         onNext = {
           Log.d(TAG, "Paged list loaded $it")
+          view.displayTodoList(it)
         },
         onError = {
           Log.e(TAG, "Error", it)
         }
       ))
+  }
+
+  override fun refreshItems() {
+    todoRepository.refreshTodoItems()
   }
 
   override fun onCleared() {

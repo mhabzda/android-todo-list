@@ -13,7 +13,7 @@ class TodoItemsDataSource @Inject constructor(
   private val todoCollection: CollectionReference,
   private val todoDocumentMapper: TodoDocumentMapper
 ) : PositionalDataSource<TodoItem>() {
-  lateinit var lastLoadedItem: DocumentSnapshot
+  private lateinit var lastLoadedItem: DocumentSnapshot
 
   override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<TodoItem>) {
     val collection = Tasks.await(
@@ -23,7 +23,7 @@ class TodoItemsDataSource @Inject constructor(
         .get()
     )
 
-    lastLoadedItem = collection.documents[collection.size() - 1]
+    cacheLastLoadedElement(collection)
     val items = formatItems(collection)
     callback.onResult(items)
   }
@@ -35,7 +35,7 @@ class TodoItemsDataSource @Inject constructor(
         .get()
     )
 
-    lastLoadedItem = collection.documents[collection.size() - 1]
+    cacheLastLoadedElement(collection)
     val items = formatItems(collection)
     callback.onResult(items, params.requestedStartPosition)
   }
@@ -44,5 +44,12 @@ class TodoItemsDataSource @Inject constructor(
     return collection.documents
       .map { document -> todoDocumentMapper.map(document) }
       .filter { item -> item.title.isNotEmpty() }
+  }
+
+  private fun cacheLastLoadedElement(collection: QuerySnapshot) {
+    val size = collection.size()
+    if (size > 0) {
+      lastLoadedItem = collection.documents[size - 1]
+    }
   }
 }

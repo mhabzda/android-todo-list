@@ -10,4 +10,8 @@ class TodoItemsDataSourceFactory @Inject constructor(
   override fun create(): DataSource<Int, TodoItem> {
     return todoItemsDataSource
   }
+
+  fun invalidateSource() {
+    todoItemsDataSource.invalidate()
+  }
 }
