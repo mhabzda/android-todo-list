@@ -1,4 +1,4 @@
-package com.todo.list.ui.adapter
+package com.todo.list.ui.list.adapter
 
 import android.view.LayoutInflater
 import android.view.View

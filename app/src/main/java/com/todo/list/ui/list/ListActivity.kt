@@ -7,7 +7,7 @@ import androidx.paging.PagedList
 import com.todo.list.R
 import com.todo.list.di.ViewModelFactory
 import com.todo.list.model.entities.TodoItem
-import com.todo.list.ui.adapter.ListAdapter
+import com.todo.list.ui.list.adapter.ListAdapter
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_list.floating_action_button as floatingActionButton
