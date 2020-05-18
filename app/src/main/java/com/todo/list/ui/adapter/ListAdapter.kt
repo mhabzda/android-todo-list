@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.R
 import com.todo.list.model.entities.TodoItem
+import com.todo.list.utils.formatDateHour
+import com.todo.list.utils.loadImage
 import kotlinx.android.extensions.LayoutContainer
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.item_todo.item_creation_date as creationTimeView
+import kotlinx.android.synthetic.main.item_todo.item_image as imageIconView
 import kotlinx.android.synthetic.main.item_todo.item_title as titleView
 
 class ListAdapter @Inject constructor() : PagedListAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
@@ -29,7 +32,8 @@ class ListAdapter @Inject constructor() : PagedListAdapter<TodoItem, ListAdapter
     fun bind(item: TodoItem?) {
       item?.let {
         titleView.text = it.title
-        creationTimeView.text = it.creationDate.toString()
+        creationTimeView.text = it.creationDate.formatDateHour()
+        imageIconView.loadImage(it.iconUrl)
       }
     }
   }

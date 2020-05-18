@@ -8,8 +8,8 @@
   >
   <ImageView
     android:id="@+id/item_image"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
+    android:layout_width="@dimen/list_icon_size"
+    android:layout_height="@dimen/list_icon_size"
     android:src="@drawable/common_google_signin_btn_icon_dark"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
@@ -21,6 +21,7 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:gravity="center"
+    android:textSize="@dimen/text_size_large"
     app:layout_constraintBottom_toTopOf="@id/item_creation_date"
     app:layout_constraintLeft_toRightOf="@id/item_image"
     app:layout_constraintRight_toRightOf="parent"
@@ -33,6 +34,7 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:gravity="center"
+    android:textSize="@dimen/text_size_large"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toRightOf="@id/item_image"
     app:layout_constraintRight_toRightOf="parent"

@@ -7,4 +7,5 @@ ext {
   rxKotlinVersion = '2.4.0'
   rxAndroidVersion = '2.1.1'
   pagingVersion = '2.1.2'
+  glideVersion = '4.11.0'
 }
