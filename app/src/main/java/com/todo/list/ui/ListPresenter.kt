@@ -28,6 +28,13 @@ class ListPresenter @Inject constructor(
           Log.e(TAG, "Error", it)
         }
       ))
+
+    compositeDisposable.add(todoRepository.networkOperationState
+      .subscribeOn(schedulerProvider.io())
+      .observeOn(schedulerProvider.ui())
+      .subscribeBy {
+        Log.d(TAG, "$it")
+      })
   }
 
   override fun refreshItems() {

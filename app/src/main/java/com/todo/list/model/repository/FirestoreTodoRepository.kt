@@ -1,5 +1,6 @@
 package com.todo.list.model.repository
 
+import androidx.paging.DataSource
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.todo.list.model.entities.TodoItem
@@ -7,8 +8,12 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class FirestoreTodoRepository @Inject constructor(
-  private val todoItemsDataSourceFactory: TodoItemsDataSourceFactory
+  private val todoItemsDataSource: TodoItemsDataSource
 ) : TodoRepository {
+
+  override val networkOperationState: Observable<NetworkOperationState>
+    get() = todoItemsDataSource.networkOperationSubject.hide()
+
   override fun fetchTodoItems(): Observable<PagedList<TodoItem>> {
     val pagingConfig = PagedList.Config.Builder()
       .setEnablePlaceholders(false)
@@ -16,13 +21,21 @@ class FirestoreTodoRepository @Inject constructor(
       .build()
 
     return RxPagedListBuilder(
-      todoItemsDataSourceFactory,
+      createDataSourceFactory(),
       pagingConfig
     ).buildObservable()
   }
 
   override fun refreshTodoItems() {
-    todoItemsDataSourceFactory.invalidateSource()
+    todoItemsDataSource.invalidate()
+  }
+
+  private fun createDataSourceFactory(): DataSource.Factory<Int, TodoItem> {
+    return object : DataSource.Factory<Int, TodoItem>() {
+      override fun create(): DataSource<Int, TodoItem> {
+        return todoItemsDataSource
+      }
+    }
   }
 
   companion object {
