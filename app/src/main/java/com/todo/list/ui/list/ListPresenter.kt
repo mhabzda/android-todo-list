@@ -51,7 +51,17 @@ class ListPresenter @Inject constructor(
   }
 
   override fun itemLongClicked(item: TodoItem) {
-    router.openDeleteItemConfirmationDialog { todoRepository.deleteItem(item) }
+    router.openDeleteItemConfirmationDialog {
+      view.setRefreshingState(true)
+      compositeDisposable.add(todoRepository.deleteItem(item)
+        .observeOn(schedulerProvider.ui())
+        .doOnTerminate { view.setRefreshingState(false) }
+        .subscribeBy(
+          onError = {
+            view.displayError(it.message ?: EMPTY)
+          }
+        ))
+    }
   }
 
   override fun onCleared() {
