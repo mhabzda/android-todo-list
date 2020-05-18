@@ -28,7 +28,7 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
     setActionBar(toolbar)
 
     presenter = ViewModelProvider(this, viewModelFactory).get(ListPresenter::class.java)
-    listAdapter = ListAdapter { presenter.itemLongClicked() }
+    listAdapter = ListAdapter { presenter.itemLongClicked(it) }
 
     todoListView.adapter = listAdapter
     swipeRefresh.setOnRefreshListener { presenter.refreshItems() }

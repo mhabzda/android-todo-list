@@ -2,6 +2,7 @@ package com.todo.list.ui.list
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.model.repository.model.NetworkState
 import com.todo.list.ui.schedulers.SchedulerProvider
@@ -49,8 +50,8 @@ class ListPresenter @Inject constructor(
     router.openItemCreationView()
   }
 
-  override fun itemLongClicked() {
-    router.openDeleteItemConfirmationDialog { }
+  override fun itemLongClicked(item: TodoItem) {
+    router.openDeleteItemConfirmationDialog { todoRepository.deleteItem(item) }
   }
 
   override fun onCleared() {

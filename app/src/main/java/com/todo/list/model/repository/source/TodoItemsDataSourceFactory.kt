@@ -6,13 +6,12 @@ import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.mapper.TodoDocumentMapper
 import com.todo.list.model.repository.model.NetworkState
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Inject
 
-class TodoItemsDataSourceFactory @Inject constructor(
+class TodoItemsDataSourceFactory(
   private val collectionReference: CollectionReference,
-  private val todoDocumentMapper: TodoDocumentMapper
+  private val todoDocumentMapper: TodoDocumentMapper,
+  private val networkOperationSubject: PublishSubject<NetworkState>
 ) : DataSource.Factory<Int, TodoItem>() {
-  val networkOperationSubject = PublishSubject.create<NetworkState>()
   lateinit var dataSource: TodoItemsDataSource
 
   override fun create(): DataSource<Int, TodoItem> {

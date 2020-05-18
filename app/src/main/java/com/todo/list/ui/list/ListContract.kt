@@ -15,7 +15,7 @@ interface ListContract {
     fun stopPagedDataObservation()
     fun refreshItems()
     fun floatingButtonClicked()
-    fun itemLongClicked()
+    fun itemLongClicked(item: TodoItem)
   }
 
   interface Router {

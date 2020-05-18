@@ -17,7 +17,7 @@ class TodoDocumentMapper @Inject constructor() {
   }
 
   companion object {
-    private const val TITLE_KEY = "title"
+    const val TITLE_KEY = "title"
     private const val DESCRIPTION_KEY = "description"
     private const val CREATION_DATE_KEY = "creationDate"
     private const val LOGO_URL_KEY = "logoUrl"
