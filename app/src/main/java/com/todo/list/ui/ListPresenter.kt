@@ -33,6 +33,7 @@ class ListPresenter @Inject constructor(
       ))
 
     handleNetworkState(pagingObservable.networkState)
+    observeItemsChanges()
   }
 
   override fun refreshItems() {
@@ -53,6 +54,13 @@ class ListPresenter @Inject constructor(
           NetworkState.Loaded -> view.setRefreshingState(false)
           is NetworkState.Error -> view.displayError(it.throwable.message ?: EMPTY)
         }
+      })
+  }
+
+  private fun observeItemsChanges() {
+    compositeDisposable.add(todoRepository.observeItemsChanges()
+      .subscribeBy {
+        refreshItems()
       })
   }
 

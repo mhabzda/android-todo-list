@@ -6,6 +6,8 @@ import com.todo.list.R
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 const val EMPTY = ""
 
@@ -19,4 +21,13 @@ fun ImageView.loadImage(url: String?) {
     .load(url)
     .placeholder(R.drawable.common_google_signin_btn_icon_dark)
     .into(this)
+}
+
+@OptIn(ExperimentalContracts::class)
+fun Any?.isNotNull(): Boolean {
+  contract {
+    returns(true) implies (this@isNotNull != null)
+  }
+
+  return this != null
 }
