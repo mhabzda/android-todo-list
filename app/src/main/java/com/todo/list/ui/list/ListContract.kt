@@ -14,5 +14,12 @@ interface ListContract {
     fun observePagedData()
     fun stopPagedDataObservation()
     fun refreshItems()
+    fun floatingButtonClicked()
+    fun itemLongClicked()
+  }
+
+  interface Router {
+    fun openItemCreationView()
+    fun openDeleteItemConfirmationDialog(deleteItemAction: () -> Unit)
   }
 }

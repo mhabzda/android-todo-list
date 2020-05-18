@@ -2,4 +2,8 @@
   <string name="app_name">Todo List</string>
 
   <string name="error_message">Error occurred</string>
+  <string name="delete_item_dialog_title">Delete item</string>
+  <string name="delete_item_dialog_message">Are you sure you want to delete this item?</string>
+  <string name="delete_item_dialog_delete_button">Delete</string>
+  <string name="delete_item_dialog_cancel_button">Cancel</string>
 </resources>

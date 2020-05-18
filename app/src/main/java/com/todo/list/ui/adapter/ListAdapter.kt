@@ -16,7 +16,10 @@ import kotlinx.android.synthetic.main.item_todo.item_creation_date as creationTi
 import kotlinx.android.synthetic.main.item_todo.item_image as imageIconView
 import kotlinx.android.synthetic.main.item_todo.item_title as titleView
 
-class ListAdapter @Inject constructor() : PagedListAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
+class ListAdapter @Inject constructor(
+  private val longClickAction: (TodoItem) -> Unit
+) : PagedListAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     val view = inflater.inflate(R.layout.item_todo, parent, false)
@@ -31,6 +34,11 @@ class ListAdapter @Inject constructor() : PagedListAdapter<TodoItem, ListAdapter
   inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
     fun bind(item: TodoItem?) {
       item?.let {
+        containerView.setOnLongClickListener {
+          longClickAction.invoke(item)
+          true
+        }
+
         titleView.text = it.title
         creationTimeView.text = it.creationDate.formatDateHour()
         imageIconView.loadImage(it.iconUrl)

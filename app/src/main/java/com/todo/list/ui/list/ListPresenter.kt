@@ -14,7 +14,8 @@ import javax.inject.Inject
 class ListPresenter @Inject constructor(
   private val todoRepository: TodoRepository,
   private val schedulerProvider: SchedulerProvider,
-  private val view: ListContract.View
+  private val view: ListContract.View,
+  private val router: ListContract.Router
 ) : ViewModel(), ListContract.Presenter {
   private val compositeDisposable = CompositeDisposable()
 
@@ -42,6 +43,14 @@ class ListPresenter @Inject constructor(
 
   override fun refreshItems() {
     todoRepository.refreshTodoItems()
+  }
+
+  override fun floatingButtonClicked() {
+    router.openItemCreationView()
+  }
+
+  override fun itemLongClicked() {
+    router.openDeleteItemConfirmationDialog { }
   }
 
   override fun onCleared() {
