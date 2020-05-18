@@ -3,7 +3,10 @@ package com.todo.list.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.todo.list.model.repository.TodoRepository
+import com.todo.list.model.repository.model.NetworkState
 import com.todo.list.ui.schedulers.SchedulerProvider
+import com.todo.list.utils.EMPTY
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
@@ -16,25 +19,20 @@ class ListPresenter @Inject constructor(
   private val compositeDisposable = CompositeDisposable()
 
   override fun fetchItems() {
-    compositeDisposable.add(todoRepository.fetchTodoItems()
-      .subscribeOn(schedulerProvider.io())
+    val pagingObservable = todoRepository.fetchTodoItems()
+    compositeDisposable.add(pagingObservable.pagedList
       .observeOn(schedulerProvider.ui())
       .subscribeBy(
         onNext = {
-          Log.d(TAG, "Paged list loaded $it")
           view.displayTodoList(it)
         },
         onError = {
-          Log.e(TAG, "Error", it)
+          Log.e(TAG, "Error during paged list observation", it)
+          view.displayError(it.message ?: EMPTY)
         }
       ))
 
-    compositeDisposable.add(todoRepository.networkOperationState
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
-      .subscribeBy {
-        Log.d(TAG, "$it")
-      })
+    handleNetworkState(pagingObservable.networkState)
   }
 
   override fun refreshItems() {
@@ -44,6 +42,18 @@ class ListPresenter @Inject constructor(
   override fun onCleared() {
     compositeDisposable.clear()
     super.onCleared()
+  }
+
+  private fun handleNetworkState(networkStateObservable: Observable<NetworkState>) {
+    compositeDisposable.add(networkStateObservable
+      .observeOn(schedulerProvider.ui())
+      .subscribeBy {
+        when (it) {
+          NetworkState.Loading -> view.setRefreshingState(true)
+          NetworkState.Loaded -> view.setRefreshingState(false)
+          is NetworkState.Error -> view.displayError(it.throwable.message ?: EMPTY)
+        }
+      })
   }
 
   companion object {

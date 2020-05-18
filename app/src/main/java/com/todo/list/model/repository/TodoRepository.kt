@@ -1,12 +1,8 @@
 package com.todo.list.model.repository
 
-import androidx.paging.PagedList
-import com.todo.list.model.entities.TodoItem
-import io.reactivex.Observable
+import com.todo.list.model.repository.model.PagingObservable
 
 interface TodoRepository {
-  val networkOperationState: Observable<NetworkOperationState>
-
-  fun fetchTodoItems(): Observable<PagedList<TodoItem>>
+  fun fetchTodoItems(): PagingObservable
   fun refreshTodoItems()
 }

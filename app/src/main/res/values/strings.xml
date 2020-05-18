@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">Todo List</string>
+
+  <string name="error_message">Error occurred</string>
 </resources>
