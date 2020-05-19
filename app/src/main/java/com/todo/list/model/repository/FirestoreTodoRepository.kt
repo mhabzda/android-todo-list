@@ -4,7 +4,7 @@ import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.google.firebase.firestore.CollectionReference
 import com.todo.list.model.entities.TodoItem
-import com.todo.list.model.mapper.TodoDocumentMapper.Companion.TITLE_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.TITLE_KEY
 import com.todo.list.model.mapper.TodoItemMapper
 import com.todo.list.model.repository.model.PagingObservable
 import com.todo.list.model.repository.source.TodoItemsDataSourceFactory

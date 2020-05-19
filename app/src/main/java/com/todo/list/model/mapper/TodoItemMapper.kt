@@ -1,10 +1,10 @@
 package com.todo.list.model.mapper
 
 import com.todo.list.model.entities.TodoItem
-import com.todo.list.model.mapper.TodoDocumentMapper.Companion.CREATION_DATE_KEY
-import com.todo.list.model.mapper.TodoDocumentMapper.Companion.DESCRIPTION_KEY
-import com.todo.list.model.mapper.TodoDocumentMapper.Companion.LOGO_URL_KEY
-import com.todo.list.model.mapper.TodoDocumentMapper.Companion.TITLE_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.CREATION_DATE_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.DESCRIPTION_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.LOGO_URL_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.TITLE_KEY
 import com.todo.list.utils.isNotNull
 import javax.inject.Inject
 

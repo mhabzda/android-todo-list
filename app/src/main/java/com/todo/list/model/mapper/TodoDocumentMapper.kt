@@ -2,6 +2,10 @@ package com.todo.list.model.mapper
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.todo.list.model.entities.TodoItem
+import com.todo.list.model.mapper.TodoDocumentKeys.CREATION_DATE_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.DESCRIPTION_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.LOGO_URL_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.TITLE_KEY
 import com.todo.list.utils.EMPTY
 import com.todo.list.utils.isNotNull
 import org.joda.time.DateTime
@@ -18,12 +22,5 @@ class TodoDocumentMapper @Inject constructor() {
       creationDate = creationDate,
       iconUrl = document.getString(LOGO_URL_KEY)
     )
-  }
-
-  companion object {
-    const val TITLE_KEY = "title"
-    const val DESCRIPTION_KEY = "description"
-    const val CREATION_DATE_KEY = "creationDate"
-    const val LOGO_URL_KEY = "logoUrl"
   }
 }
