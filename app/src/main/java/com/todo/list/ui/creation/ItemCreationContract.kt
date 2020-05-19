@@ -11,5 +11,6 @@ interface ItemCreationContract {
 
   interface Presenter {
     fun saveItemButtonClicked(title: String, description: String, iconUrl: String?)
+    fun releaseResources()
   }
 }

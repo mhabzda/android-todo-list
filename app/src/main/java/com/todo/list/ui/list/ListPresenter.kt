@@ -1,7 +1,6 @@
 package com.todo.list.ui.list
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.model.repository.model.NetworkState
@@ -17,7 +16,7 @@ class ListPresenter @Inject constructor(
   private val schedulerProvider: SchedulerProvider,
   private val view: ListContract.View,
   private val router: ListContract.Router
-) : ViewModel(), ListContract.Presenter {
+) : ListContract.Presenter {
   private val compositeDisposable = CompositeDisposable()
 
   override fun observePagedData() {
@@ -36,10 +35,6 @@ class ListPresenter @Inject constructor(
 
     handleNetworkState(pagingObservable.networkState)
     observeItemsChanges()
-  }
-
-  override fun stopPagedDataObservation() {
-    compositeDisposable.clear()
   }
 
   override fun refreshItems() {
@@ -64,9 +59,8 @@ class ListPresenter @Inject constructor(
     }
   }
 
-  override fun onCleared() {
+  override fun clearResources() {
     compositeDisposable.clear()
-    super.onCleared()
   }
 
   private fun handleNetworkState(networkStateObservable: Observable<NetworkState>) {

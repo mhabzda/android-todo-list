@@ -5,9 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.lifecycle.ViewModelProvider
 import com.todo.list.R
-import com.todo.list.di.ViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_item_creation.edit_text_description as editTextDescription
@@ -19,9 +17,7 @@ import kotlinx.android.synthetic.main.toolbar.my_toolbar as toolbar
 
 class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.View {
   @Inject
-  lateinit var viewModelFactory: ViewModelFactory<ItemCreationPresenter>
-
-  private lateinit var presenter: ItemCreationContract.Presenter
+  lateinit var presenter: ItemCreationContract.Presenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,7 +25,6 @@ class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.Vie
     setSupportActionBar(toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    presenter = ViewModelProvider(this, viewModelFactory).get(ItemCreationPresenter::class.java)
     itemActionButton.setOnClickListener {
       presenter.saveItemButtonClicked(
         title = editTextTitle.text.toString(),
@@ -70,6 +65,11 @@ class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.Vie
       finish()
       true
     } else super.onOptionsItemSelected(item)
+  }
+
+  override fun onDestroy() {
+    presenter.releaseResources()
+    super.onDestroy()
   }
 
   private fun displayToastMessage(@StringRes messageId: Int) {

@@ -12,10 +12,10 @@ interface ListContract {
 
   interface Presenter {
     fun observePagedData()
-    fun stopPagedDataObservation()
     fun refreshItems()
     fun floatingButtonClicked()
     fun itemLongClicked(item: TodoItem)
+    fun clearResources()
   }
 
   interface Router {

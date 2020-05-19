@@ -1,6 +1,5 @@
 package com.todo.list.ui.creation
 
-import androidx.lifecycle.ViewModel
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.ui.schedulers.SchedulerProvider
@@ -13,7 +12,7 @@ class ItemCreationPresenter @Inject constructor(
   private val view: ItemCreationContract.View,
   private val schedulerProvider: SchedulerProvider,
   private val todoRepository: TodoRepository
-) : ViewModel(), ItemCreationContract.Presenter {
+) : ItemCreationContract.Presenter {
   private val compositeDisposable = CompositeDisposable()
 
   override fun saveItemButtonClicked(title: String, description: String, iconUrl: String?) {
@@ -37,8 +36,7 @@ class ItemCreationPresenter @Inject constructor(
       ))
   }
 
-  override fun onCleared() {
+  override fun releaseResources() {
     compositeDisposable.clear()
-    super.onCleared()
   }
 }
