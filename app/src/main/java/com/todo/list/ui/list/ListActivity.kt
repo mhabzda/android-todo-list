@@ -3,6 +3,7 @@ package com.todo.list.ui.list
 import android.os.Bundle
 import android.widget.Toast
 import androidx.paging.PagedList
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.todo.list.R
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.ui.list.adapter.ListAdapter
@@ -29,6 +30,7 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
       clickAction = { presenter.itemClicked(it) }
     )
 
+    todoListView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     todoListView.adapter = listAdapter
     swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
     floatingActionButton.setOnClickListener { presenter.floatingButtonClicked() }
