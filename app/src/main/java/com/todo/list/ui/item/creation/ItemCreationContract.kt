@@ -1,4 +1,4 @@
-package com.todo.list.ui.creation
+package com.todo.list.ui.item.creation
 
 interface ItemCreationContract {
   interface View {

@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import com.todo.list.R
 import com.todo.list.di.annotation.ActivityScope
-import com.todo.list.ui.creation.ItemCreationActivity
+import com.todo.list.ui.item.creation.ItemCreationActivity
 import javax.inject.Inject
 
 @ActivityScope

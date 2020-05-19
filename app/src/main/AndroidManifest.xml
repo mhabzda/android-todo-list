@@ -20,7 +20,10 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".ui.creation.ItemCreationActivity"/>
+    <activity
+      android:name="com.todo.list.ui.item.creation.ItemCreationActivity"
+      android:windowSoftInputMode="adjustResize"
+      />
   </application>
 
 </manifest>

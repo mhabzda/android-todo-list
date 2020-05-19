@@ -1,4 +1,4 @@
-package com.todo.list.ui.creation
+package com.todo.list.ui.item.creation
 
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository

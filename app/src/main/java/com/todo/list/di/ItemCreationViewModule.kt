@@ -1,8 +1,8 @@
 package com.todo.list.di
 
-import com.todo.list.ui.creation.ItemCreationActivity
-import com.todo.list.ui.creation.ItemCreationContract
-import com.todo.list.ui.creation.ItemCreationPresenter
+import com.todo.list.ui.item.creation.ItemCreationActivity
+import com.todo.list.ui.item.creation.ItemCreationContract
+import com.todo.list.ui.item.creation.ItemCreationPresenter
 import dagger.Binds
 import dagger.Module
 
