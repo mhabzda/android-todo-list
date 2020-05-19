@@ -12,7 +12,7 @@ class ItemCreationPresenter @Inject constructor(
   view: ItemCreationContract.View,
   schedulerProvider: SchedulerProvider
 ) : ItemBasePresenter(view, schedulerProvider), ItemCreationContract.Presenter {
-  override fun performItemOperation(todoItem: TodoItem): Completable {
-    return todoRepository.saveItem(todoItem)
+  override fun performItemOperation(title: String, description: String, iconUrl: String?): Completable {
+    return todoRepository.saveItem(TodoItem.create(title, description, iconUrl))
   }
 }

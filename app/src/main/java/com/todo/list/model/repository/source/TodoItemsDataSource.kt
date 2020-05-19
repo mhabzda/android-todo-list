@@ -7,6 +7,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.todo.list.model.entities.TodoItem
+import com.todo.list.model.mapper.TodoDocumentFilter
 import com.todo.list.model.mapper.TodoDocumentMapper
 import com.todo.list.model.repository.model.NetworkState
 import io.reactivex.subjects.PublishSubject
@@ -14,6 +15,7 @@ import io.reactivex.subjects.PublishSubject
 class TodoItemsDataSource(
   private val todoCollection: CollectionReference,
   private val todoDocumentMapper: TodoDocumentMapper,
+  private val todoDocumentFilter: TodoDocumentFilter,
   private val networkOperationSubject: PublishSubject<NetworkState>
 ) : PositionalDataSource<TodoItem>() {
   private lateinit var lastLoadedItem: DocumentSnapshot
@@ -66,7 +68,7 @@ class TodoItemsDataSource(
 
   private fun formatItems(collection: QuerySnapshot): List<TodoItem> {
     return collection.documents
+      .filter { document -> todoDocumentFilter.filer(document) }
       .map { document -> todoDocumentMapper.map(document) }
-      .filter { item -> item.title.isNotEmpty() }
   }
 }

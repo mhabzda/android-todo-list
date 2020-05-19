@@ -11,4 +11,5 @@ interface TodoRepository {
   fun observeItemsChanges(): Observable<Any>
   fun deleteItem(item: TodoItem): Completable
   fun saveItem(item: TodoItem): Completable
+  fun editItem(item: TodoItem): Completable
 }

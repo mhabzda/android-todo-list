@@ -1,6 +1,5 @@
 package com.todo.list.ui.item.base
 
-import com.todo.list.model.entities.TodoItem
 import com.todo.list.ui.schedulers.SchedulerProvider
 import com.todo.list.utils.EMPTY
 import io.reactivex.Completable
@@ -20,7 +19,7 @@ abstract class ItemBasePresenter(
     }
 
     view.toggleLoading(true)
-    compositeDisposable.add(performItemOperation(TodoItem.create(title, description, iconUrl))
+    compositeDisposable.add(performItemOperation(title, description, iconUrl)
       .observeOn(schedulerProvider.ui())
       .doOnTerminate { view.toggleLoading(false) }
       .subscribeBy(
@@ -38,5 +37,5 @@ abstract class ItemBasePresenter(
     compositeDisposable.clear()
   }
 
-  abstract fun performItemOperation(todoItem: TodoItem): Completable
+  abstract fun performItemOperation(title: String, description: String, iconUrl: String?): Completable
 }

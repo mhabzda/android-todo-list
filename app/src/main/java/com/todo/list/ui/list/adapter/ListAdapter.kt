@@ -40,7 +40,7 @@ class ListAdapter @Inject constructor(
         }
 
         titleView.text = it.title
-        creationTimeView.text = it.creationDate?.formatDateHour()
+        creationTimeView.text = it.creationDate.formatDateHour()
         imageIconView.loadImage(it.iconUrl)
       }
     }

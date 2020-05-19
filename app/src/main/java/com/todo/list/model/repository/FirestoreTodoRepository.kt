@@ -4,7 +4,7 @@ import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.google.firebase.firestore.CollectionReference
 import com.todo.list.model.entities.TodoItem
-import com.todo.list.model.mapper.TodoDocumentKeys.TITLE_KEY
+import com.todo.list.model.mapper.TodoDocumentKeys.CREATION_DATE_KEY
 import com.todo.list.model.mapper.TodoItemMapper
 import com.todo.list.model.repository.model.PagingObservable
 import com.todo.list.model.repository.source.TodoItemsDataSourceFactory
@@ -42,7 +42,7 @@ class FirestoreTodoRepository @Inject constructor(
   override fun deleteItem(item: TodoItem): Completable {
     return Completable.create { emitter ->
       todoCollection
-        .whereEqualTo(TITLE_KEY, item.title)
+        .whereEqualTo(CREATION_DATE_KEY, item.creationDate.toString())
         .get()
         .addOnSuccessListener {
           val documentRef = it.documents.first().reference
@@ -63,6 +63,11 @@ class FirestoreTodoRepository @Inject constructor(
         .addOnSuccessListener { emitter.onComplete() }
         .addOnFailureListener { emitter.onError(it) }
     }
+  }
+
+  override fun editItem(item: TodoItem): Completable {
+    return deleteItem(item)
+      .andThen { saveItem(item) }
   }
 
   private fun observeSnapshots(emitter: ObservableEmitter<Any>) {
