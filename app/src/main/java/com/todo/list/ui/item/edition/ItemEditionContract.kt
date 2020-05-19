@@ -8,6 +8,6 @@ interface ItemEditionContract {
   }
 
   interface Presenter : ItemCreationContract.Presenter {
-    fun initializeItemData(title: String, description: String, iconUrl: String?)
+    fun initializeItemData()
   }
 }

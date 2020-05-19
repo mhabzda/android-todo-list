@@ -1,6 +1,8 @@
 package com.todo.list.utils
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.os.Parcelable
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -41,4 +43,10 @@ fun Any?.isNotNull(): Boolean {
   }
 
   return this != null
+}
+
+fun <T : Parcelable> Intent.getParcelableStrictly(key: String): T {
+  getParcelableExtra<T>(key)?.let {
+    return it
+  } ?: throw NullPointerException()
 }

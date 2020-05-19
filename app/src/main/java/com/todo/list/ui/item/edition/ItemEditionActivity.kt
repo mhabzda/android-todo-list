@@ -5,6 +5,7 @@ import com.todo.list.R
 import com.todo.list.ui.item.base.ItemBaseActivity
 import com.todo.list.ui.item.base.ItemBaseContract
 import com.todo.list.ui.parcel.TodoItemParcelable
+import com.todo.list.utils.getParcelableStrictly
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_item.edit_text_description as editTextDescription
 import kotlinx.android.synthetic.main.activity_item.edit_text_icon_url as editTextIconUrl
@@ -22,10 +23,7 @@ class ItemEditionActivity : ItemBaseActivity(), ItemEditionContract.View {
     super.onCreate(savedInstanceState)
     itemActionButton.setText(R.string.item_edition_button_title)
 
-    val item = intent.getParcelableExtra<TodoItemParcelable>(ITEM_PARCELABLE_EXTRA_KEY)
-    item?.let {
-      itemEditionPresenter.initializeItemData(item.title, item.description, item.iconUrl)
-    }
+    itemEditionPresenter.initializeItemData()
   }
 
   override fun fillItemData(title: String, description: String, iconUrl: String?) {
@@ -36,6 +34,10 @@ class ItemEditionActivity : ItemBaseActivity(), ItemEditionContract.View {
 
   override fun displayConfirmationMessage() {
     displayToastMessage(R.string.item_edition_confirmation_message)
+  }
+
+  fun provideTodoItemParcelable(): TodoItemParcelable {
+    return intent.getParcelableStrictly(ITEM_PARCELABLE_EXTRA_KEY)
   }
 
   companion object {
