@@ -33,16 +33,8 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
     todoListView.adapter = listAdapter
     swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
     floatingActionButton.setOnClickListener { presenter.floatingButtonClicked() }
-  }
 
-  override fun onResume() {
-    super.onResume()
     presenter.observePagedData()
-  }
-
-  override fun onPause() {
-    presenter.stopPagedDataObservation()
-    super.onPause()
   }
 
   override fun displayTodoList(items: PagedList<TodoItem>) {
@@ -54,8 +46,6 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
   }
 
   override fun displayError(errorMessage: String) {
-    val message = resources.getString(R.string.error_message)
-    val finalMessage = "$message - $errorMessage"
-    Toast.makeText(this, finalMessage, Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
   }
 }

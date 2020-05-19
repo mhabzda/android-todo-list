@@ -1,7 +1,10 @@
 package com.todo.list.utils
 
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.RequestManager
 import com.todo.list.R
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -18,9 +21,17 @@ fun DateTime.formatDateHour(): String {
 
 fun ImageView.loadImage(url: String?) {
   Glide.with(context)
-    .load(url)
-    .placeholder(R.drawable.common_google_signin_btn_icon_dark)
+    .loadImageIfUrlIsPresent(url)
     .into(this)
+}
+
+fun RequestManager.loadImageIfUrlIsPresent(url: String?): RequestBuilder<Drawable> {
+  val placeholder = R.drawable.ic_check_box_100
+  return if (url.isNullOrEmpty()) {
+    load(placeholder)
+  } else {
+    load(url).placeholder(placeholder)
+  }
 }
 
 @OptIn(ExperimentalContracts::class)

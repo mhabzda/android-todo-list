@@ -6,6 +6,7 @@ interface ItemCreationContract {
     fun close()
     fun displayError(errorMessage: String)
     fun displayEmptyTitleError()
+    fun displayConfirmationMessage()
   }
 
   interface Presenter {

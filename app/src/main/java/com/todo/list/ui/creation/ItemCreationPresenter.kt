@@ -28,6 +28,7 @@ class ItemCreationPresenter @Inject constructor(
       .doOnTerminate { view.toggleLoading(false) }
       .subscribeBy(
         onComplete = {
+          view.displayConfirmationMessage()
           view.close()
         },
         onError = {

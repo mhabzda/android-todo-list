@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProvider
 import com.todo.list.R
 import com.todo.list.di.ViewModelFactory
@@ -57,7 +58,11 @@ class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.Vie
   }
 
   override fun displayEmptyTitleError() {
-    Toast.makeText(this, R.string.item_creation_empty_title_message, Toast.LENGTH_SHORT).show()
+    displayToastMessage(R.string.item_creation_empty_title_message)
+  }
+
+  override fun displayConfirmationMessage() {
+    displayToastMessage(R.string.item_creation_confirmation_message)
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -65,5 +70,9 @@ class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.Vie
       finish()
       true
     } else super.onOptionsItemSelected(item)
+  }
+
+  private fun displayToastMessage(@StringRes messageId: Int) {
+    Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show()
   }
 }
