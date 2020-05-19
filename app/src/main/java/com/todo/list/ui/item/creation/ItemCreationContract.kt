@@ -1,16 +1,8 @@
 package com.todo.list.ui.item.creation
 
-interface ItemCreationContract {
-  interface View {
-    fun toggleLoading(isLoading: Boolean)
-    fun close()
-    fun displayError(errorMessage: String)
-    fun displayEmptyTitleError()
-    fun displayConfirmationMessage()
-  }
+import com.todo.list.ui.item.base.ItemBaseContract
 
-  interface Presenter {
-    fun saveItemButtonClicked(title: String, description: String, iconUrl: String?)
-    fun releaseResources()
-  }
+interface ItemCreationContract {
+  interface View : ItemBaseContract.View
+  interface Presenter : ItemBaseContract.Presenter
 }

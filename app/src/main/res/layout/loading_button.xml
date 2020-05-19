@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="@dimen/loading_button_height"
   android:background="@color/colorAccent"
@@ -26,6 +27,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/button_ripple_selector"
-    android:text="@string/item_creation_button_title"
+    tools:text="@string/item_creation_button_title"
     />
 </androidx.cardview.widget.CardView>

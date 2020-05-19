@@ -24,6 +24,11 @@
       android:name="com.todo.list.ui.item.creation.ItemCreationActivity"
       android:windowSoftInputMode="adjustResize"
       />
+
+    <activity
+      android:name="com.todo.list.ui.item.edition.ItemEditionActivity"
+      android:windowSoftInputMode="adjustResize"
+      />
   </application>
 
 </manifest>

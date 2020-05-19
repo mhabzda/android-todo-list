@@ -1,4 +1,4 @@
-package com.todo.list.ui.item.creation
+package com.todo.list.ui.item.edition
 
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
@@ -7,12 +7,13 @@ import com.todo.list.ui.schedulers.SchedulerProvider
 import io.reactivex.Completable
 import javax.inject.Inject
 
-class ItemCreationPresenter @Inject constructor(
+class ItemEditionPresenter @Inject constructor(
   private val todoRepository: TodoRepository,
-  view: ItemCreationContract.View,
+  view: ItemEditionContract.View,
   schedulerProvider: SchedulerProvider
-) : ItemBasePresenter(view, schedulerProvider), ItemCreationContract.Presenter {
+) : ItemBasePresenter(view, schedulerProvider), ItemEditionContract.Presenter {
   override fun performItemOperation(todoItem: TodoItem): Completable {
-    return todoRepository.saveItem(todoItem)
+    return Completable.complete()
+    // edit item
   }
 }
