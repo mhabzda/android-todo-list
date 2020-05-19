@@ -4,7 +4,7 @@ import android.util.Log
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.model.repository.model.NetworkState
-import com.todo.list.ui.parcel.TodoItemParcelable
+import com.todo.list.ui.parcel.TodoItemToParcelableMapper
 import com.todo.list.ui.schedulers.SchedulerProvider
 import com.todo.list.utils.EMPTY
 import io.reactivex.Observable
@@ -16,7 +16,8 @@ class ListPresenter @Inject constructor(
   private val todoRepository: TodoRepository,
   private val schedulerProvider: SchedulerProvider,
   private val view: ListContract.View,
-  private val router: ListContract.Router
+  private val router: ListContract.Router,
+  private val todoItemToParcelableMapper: TodoItemToParcelableMapper
 ) : ListContract.Presenter {
   private val compositeDisposable = CompositeDisposable()
 
@@ -47,21 +48,21 @@ class ListPresenter @Inject constructor(
   }
 
   override fun itemLongClicked(item: TodoItem) {
-    router.openItemEditionView(
-      TodoItemParcelable(item.title, item.description, item.creationDate.toString(), item.iconUrl)
-    )
+    router.openDeleteItemConfirmationDialog {
+      view.setRefreshingState(true)
+      compositeDisposable.add(todoRepository.deleteItem(item)
+        .observeOn(schedulerProvider.ui())
+        .doOnTerminate { view.setRefreshingState(false) }
+        .subscribeBy(
+          onError = {
+            view.displayError(it.message ?: EMPTY)
+          }
+        ))
+    }
+  }
 
-    //    router.openDeleteItemConfirmationDialog {
-    //      view.setRefreshingState(true)
-    //      compositeDisposable.add(todoRepository.deleteItem(item)
-    //        .observeOn(schedulerProvider.ui())
-    //        .doOnTerminate { view.setRefreshingState(false) }
-    //        .subscribeBy(
-    //          onError = {
-    //            view.displayError(it.message ?: EMPTY)
-    //          }
-    //        ))
-    //    }
+  override fun itemClicked(item: TodoItem) {
+    router.openItemEditionView(todoItemToParcelableMapper.map(item))
   }
 
   override fun clearResources() {

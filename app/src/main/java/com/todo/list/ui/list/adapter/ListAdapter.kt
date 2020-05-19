@@ -17,7 +17,8 @@ import kotlinx.android.synthetic.main.item_todo.item_image as imageIconView
 import kotlinx.android.synthetic.main.item_todo.item_title as titleView
 
 class ListAdapter @Inject constructor(
-  private val longClickAction: (TodoItem) -> Unit
+  private val longClickAction: (TodoItem) -> Unit,
+  private val clickAction: (TodoItem) -> Unit
 ) : PagedListAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +39,7 @@ class ListAdapter @Inject constructor(
           longClickAction.invoke(item)
           true
         }
+        containerView.setOnClickListener { clickAction(item) }
 
         titleView.text = it.title
         creationTimeView.text = it.creationDate.formatDateHour()

@@ -16,6 +16,7 @@ interface ListContract {
     fun refreshItems()
     fun floatingButtonClicked()
     fun itemLongClicked(item: TodoItem)
+    fun itemClicked(item: TodoItem)
     fun clearResources()
   }
 

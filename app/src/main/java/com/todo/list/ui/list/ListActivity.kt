@@ -24,7 +24,10 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
     setContentView(R.layout.activity_list)
     setSupportActionBar(toolbar)
 
-    listAdapter = ListAdapter { presenter.itemLongClicked(it) }
+    listAdapter = ListAdapter(
+      longClickAction = { presenter.itemLongClicked(it) },
+      clickAction = { presenter.itemClicked(it) }
+    )
 
     todoListView.adapter = listAdapter
     swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
