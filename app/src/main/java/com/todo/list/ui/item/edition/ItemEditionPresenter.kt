@@ -10,10 +10,14 @@ import javax.inject.Inject
 
 class ItemEditionPresenter @Inject constructor(
   private val todoRepository: TodoRepository,
-  view: ItemEditionContract.View,
+  private val view: ItemEditionContract.View,
   schedulerProvider: SchedulerProvider
 ) : ItemBasePresenter(view, schedulerProvider), ItemEditionContract.Presenter {
   override fun performItemOperation(title: String, description: String, iconUrl: String?): Completable {
     return todoRepository.deleteItem(TodoItem(title, description, DateTime(), iconUrl)) // pass previous dateTime
+  }
+
+  override fun initializeItemData(title: String, description: String, iconUrl: String?) {
+    view.fillItemData(title, description, iconUrl)
   }
 }

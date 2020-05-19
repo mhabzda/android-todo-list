@@ -2,6 +2,7 @@ package com.todo.list.ui.list
 
 import androidx.paging.PagedList
 import com.todo.list.model.entities.TodoItem
+import com.todo.list.ui.parcel.TodoItemParcelable
 
 interface ListContract {
   interface View {
@@ -20,6 +21,7 @@ interface ListContract {
 
   interface Router {
     fun openItemCreationView()
+    fun openItemEditionView(item: TodoItemParcelable)
     fun openDeleteItemConfirmationDialog(deleteItemAction: () -> Unit)
   }
 }

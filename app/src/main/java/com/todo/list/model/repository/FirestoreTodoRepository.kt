@@ -41,8 +41,9 @@ class FirestoreTodoRepository @Inject constructor(
 
   override fun deleteItem(item: TodoItem): Completable {
     return Completable.create { emitter ->
+      val document = todoItemMapper.map(item)
       todoCollection
-        .whereEqualTo(CREATION_DATE_KEY, item.creationDate.toString())
+        .whereEqualTo(CREATION_DATE_KEY, document[CREATION_DATE_KEY])
         .get()
         .addOnSuccessListener {
           val documentRef = it.documents.first().reference
@@ -67,7 +68,7 @@ class FirestoreTodoRepository @Inject constructor(
 
   override fun editItem(item: TodoItem): Completable {
     return deleteItem(item)
-      .andThen { saveItem(item) }
+      .andThen(saveItem(item))
   }
 
   private fun observeSnapshots(emitter: ObservableEmitter<Any>) {
