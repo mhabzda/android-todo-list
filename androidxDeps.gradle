@@ -1,0 +1,12 @@
+ext {
+  androidx = [
+
+      "appCompat"         : 'androidx.appcompat:appcompat:1.1.0',
+      "coreKtx"           : 'androidx.core:core-ktx:1.2.0',
+      "constraintlayout"  : 'androidx.constraintlayout:constraintlayout:1.1.3',
+      "swiperefreshlayout": "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0",
+      "pagingKtx"         : "androidx.paging:paging-runtime-ktx:2.1.2",
+      "pagingRxJava"      : "androidx.paging:paging-rxjava2:2.1.2"
+
+  ]
+}

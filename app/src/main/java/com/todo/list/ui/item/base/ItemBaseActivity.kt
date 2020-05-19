@@ -10,8 +10,8 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_item.edit_text_description as editTextDescription
 import kotlinx.android.synthetic.main.activity_item.edit_text_icon_url as editTextIconUrl
 import kotlinx.android.synthetic.main.activity_item.edit_text_title as editTextTitle
-import kotlinx.android.synthetic.main.loading_button.item_action_button as itemActionButton
-import kotlinx.android.synthetic.main.loading_button.item_icon_progress_bar as progressBar
+import kotlinx.android.synthetic.main.loading_button.loading_button as itemActionButton
+import kotlinx.android.synthetic.main.loading_button.loading_button_progress_bar as progressBar
 import kotlinx.android.synthetic.main.toolbar.my_toolbar as toolbar
 
 abstract class ItemBaseActivity : DaggerAppCompatActivity(), ItemBaseContract.View {

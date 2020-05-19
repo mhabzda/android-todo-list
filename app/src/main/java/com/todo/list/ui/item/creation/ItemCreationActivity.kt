@@ -5,7 +5,7 @@ import com.todo.list.R
 import com.todo.list.ui.item.base.ItemBaseActivity
 import com.todo.list.ui.item.base.ItemBaseContract
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.loading_button.item_action_button as itemActionButton
+import kotlinx.android.synthetic.main.loading_button.loading_button as itemActionButton
 
 class ItemCreationActivity : ItemBaseActivity(), ItemCreationContract.View {
   @Inject

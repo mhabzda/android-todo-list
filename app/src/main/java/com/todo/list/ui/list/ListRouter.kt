@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import com.todo.list.R
-import com.todo.list.di.annotation.ActivityScope
 import com.todo.list.ui.item.creation.ItemCreationActivity
 import com.todo.list.ui.item.edition.ItemEditionActivity
 import com.todo.list.ui.item.edition.ItemEditionActivity.Companion.ITEM_PARCELABLE_EXTRA_KEY
 import com.todo.list.ui.parcel.TodoItemParcelable
 import javax.inject.Inject
 
-@ActivityScope
 class ListRouter @Inject constructor(
   private val navigationContext: Context
 ) : ListContract.Router {

@@ -10,7 +10,7 @@
   app:cardElevation="@dimen/default_radius"
   >
   <ProgressBar
-    android:id="@+id/item_icon_progress_bar"
+    android:id="@+id/loading_button_progress_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -22,7 +22,7 @@
     />
 
   <Button
-    android:id="@+id/item_action_button"
+    android:id="@+id/loading_button"
     style="@style/Widget.AppCompat.Button.Borderless"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
