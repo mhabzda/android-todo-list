@@ -1,12 +1,17 @@
 package com.todo.list.ui.creation
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.todo.list.R
 import com.todo.list.di.ViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_item_creation.edit_text_description as editTextDescription
+import kotlinx.android.synthetic.main.activity_item_creation.edit_text_icon_url as editTextIconUrl
+import kotlinx.android.synthetic.main.activity_item_creation.edit_text_title as editTextTitle
 import kotlinx.android.synthetic.main.loading_button.item_action_button as itemActionButton
 import kotlinx.android.synthetic.main.loading_button.item_icon_progress_bar as progressBar
 import kotlinx.android.synthetic.main.toolbar.my_toolbar as toolbar
@@ -20,10 +25,17 @@ class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.Vie
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_item_creation)
-    setActionBar(toolbar)
+    setSupportActionBar(toolbar)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     presenter = ViewModelProvider(this, viewModelFactory).get(ItemCreationPresenter::class.java)
-    itemActionButton.setOnClickListener { presenter.saveItemButtonClicked() }
+    itemActionButton.setOnClickListener {
+      presenter.saveItemButtonClicked(
+        title = editTextTitle.text.toString(),
+        description = editTextDescription.text.toString(),
+        iconUrl = editTextIconUrl.text.toString()
+      )
+    }
   }
 
   override fun toggleLoading(isLoading: Boolean) {
@@ -38,5 +50,20 @@ class ItemCreationActivity : DaggerAppCompatActivity(), ItemCreationContract.Vie
 
   override fun close() {
     finish()
+  }
+
+  override fun displayError(errorMessage: String) {
+    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+  }
+
+  override fun displayEmptyTitleError() {
+    Toast.makeText(this, R.string.item_creation_empty_title_message, Toast.LENGTH_SHORT).show()
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    return if (item.itemId == android.R.id.home) {
+      finish()
+      true
+    } else super.onOptionsItemSelected(item)
   }
 }

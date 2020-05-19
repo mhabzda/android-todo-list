@@ -4,9 +4,11 @@ interface ItemCreationContract {
   interface View {
     fun toggleLoading(isLoading: Boolean)
     fun close()
+    fun displayError(errorMessage: String)
+    fun displayEmptyTitleError()
   }
 
   interface Presenter {
-    fun saveItemButtonClicked()
+    fun saveItemButtonClicked(title: String, description: String, iconUrl: String?)
   }
 }

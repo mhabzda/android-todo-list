@@ -76,7 +76,10 @@ class ListPresenter @Inject constructor(
         when (it) {
           NetworkState.Loading -> view.setRefreshingState(true)
           NetworkState.Loaded -> view.setRefreshingState(false)
-          is NetworkState.Error -> view.displayError(it.throwable.message ?: EMPTY)
+          is NetworkState.Error -> {
+            view.setRefreshingState(false)
+            view.displayError(it.throwable.message ?: EMPTY)
+          }
         }
       })
   }

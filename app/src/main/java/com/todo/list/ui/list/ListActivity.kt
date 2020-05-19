@@ -25,7 +25,7 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_list)
-    setActionBar(toolbar)
+    setSupportActionBar(toolbar)
 
     presenter = ViewModelProvider(this, viewModelFactory).get(ListPresenter::class.java)
     listAdapter = ListAdapter { presenter.itemLongClicked(it) }

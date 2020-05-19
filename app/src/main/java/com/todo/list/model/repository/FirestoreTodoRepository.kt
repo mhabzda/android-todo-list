@@ -5,6 +5,7 @@ import androidx.paging.RxPagedListBuilder
 import com.google.firebase.firestore.CollectionReference
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.mapper.TodoDocumentMapper.Companion.TITLE_KEY
+import com.todo.list.model.mapper.TodoItemMapper
 import com.todo.list.model.repository.model.PagingObservable
 import com.todo.list.model.repository.source.TodoItemsDataSourceFactory
 import com.todo.list.utils.isNotNull
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 class FirestoreTodoRepository @Inject constructor(
   private val todoItemsDataSourceFactory: TodoItemsDataSourceFactory,
-  private val todoCollection: CollectionReference
+  private val todoCollection: CollectionReference,
+  private val todoItemMapper: TodoItemMapper
 ) : TodoRepository {
   override fun fetchTodoItems(pageSize: Int): PagingObservable {
     val pagedListObservable = RxPagedListBuilder(
@@ -51,6 +53,15 @@ class FirestoreTodoRepository @Inject constructor(
         .addOnFailureListener {
           emitter.onError(it)
         }
+    }
+  }
+
+  override fun saveItem(item: TodoItem): Completable {
+    return Completable.create { emitter ->
+      todoCollection
+        .add(todoItemMapper.map(item))
+        .addOnSuccessListener { emitter.onComplete() }
+        .addOnFailureListener { emitter.onError(it) }
     }
   }
 
