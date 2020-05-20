@@ -34,30 +34,15 @@ class TodoItemMapperTest {
       get() = listOf(
         Input(
           TodoItem("Buy", "desc", DateTime("2020-05-19T12:40:04.698Z"), "logo.com"),
-          createDocumentMap(
-            "Buy",
-            "desc",
-            "2020-05-19T12:40:04.698Z",
-            "logo.com"
-          )
+          createDocumentMap("Buy", "desc", "2020-05-19T12:40:04.698Z", "logo.com")
         ),
         Input(
           TodoItem("Buy", "desc", DateTime("2020-05-19T12:40:04.698Z"), ""),
-          createDocumentMap(
-            "Buy",
-            "desc",
-            "2020-05-19T12:40:04.698Z",
-            null
-          )
+          createDocumentMap("Buy", "desc", "2020-05-19T12:40:04.698Z", null)
         ),
         Input(
           TodoItem("Buy", "desc", DateTime("2020-05-19T12:40:04.698Z"), null),
-          createDocumentMap(
-            "Buy",
-            "desc",
-            "2020-05-19T12:40:04.698Z",
-            null
-          )
+          createDocumentMap("Buy", "desc", "2020-05-19T12:40:04.698Z", null)
         )
       )
   }

@@ -21,21 +21,9 @@ class TodoDocumentFilterTest {
   class InputProvider : BaseInputProvider() {
     override val listInput: List<Any>
       get() = listOf(
-        Input(
-          mockDocument(
-            title = "Buy a book",
-            creationDate = "2020-05-19T12:40:04.698"
-          ), true),
-        Input(
-          mockDocument(
-            title = null,
-            creationDate = "2020-05-19T12:40:04.698"
-          ), false),
-        Input(
-          mockDocument(
-            title = "",
-            creationDate = "2020-05-19T12:40:04.698"
-          ), false),
+        Input(mockDocument(title = "Buy a book", creationDate = "2020-05-19T12:40:04.698"), true),
+        Input(mockDocument(title = null, creationDate = "2020-05-19T12:40:04.698"), false),
+        Input(mockDocument(title = "", creationDate = "2020-05-19T12:40:04.698"), false),
         Input(mockDocument(title = "Buy a book", creationDate = null), false),
         Input(mockDocument(title = null, creationDate = null), false)
       )
