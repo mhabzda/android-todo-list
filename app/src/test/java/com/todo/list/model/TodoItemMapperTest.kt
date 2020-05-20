@@ -17,7 +17,7 @@ class TodoItemMapperTest {
   companion object {
     @JvmField
     @RegisterExtension
-    val fixedTimeExtension = TimeZoneExtension(DateTimeZone.UTC)
+    val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
   }
 
   @ParameterizedTest

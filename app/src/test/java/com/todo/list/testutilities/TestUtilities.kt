@@ -23,6 +23,15 @@ fun mockDocument(
   }
 }
 
+fun mockDocumentFromMap(documentMap: Map<String, String>): DocumentSnapshot {
+  return mock {
+    on { getString(titleKey) } doReturn documentMap[titleKey]
+    on { getString(descriptionKey) } doReturn documentMap[descriptionKey]
+    on { getString(creationDateKey) } doReturn documentMap[creationDateKey]
+    on { getString(logoUrlKey) } doReturn documentMap[logoUrlKey]
+  }
+}
+
 fun createDocumentMap(
   title: String,
   description: String,

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 class TodoEntityTest {
 
   companion object {
-    private val FIXED_DATE_TIME = DateTime("2020-05-19T12:40:04.698")
+    private const val FIXED_DATE_TIME = ("2020-05-19T12:40:04.698")
 
     @JvmField
     @RegisterExtension
@@ -24,6 +24,6 @@ class TodoEntityTest {
     val logoUrl = "logo.com"
     val item = TodoItem.create(title, description, logoUrl)
 
-    assertEquals(TodoItem(title, description, FIXED_DATE_TIME, logoUrl), item)
+    assertEquals(TodoItem(title, description, DateTime(FIXED_DATE_TIME), logoUrl), item)
   }
 }

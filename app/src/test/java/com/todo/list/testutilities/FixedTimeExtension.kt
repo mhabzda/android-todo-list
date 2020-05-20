@@ -7,10 +7,10 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
 class FixedTimeExtension(
-  private val fixedTime: DateTime
+  private val fixedTime: String
 ) : BeforeAllCallback, AfterAllCallback {
   override fun beforeAll(context: ExtensionContext?) {
-    DateTimeUtils.setCurrentMillisFixed(fixedTime.millis)
+    DateTimeUtils.setCurrentMillisFixed(DateTime(fixedTime).millis)
   }
 
   override fun afterAll(context: ExtensionContext?) {

@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 class TodoDocumentMapperTest {
 
   companion object {
-    private val FIXED_DATE_TIME = DateTime("2020-05-19T12:40:04.698")
+    private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
 
     @JvmField
     @RegisterExtension
