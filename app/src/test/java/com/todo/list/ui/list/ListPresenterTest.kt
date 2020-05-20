@@ -15,18 +15,16 @@ import com.todo.list.model.repository.TodoRepository
 import com.todo.list.model.repository.model.NetworkState
 import com.todo.list.model.repository.model.PagingObservable
 import com.todo.list.testutilities.TestSchedulerProvider
+import com.todo.list.ui.TestData.testTodoItem
 import com.todo.list.ui.parcel.TodoItemParcelable
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Test
 
 class ListPresenterTest {
   private val pageSize = 30
-  private val testItem = TodoItem("title", "desc", DateTime("2020-05-19T12:40:04.698", DateTimeZone.UTC), "logo.com")
   private val testPagedList: PagedList<TodoItem> = mock()
   private val defaultTodoRepositoryMock: TodoRepository = mock {
     on { fetchTodoItems(pageSize) } doReturn
@@ -139,7 +137,7 @@ class ListPresenterTest {
 
     presenter.runInLifecycle {
       testSchedulerProvider.triggerActions()
-      itemLongClicked(testItem)
+      itemLongClicked(testTodoItem)
 
       verify(router).openDeleteItemConfirmationDialog(any())
     }
@@ -150,14 +148,14 @@ class ListPresenterTest {
     val router: ListContract.Router = mock {
       on { openDeleteItemConfirmationDialog(any()) } doAnswer { it.getArgument<() -> Unit>(0).invoke() }
     }
-    whenever(defaultTodoRepositoryMock.deleteItem(testItem)).thenReturn(Completable.complete())
+    whenever(defaultTodoRepositoryMock.deleteItem(testTodoItem)).thenReturn(Completable.complete())
     val presenter = createPresenter(router = router)
 
     presenter.runInLifecycle {
       testSchedulerProvider.triggerActions()
       clearInvocations(view)
 
-      itemLongClicked(testItem)
+      itemLongClicked(testTodoItem)
       testSchedulerProvider.triggerActions()
 
       verify(view).setRefreshingState(true)
@@ -172,14 +170,14 @@ class ListPresenterTest {
     val router: ListContract.Router = mock {
       on { openDeleteItemConfirmationDialog(any()) } doAnswer { it.getArgument<() -> Unit>(0).invoke() }
     }
-    whenever(defaultTodoRepositoryMock.deleteItem(testItem)).thenReturn(Completable.error(Throwable(errorMessage)))
+    whenever(defaultTodoRepositoryMock.deleteItem(testTodoItem)).thenReturn(Completable.error(Throwable(errorMessage)))
     val presenter = createPresenter(router = router)
 
     presenter.runInLifecycle {
       testSchedulerProvider.triggerActions()
       clearInvocations(view)
 
-      itemLongClicked(testItem)
+      itemLongClicked(testTodoItem)
       testSchedulerProvider.triggerActions()
 
       verify(view).setRefreshingState(true)
@@ -190,15 +188,15 @@ class ListPresenterTest {
 
   @Test
   fun `when item clicked then open item edition view with correct data`() {
-    val testItemParcelable = TodoItemParcelable("title", "desc", "2020-05-19T12:40:04.698Z", "logo.com")
+    val testTodoItemParcelable = TodoItemParcelable("title", "desc", "2020-05-19T12:40:04.698Z", "logo.com")
     val router: ListContract.Router = mock()
     val presenter = createPresenter(router = router)
 
     presenter.runInLifecycle {
       testSchedulerProvider.triggerActions()
-      itemClicked(testItem)
+      itemClicked(testTodoItem)
 
-      verify(router).openItemEditionView(testItemParcelable)
+      verify(router).openItemEditionView(testTodoItemParcelable)
     }
   }
 
