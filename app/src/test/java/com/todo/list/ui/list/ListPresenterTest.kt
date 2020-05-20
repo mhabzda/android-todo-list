@@ -16,7 +16,7 @@ import com.todo.list.model.repository.model.NetworkState
 import com.todo.list.model.repository.model.PagingObservable
 import com.todo.list.testutilities.TestSchedulerProvider
 import com.todo.list.ui.TestData.testTodoItem
-import com.todo.list.ui.parcel.TodoItemParcelable
+import com.todo.list.ui.TestData.testTodoItemParcelable
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -44,7 +44,7 @@ class ListPresenterTest {
       }
     )
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
 
       verify(view).displayTodoList(testPagedList)
@@ -61,7 +61,7 @@ class ListPresenterTest {
       }
     )
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
 
       val inOrder = InOrderOnType(view)
@@ -82,7 +82,7 @@ class ListPresenterTest {
       }
     )
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
 
       verify(view).setRefreshingState(false)
@@ -98,7 +98,7 @@ class ListPresenterTest {
     }
     val presenter = createPresenter(todoRepository)
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
 
       verify(todoRepository).refreshTodoItems()
@@ -109,7 +109,7 @@ class ListPresenterTest {
   fun `when refresh items then refresh items in repository`() {
     val presenter = createPresenter()
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
       refreshItems()
 
@@ -122,7 +122,7 @@ class ListPresenterTest {
     val router: ListContract.Router = mock()
     val presenter = createPresenter(router = router)
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
       floatingButtonClicked()
 
@@ -135,7 +135,7 @@ class ListPresenterTest {
     val router: ListContract.Router = mock()
     val presenter = createPresenter(router = router)
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
       itemLongClicked(testTodoItem)
 
@@ -151,7 +151,7 @@ class ListPresenterTest {
     whenever(defaultTodoRepositoryMock.deleteItem(testTodoItem)).thenReturn(Completable.complete())
     val presenter = createPresenter(router = router)
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
       clearInvocations(view)
 
@@ -173,7 +173,7 @@ class ListPresenterTest {
     whenever(defaultTodoRepositoryMock.deleteItem(testTodoItem)).thenReturn(Completable.error(Throwable(errorMessage)))
     val presenter = createPresenter(router = router)
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
       clearInvocations(view)
 
@@ -188,11 +188,10 @@ class ListPresenterTest {
 
   @Test
   fun `when item clicked then open item edition view with correct data`() {
-    val testTodoItemParcelable = TodoItemParcelable("title", "desc", "2020-05-19T12:40:04.698Z", "logo.com")
     val router: ListContract.Router = mock()
     val presenter = createPresenter(router = router)
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       testSchedulerProvider.triggerActions()
       itemClicked(testTodoItem)
 
@@ -211,7 +210,7 @@ class ListPresenterTest {
       }
     )
 
-    presenter.runInLifecycle {
+    presenter.runOnLifecycle {
       itemsSubject.onNext(testPagedList)
       testSchedulerProvider.triggerActions()
     }
@@ -221,7 +220,7 @@ class ListPresenterTest {
     verify(view, times(1)).displayTodoList(testPagedList)
   }
 
-  private fun ListPresenter.runInLifecycle(block: ListPresenter.() -> Unit) {
+  private fun ListPresenter.runOnLifecycle(block: ListPresenter.() -> Unit) {
     observePagedData()
     block(this)
     clearResources()
