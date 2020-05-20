@@ -68,7 +68,7 @@ class TodoItemsDataSource(
 
   private fun formatItems(collection: QuerySnapshot): List<TodoItem> {
     return collection.documents
-      .filter { document -> todoDocumentFilter.filer(document) }
+      .filter { document -> todoDocumentFilter.filter(document) }
       .map { document -> todoDocumentMapper.map(document) }
   }
 }

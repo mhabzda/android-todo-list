@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'de.mannodermaus.android-junit5'
 
 apply from: "$rootDir/versions.gradle"
 apply from: "$rootDir/androidxDeps.gradle"
@@ -67,7 +68,10 @@ dependencies {
 
   implementation "com.github.bumptech.glide:glide:$glideVersion"
 
-  testImplementation 'junit:junit:4.13'
+  testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+  testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
+  testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
 
   androidTestImplementation 'androidx.test.ext:junit:1.1.1'
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
