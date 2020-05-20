@@ -5,6 +5,7 @@
   <string name="delete_item_dialog_message">Are you sure you want to delete this item?</string>
   <string name="delete_item_dialog_delete_button">Delete</string>
   <string name="delete_item_dialog_cancel_button">Cancel</string>
+  <string name="delete_item_confirmation_message">Item deleted successfully</string>
 
   <string name="item_title_hint">Title</string>
   <string name="item_description_hint">Description</string>

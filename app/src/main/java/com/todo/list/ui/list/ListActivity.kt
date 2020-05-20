@@ -54,4 +54,8 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
   override fun displayError(errorMessage: String) {
     Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
   }
+
+  override fun displayItemDeletionConfirmationMessage() {
+    Toast.makeText(this, R.string.delete_item_confirmation_message, Toast.LENGTH_SHORT).show()
+  }
 }

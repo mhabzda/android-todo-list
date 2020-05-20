@@ -54,6 +54,9 @@ class ListPresenter @Inject constructor(
         .observeOn(schedulerProvider.ui())
         .doOnTerminate { view.setRefreshingState(false) }
         .subscribeBy(
+          onComplete = {
+            view.displayItemDeletionConfirmationMessage()
+          },
           onError = {
             view.displayError(it.message ?: EMPTY)
           }
@@ -93,6 +96,6 @@ class ListPresenter @Inject constructor(
 
   companion object {
     private val TAG = ListPresenter::class.simpleName
-    private const val PAGE_SIZE = 5
+    private const val PAGE_SIZE = 30
   }
 }

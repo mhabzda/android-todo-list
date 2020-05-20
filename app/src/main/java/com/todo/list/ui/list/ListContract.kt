@@ -9,6 +9,7 @@ interface ListContract {
     fun displayTodoList(items: PagedList<TodoItem>)
     fun setRefreshingState(isRefreshing: Boolean)
     fun displayError(errorMessage: String)
+    fun displayItemDeletionConfirmationMessage()
   }
 
   interface Presenter {
