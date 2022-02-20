@@ -5,74 +5,74 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'de.mannodermaus.android-junit5'
 
-apply from: "$rootDir/versions.gradle"
-apply from: "$rootDir/androidxDeps.gradle"
-
 android {
-  compileSdkVersion 29
-  buildToolsVersion "29.0.3"
+    compileSdkVersion 31
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+    defaultConfig {
+        applicationId "com.todo.list"
+        minSdkVersion 23
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
 
-  defaultConfig {
-    applicationId "com.todo.list"
-    minSdkVersion 21
-    targetSdkVersion 29
-    versionCode 1
-    versionName "1.0"
-
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-  }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+
+        release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 androidExtensions {
-  experimental = true
+    experimental = true
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-  kotlinOptions {
-    freeCompilerArgs = ["-Xopt-in=kotlin.RequiresOptIn"]
-  }
+    kotlinOptions {
+        freeCompilerArgs = ["-Xopt-in=kotlin.RequiresOptIn"]
+    }
 }
 
 dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-  implementation androidx.values()
-  implementation "com.google.android.material:material:$materialVersion"
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.coreKtx
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.swiperefreshlayout
+    implementation libs.androidx.pagingKtx
+    implementation libs.androidx.pagingRxJava
 
-  implementation "com.google.dagger:dagger:$daggerVersion"
-  kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-  implementation "com.google.dagger:dagger-android:$daggerVersion"
-  implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-  kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation libs.dagger
+    kapt libs.dagger.compiler
+    implementation libs.dagger.android
+    implementation libs.dagger.support
+    kapt libs.dagger.processor
 
-  implementation "com.google.firebase:firebase-analytics:$firebaseAnalyticsVersion"
-  implementation "com.google.firebase:firebase-firestore-ktx:$firestoreVersion"
+    implementation libs.firebase.analytics
+    implementation libs.firestore
+    implementation libs.material
+    implementation libs.joda
+    implementation libs.glide
 
-  implementation "joda-time:joda-time:$jodaVersion"
+    implementation libs.rxJava
+    implementation libs.rxKotlin
+    implementation libs.rxAndroid
 
-  implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-  implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
-  implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
-
-  implementation "com.github.bumptech.glide:glide:$glideVersion"
-
-  testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-  testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
-  testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
-
-  androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation libs.junit5.api
+    testRuntimeOnly libs.junit5.engine
+    testImplementation libs.junit5.params
+    testImplementation libs.mockito.kotlin
 }

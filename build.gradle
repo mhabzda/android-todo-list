@@ -2,22 +2,21 @@
 
 buildscript {
     repositories {
-        apply from: "$rootDir/versions.gradle"
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.google.gms:google-services:4.3.3'
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.5.2.0"
+        classpath libs.android.gradle
+        classpath libs.kotlin.gradle
+        classpath libs.google.services
+        classpath libs.junit5.gradle
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
