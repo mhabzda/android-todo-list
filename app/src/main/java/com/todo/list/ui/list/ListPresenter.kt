@@ -1,15 +1,19 @@
 package com.todo.list.ui.list
 
-import android.util.Log
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
-import com.todo.list.model.repository.model.NetworkState
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
 import com.todo.list.ui.schedulers.SchedulerProvider
 import com.todo.list.utils.EMPTY
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ListPresenter @Inject constructor(
@@ -21,26 +25,41 @@ class ListPresenter @Inject constructor(
 ) : ListContract.Presenter {
     private val compositeDisposable = CompositeDisposable()
 
-    override fun observePagedData() {
-        val pagingObservable = todoRepository.fetchTodoItems(PAGE_SIZE)
-        compositeDisposable.add(pagingObservable.pagedList
-            .observeOn(schedulerProvider.ui())
-            .subscribeBy(
-                onNext = {
-                    view.displayTodoList(it)
-                },
-                onError = {
-                    Log.e(TAG, "Error during paged list observation", it)
-                    view.displayError(it.message ?: EMPTY)
-                }
-            ))
+    override fun onStart(loadStateFlow: Flow<CombinedLoadStates>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            loadStateFlow.collectLatest { state ->
+                view.setRefreshingState(state.refresh is LoadState.Loading || state.append is LoadState.Loading)
 
-        handleNetworkState(pagingObservable.networkState)
+                val refreshState = state.refresh
+                if (refreshState is LoadState.Error) view.displayError(refreshState.error.message ?: "")
+                val appendState = state.append
+                if (appendState is LoadState.Error) view.displayError(appendState.error.message ?: "")
+            }
+        }
+
+        observePagingData()
+    }
+
+    private fun observePagingData() {
+        CoroutineScope(Dispatchers.Main).launch {
+            todoRepository.fetchTodoItems(PAGE_SIZE)
+                .collectLatest {
+                    view.displayTodoList(it)
+                }
+        }
+
         observeItemsChanges()
     }
 
+    private fun observeItemsChanges() {
+        compositeDisposable.add(todoRepository.observeItemsChanges()
+            .subscribeBy {
+                refreshItems()
+            })
+    }
+
     override fun refreshItems() {
-        todoRepository.refreshTodoItems()
+        view.refreshListItems()
     }
 
     override fun floatingButtonClicked() {
@@ -72,30 +91,7 @@ class ListPresenter @Inject constructor(
         compositeDisposable.clear()
     }
 
-    private fun handleNetworkState(networkStateObservable: Observable<NetworkState>) {
-        compositeDisposable.add(networkStateObservable
-            .observeOn(schedulerProvider.ui())
-            .subscribeBy {
-                when (it) {
-                    NetworkState.Loading -> view.setRefreshingState(true)
-                    NetworkState.Loaded -> view.setRefreshingState(false)
-                    is NetworkState.Error -> {
-                        view.setRefreshingState(false)
-                        view.displayError(it.throwable.message ?: EMPTY)
-                    }
-                }
-            })
-    }
-
-    private fun observeItemsChanges() {
-        compositeDisposable.add(todoRepository.observeItemsChanges()
-            .subscribeBy {
-                refreshItems()
-            })
-    }
-
     companion object {
-        private val TAG = ListPresenter::class.simpleName
-        private const val PAGE_SIZE = 30
+        private const val PAGE_SIZE = 10
     }
 }

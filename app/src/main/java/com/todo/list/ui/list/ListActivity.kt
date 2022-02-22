@@ -2,7 +2,7 @@ package com.todo.list.ui.list
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.todo.list.R
 import com.todo.list.model.entities.TodoItem
@@ -35,7 +35,7 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
         swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
         floatingActionButton.setOnClickListener { presenter.floatingButtonClicked() }
 
-        presenter.observePagedData()
+        presenter.onStart(listAdapter.loadStateFlow)
     }
 
     override fun onDestroy() {
@@ -43,8 +43,8 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
         super.onDestroy()
     }
 
-    override fun displayTodoList(items: PagedList<TodoItem>) {
-        listAdapter.submitList(items)
+    override suspend fun displayTodoList(items: PagingData<TodoItem>) {
+        listAdapter.submitData(items)
     }
 
     override fun setRefreshingState(isRefreshing: Boolean) {
@@ -52,10 +52,14 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
     }
 
     override fun displayError(errorMessage: String) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun displayItemDeletionConfirmationMessage() {
         Toast.makeText(this, R.string.delete_item_confirmation_message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun refreshListItems() {
+        listAdapter.refresh()
     }
 }
