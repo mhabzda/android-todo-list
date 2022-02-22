@@ -11,26 +11,26 @@ import com.todo.list.ui.parcel.TodoItemParcelable
 import javax.inject.Inject
 
 class ListRouter @Inject constructor(
-  private val navigationContext: Context
+    private val navigationContext: Context
 ) : ListContract.Router {
-  override fun openItemCreationView() {
-    val intent = Intent(navigationContext, ItemCreationActivity::class.java)
-    navigationContext.startActivity(intent)
-  }
+    override fun openItemCreationView() {
+        val intent = Intent(navigationContext, ItemCreationActivity::class.java)
+        navigationContext.startActivity(intent)
+    }
 
-  override fun openItemEditionView(item: TodoItemParcelable) {
-    val intent = Intent(navigationContext, ItemEditionActivity::class.java)
-    intent.putExtra(ITEM_PARCELABLE_EXTRA_KEY, item)
-    navigationContext.startActivity(intent)
-  }
+    override fun openItemEditionView(item: TodoItemParcelable) {
+        val intent = Intent(navigationContext, ItemEditionActivity::class.java)
+        intent.putExtra(ITEM_PARCELABLE_EXTRA_KEY, item)
+        navigationContext.startActivity(intent)
+    }
 
-  override fun openDeleteItemConfirmationDialog(deleteItemAction: () -> Unit) {
-    AlertDialog.Builder(navigationContext)
-      .setTitle(R.string.delete_item_dialog_title)
-      .setMessage(R.string.delete_item_dialog_message)
-      .setPositiveButton(R.string.delete_item_dialog_delete_button) { _, _ -> deleteItemAction() }
-      .setNegativeButton(R.string.delete_item_dialog_cancel_button) { dialog, _ -> dialog.dismiss() }
-      .create()
-      .show()
-  }
+    override fun openDeleteItemConfirmationDialog(deleteItemAction: () -> Unit) {
+        AlertDialog.Builder(navigationContext)
+            .setTitle(R.string.delete_item_dialog_title)
+            .setMessage(R.string.delete_item_dialog_message)
+            .setPositiveButton(R.string.delete_item_dialog_delete_button) { _, _ -> deleteItemAction() }
+            .setNegativeButton(R.string.delete_item_dialog_cancel_button) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
 }

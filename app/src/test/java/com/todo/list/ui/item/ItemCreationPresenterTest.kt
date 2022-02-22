@@ -16,86 +16,86 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
 class ItemCreationPresenterTest {
-  private val view: ItemCreationContract.View = mock()
-  private val testSchedulerProvider = TestSchedulerProvider()
+    private val view: ItemCreationContract.View = mock()
+    private val testSchedulerProvider = TestSchedulerProvider()
 
-  companion object {
-    private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
-    private val testItem = testTodoItem.copy(creationDate = DateTime(FIXED_DATE_TIME))
+    companion object {
+        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
+        private val testItem = testTodoItem.copy(creationDate = DateTime(FIXED_DATE_TIME))
 
-    @JvmField
-    @RegisterExtension
-    val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
-  }
+        @JvmField
+        @RegisterExtension
+        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
+    }
 
-  @Test
-  fun `given title is empty when button clicked then display error`() {
-    val presenter = createPresenter(mock())
+    @Test
+    fun `given title is empty when button clicked then display error`() {
+        val presenter = createPresenter(mock())
 
-    presenter.itemButtonClicked("", "", null)
+        presenter.itemButtonClicked("", "", null)
 
-    verify(view).displayEmptyTitleError()
-  }
+        verify(view).displayEmptyTitleError()
+    }
 
-  @Test
-  fun `given can save item when button clicked then display confirmation message and close view`() {
-    val presenter = createPresenter(mock {
-      on { saveItem(testItem) } doReturn Completable.complete()
-    })
+    @Test
+    fun `given can save item when button clicked then display confirmation message and close view`() {
+        val presenter = createPresenter(mock {
+            on { saveItem(testItem) } doReturn Completable.complete()
+        })
 
-    presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-    testSchedulerProvider.triggerActions()
+        presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
+        testSchedulerProvider.triggerActions()
 
-    verify(view).displayConfirmationMessage()
-    verify(view).close()
-  }
+        verify(view).displayConfirmationMessage()
+        verify(view).close()
+    }
 
-  @Test
-  fun `given cannot save item when button clicked then display error`() {
-    val errorMessage = "Cannot save item"
-    val presenter = createPresenter(mock {
-      on { saveItem(testItem) } doReturn Completable.error(Throwable(errorMessage))
-    })
+    @Test
+    fun `given cannot save item when button clicked then display error`() {
+        val errorMessage = "Cannot save item"
+        val presenter = createPresenter(mock {
+            on { saveItem(testItem) } doReturn Completable.error(Throwable(errorMessage))
+        })
 
-    presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-    testSchedulerProvider.triggerActions()
+        presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
+        testSchedulerProvider.triggerActions()
 
-    verify(view).displayError(errorMessage)
-  }
+        verify(view).displayError(errorMessage)
+    }
 
-  @Test
-  fun `given can save item when button clicked then toggle loading`() {
-    val presenter = createPresenter(mock {
-      on { saveItem(testItem) } doReturn Completable.complete()
-    })
+    @Test
+    fun `given can save item when button clicked then toggle loading`() {
+        val presenter = createPresenter(mock {
+            on { saveItem(testItem) } doReturn Completable.complete()
+        })
 
-    presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-    testSchedulerProvider.triggerActions()
+        presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
+        testSchedulerProvider.triggerActions()
 
-    val inOrder = InOrderOnType(view)
-    inOrder.verify(view).toggleLoading(true)
-    inOrder.verify(view).toggleLoading(false)
-  }
+        val inOrder = InOrderOnType(view)
+        inOrder.verify(view).toggleLoading(true)
+        inOrder.verify(view).toggleLoading(false)
+    }
 
-  @Test
-  fun `given cannot save item when button clicked then toggle loading`() {
-    val presenter = createPresenter(mock {
-      on { saveItem(testItem) } doReturn Completable.error(Throwable("cannot save"))
-    })
+    @Test
+    fun `given cannot save item when button clicked then toggle loading`() {
+        val presenter = createPresenter(mock {
+            on { saveItem(testItem) } doReturn Completable.error(Throwable("cannot save"))
+        })
 
-    presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-    testSchedulerProvider.triggerActions()
+        presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
+        testSchedulerProvider.triggerActions()
 
-    val inOrder = InOrderOnType(view)
-    inOrder.verify(view).toggleLoading(true)
-    inOrder.verify(view).toggleLoading(false)
-  }
+        val inOrder = InOrderOnType(view)
+        inOrder.verify(view).toggleLoading(true)
+        inOrder.verify(view).toggleLoading(false)
+    }
 
-  private fun createPresenter(todoRepository: TodoRepository): ItemCreationPresenter {
-    return ItemCreationPresenter(
-      todoRepository = todoRepository,
-      view = view,
-      schedulerProvider = testSchedulerProvider
-    )
-  }
+    private fun createPresenter(todoRepository: TodoRepository): ItemCreationPresenter {
+        return ItemCreationPresenter(
+            todoRepository = todoRepository,
+            view = view,
+            schedulerProvider = testSchedulerProvider
+        )
+    }
 }

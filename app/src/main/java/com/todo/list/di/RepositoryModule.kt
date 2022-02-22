@@ -12,17 +12,17 @@ import javax.inject.Singleton
 
 @Module
 abstract class RepositoryModule {
-  @Singleton
-  @Binds
-  abstract fun provideTodoRepository(firestoreTodoRepository: FirestoreTodoRepository): TodoRepository
+    @Singleton
+    @Binds
+    abstract fun provideTodoRepository(firestoreTodoRepository: FirestoreTodoRepository): TodoRepository
 
-  companion object {
-    private const val COLLECTION_NAME = "todo_items"
+    companion object {
+        private const val COLLECTION_NAME = "todo_items"
 
-    @JvmStatic
-    @Provides
-    fun provideTodoCollection(): CollectionReference {
-      return Firebase.firestore.collection(COLLECTION_NAME)
+        @JvmStatic
+        @Provides
+        fun provideTodoCollection(): CollectionReference {
+            return Firebase.firestore.collection(COLLECTION_NAME)
+        }
     }
-  }
 }

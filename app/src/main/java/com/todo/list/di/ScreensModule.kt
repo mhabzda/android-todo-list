@@ -9,15 +9,15 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class ScreensModule {
-  @ActivityScope
-  @ContributesAndroidInjector(modules = [ListViewModule::class])
-  abstract fun provideListActivity(): ListActivity
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [ListViewModule::class])
+    abstract fun provideListActivity(): ListActivity
 
-  @ActivityScope
-  @ContributesAndroidInjector(modules = [ItemCreationViewModule::class])
-  abstract fun provideItemCreationActivity(): ItemCreationActivity
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [ItemCreationViewModule::class])
+    abstract fun provideItemCreationActivity(): ItemCreationActivity
 
-  @ActivityScope
-  @ContributesAndroidInjector(modules = [ItemEditionViewModule::class])
-  abstract fun provideItemEditionActivity(): ItemEditionActivity
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [ItemEditionViewModule::class])
+    abstract fun provideItemEditionActivity(): ItemEditionActivity
 }

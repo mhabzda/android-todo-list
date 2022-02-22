@@ -10,15 +10,15 @@ import dagger.Module
 
 @Module
 abstract class ListViewModule {
-  @Binds
-  abstract fun provideListView(listActivity: ListActivity): ListContract.View
+    @Binds
+    abstract fun provideListView(listActivity: ListActivity): ListContract.View
 
-  @Binds
-  abstract fun provideListPresenter(listPresenter: ListPresenter): ListContract.Presenter
+    @Binds
+    abstract fun provideListPresenter(listPresenter: ListPresenter): ListContract.Presenter
 
-  @Binds
-  abstract fun provideListRouter(listRouter: ListRouter): ListContract.Router
+    @Binds
+    abstract fun provideListRouter(listRouter: ListRouter): ListContract.Router
 
-  @Binds
-  abstract fun provideNavigationContext(listActivity: ListActivity): Context
+    @Binds
+    abstract fun provideNavigationContext(listActivity: ListActivity): Context
 }

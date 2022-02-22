@@ -13,34 +13,34 @@ import kotlinx.android.synthetic.main.activity_item.edit_text_title as editTextT
 import kotlinx.android.synthetic.main.loading_button.loading_button as itemActionButton
 
 class ItemEditionActivity : ItemBaseActivity(), ItemEditionContract.View {
-  @Inject
-  lateinit var itemEditionPresenter: ItemEditionContract.Presenter
+    @Inject
+    lateinit var itemEditionPresenter: ItemEditionContract.Presenter
 
-  override val presenter: ItemBaseContract.Presenter
-    get() = itemEditionPresenter
+    override val presenter: ItemBaseContract.Presenter
+        get() = itemEditionPresenter
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    itemActionButton.setText(R.string.item_edition_button_title)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        itemActionButton.setText(R.string.item_edition_button_title)
 
-    itemEditionPresenter.initializeItemData()
-  }
+        itemEditionPresenter.initializeItemData()
+    }
 
-  override fun fillItemData(title: String, description: String, iconUrl: String?) {
-    editTextTitle.setText(title)
-    editTextDescription.setText(description)
-    editTextIconUrl.setText(iconUrl)
-  }
+    override fun fillItemData(title: String, description: String, iconUrl: String?) {
+        editTextTitle.setText(title)
+        editTextDescription.setText(description)
+        editTextIconUrl.setText(iconUrl)
+    }
 
-  override fun displayConfirmationMessage() {
-    displayToastMessage(R.string.item_edition_confirmation_message)
-  }
+    override fun displayConfirmationMessage() {
+        displayToastMessage(R.string.item_edition_confirmation_message)
+    }
 
-  fun provideTodoItemParcelable(): TodoItemParcelable {
-    return intent.getParcelableStrictly(ITEM_PARCELABLE_EXTRA_KEY)
-  }
+    fun provideTodoItemParcelable(): TodoItemParcelable {
+        return intent.getParcelableStrictly(ITEM_PARCELABLE_EXTRA_KEY)
+    }
 
-  companion object {
-    const val ITEM_PARCELABLE_EXTRA_KEY = "item_parcelable_extra"
-  }
+    companion object {
+        const val ITEM_PARCELABLE_EXTRA_KEY = "item_parcelable_extra"
+    }
 }

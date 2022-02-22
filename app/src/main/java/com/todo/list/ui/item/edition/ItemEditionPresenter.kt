@@ -10,18 +10,18 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ItemEditionPresenter @Inject constructor(
-  private val todoRepository: TodoRepository,
-  private val view: ItemEditionContract.View,
-  schedulerProvider: SchedulerProvider,
-  private val todoItemParcelable: TodoItemParcelable
+    private val todoRepository: TodoRepository,
+    private val view: ItemEditionContract.View,
+    schedulerProvider: SchedulerProvider,
+    private val todoItemParcelable: TodoItemParcelable
 ) : ItemBasePresenter(view, schedulerProvider), ItemEditionContract.Presenter {
-  override fun initializeItemData() {
-    with(todoItemParcelable) {
-      view.fillItemData(title, description, iconUrl)
+    override fun initializeItemData() {
+        with(todoItemParcelable) {
+            view.fillItemData(title, description, iconUrl)
+        }
     }
-  }
 
-  override fun performItemOperation(title: String, description: String, iconUrl: String?): Completable {
-    return todoRepository.editItem(TodoItem(title, description, DateTime(todoItemParcelable.creationDate), iconUrl))
-  }
+    override fun performItemOperation(title: String, description: String, iconUrl: String?): Completable {
+        return todoRepository.editItem(TodoItem(title, description, DateTime(todoItemParcelable.creationDate), iconUrl))
+    }
 }

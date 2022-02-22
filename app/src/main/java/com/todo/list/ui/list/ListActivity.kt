@@ -15,47 +15,47 @@ import kotlinx.android.synthetic.main.activity_list.todo_list as todoListView
 import kotlinx.android.synthetic.main.toolbar.my_toolbar as toolbar
 
 class ListActivity : DaggerAppCompatActivity(), ListContract.View {
-  @Inject
-  lateinit var presenter: ListContract.Presenter
+    @Inject
+    lateinit var presenter: ListContract.Presenter
 
-  private lateinit var listAdapter: ListAdapter
+    private lateinit var listAdapter: ListAdapter
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_list)
-    setSupportActionBar(toolbar)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_list)
+        setSupportActionBar(toolbar)
 
-    listAdapter = ListAdapter(
-      longClickAction = { presenter.itemLongClicked(it) },
-      clickAction = { presenter.itemClicked(it) }
-    )
+        listAdapter = ListAdapter(
+            longClickAction = { presenter.itemLongClicked(it) },
+            clickAction = { presenter.itemClicked(it) }
+        )
 
-    todoListView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-    todoListView.adapter = listAdapter
-    swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
-    floatingActionButton.setOnClickListener { presenter.floatingButtonClicked() }
+        todoListView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        todoListView.adapter = listAdapter
+        swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
+        floatingActionButton.setOnClickListener { presenter.floatingButtonClicked() }
 
-    presenter.observePagedData()
-  }
+        presenter.observePagedData()
+    }
 
-  override fun onDestroy() {
-    presenter.clearResources()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        presenter.clearResources()
+        super.onDestroy()
+    }
 
-  override fun displayTodoList(items: PagedList<TodoItem>) {
-    listAdapter.submitList(items)
-  }
+    override fun displayTodoList(items: PagedList<TodoItem>) {
+        listAdapter.submitList(items)
+    }
 
-  override fun setRefreshingState(isRefreshing: Boolean) {
-    swipeRefresh.isRefreshing = isRefreshing
-  }
+    override fun setRefreshingState(isRefreshing: Boolean) {
+        swipeRefresh.isRefreshing = isRefreshing
+    }
 
-  override fun displayError(errorMessage: String) {
-    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-  }
+    override fun displayError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+    }
 
-  override fun displayItemDeletionConfirmationMessage() {
-    Toast.makeText(this, R.string.delete_item_confirmation_message, Toast.LENGTH_SHORT).show()
-  }
+    override fun displayItemDeletionConfirmationMessage() {
+        Toast.makeText(this, R.string.delete_item_confirmation_message, Toast.LENGTH_SHORT).show()
+    }
 }

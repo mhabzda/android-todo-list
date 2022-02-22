@@ -7,7 +7,7 @@ import com.todo.list.utils.isNotNull
 import javax.inject.Inject
 
 class TodoDocumentFilter @Inject constructor() {
-  fun filter(document: DocumentSnapshot): Boolean {
-    return !document.getString(TITLE_KEY).isNullOrEmpty() && document.getString(CREATION_DATE_KEY).isNotNull()
-  }
+    fun filter(document: DocumentSnapshot): Boolean {
+        return !document.getString(TITLE_KEY).isNullOrEmpty() && document.getString(CREATION_DATE_KEY).isNotNull()
+    }
 }

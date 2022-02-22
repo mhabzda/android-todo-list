@@ -8,9 +8,9 @@ import dagger.Module
 
 @Module
 abstract class ItemCreationViewModule {
-  @Binds
-  abstract fun provideItemCreationView(itemCreationActivity: ItemCreationActivity): ItemCreationContract.View
+    @Binds
+    abstract fun provideItemCreationView(itemCreationActivity: ItemCreationActivity): ItemCreationContract.View
 
-  @Binds
-  abstract fun provideItemCreationPresenter(presenter: ItemCreationPresenter): ItemCreationContract.Presenter
+    @Binds
+    abstract fun provideItemCreationPresenter(presenter: ItemCreationPresenter): ItemCreationContract.Presenter
 }

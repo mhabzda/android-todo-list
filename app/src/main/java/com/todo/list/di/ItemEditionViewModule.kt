@@ -10,17 +10,17 @@ import dagger.Provides
 
 @Module
 abstract class ItemEditionViewModule {
-  @Binds
-  abstract fun provideItemEditionView(itemEditionActivity: ItemEditionActivity): ItemEditionContract.View
+    @Binds
+    abstract fun provideItemEditionView(itemEditionActivity: ItemEditionActivity): ItemEditionContract.View
 
-  @Binds
-  abstract fun provideItemEditionPresenter(presenter: ItemEditionPresenter): ItemEditionContract.Presenter
+    @Binds
+    abstract fun provideItemEditionPresenter(presenter: ItemEditionPresenter): ItemEditionContract.Presenter
 
-  companion object {
-    @JvmStatic
-    @Provides
-    fun provideItemParcelable(itemEditionActivity: ItemEditionActivity): TodoItemParcelable {
-      return itemEditionActivity.provideTodoItemParcelable()
+    companion object {
+        @JvmStatic
+        @Provides
+        fun provideItemParcelable(itemEditionActivity: ItemEditionActivity): TodoItemParcelable {
+            return itemEditionActivity.provideTodoItemParcelable()
+        }
     }
-  }
 }

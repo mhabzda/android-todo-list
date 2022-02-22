@@ -8,18 +8,18 @@ import javax.inject.Inject
 import kotlinx.android.synthetic.main.loading_button.loading_button as itemActionButton
 
 class ItemCreationActivity : ItemBaseActivity(), ItemCreationContract.View {
-  @Inject
-  lateinit var itemCreationPresenter: ItemCreationContract.Presenter
+    @Inject
+    lateinit var itemCreationPresenter: ItemCreationContract.Presenter
 
-  override val presenter: ItemBaseContract.Presenter
-    get() = itemCreationPresenter
+    override val presenter: ItemBaseContract.Presenter
+        get() = itemCreationPresenter
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    itemActionButton.setText(R.string.item_creation_button_title)
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        itemActionButton.setText(R.string.item_creation_button_title)
+    }
 
-  override fun displayConfirmationMessage() {
-    displayToastMessage(R.string.item_creation_confirmation_message)
-  }
+    override fun displayConfirmationMessage() {
+        displayToastMessage(R.string.item_creation_confirmation_message)
+    }
 }

@@ -7,35 +7,35 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 abstract class ItemBasePresenter(
-  private val view: ItemBaseContract.View,
-  private val schedulerProvider: SchedulerProvider
+    private val view: ItemBaseContract.View,
+    private val schedulerProvider: SchedulerProvider
 ) : ItemBaseContract.Presenter {
-  private val compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
-  override fun itemButtonClicked(title: String, description: String, iconUrl: String?) {
-    if (title.isEmpty()) {
-      view.displayEmptyTitleError()
-      return
+    override fun itemButtonClicked(title: String, description: String, iconUrl: String?) {
+        if (title.isEmpty()) {
+            view.displayEmptyTitleError()
+            return
+        }
+
+        view.toggleLoading(true)
+        compositeDisposable.add(performItemOperation(title, description, iconUrl)
+            .observeOn(schedulerProvider.ui())
+            .doOnTerminate { view.toggleLoading(false) }
+            .subscribeBy(
+                onComplete = {
+                    view.displayConfirmationMessage()
+                    view.close()
+                },
+                onError = {
+                    view.displayError(it.message ?: EMPTY)
+                }
+            ))
     }
 
-    view.toggleLoading(true)
-    compositeDisposable.add(performItemOperation(title, description, iconUrl)
-      .observeOn(schedulerProvider.ui())
-      .doOnTerminate { view.toggleLoading(false) }
-      .subscribeBy(
-        onComplete = {
-          view.displayConfirmationMessage()
-          view.close()
-        },
-        onError = {
-          view.displayError(it.message ?: EMPTY)
-        }
-      ))
-  }
+    override fun releaseResources() {
+        compositeDisposable.clear()
+    }
 
-  override fun releaseResources() {
-    compositeDisposable.clear()
-  }
-
-  abstract fun performItemOperation(title: String, description: String, iconUrl: String?): Completable
+    abstract fun performItemOperation(title: String, description: String, iconUrl: String?): Completable
 }

@@ -8,17 +8,17 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-  modules = [
-    AndroidInjectionModule::class,
-    ScreensModule::class,
-    RepositoryModule::class,
-    UtilsModule::class
-  ]
+    modules = [
+        AndroidInjectionModule::class,
+        ScreensModule::class,
+        RepositoryModule::class,
+        UtilsModule::class
+    ]
 )
 interface ApplicationComponent : AndroidInjector<App> {
-  companion object {
-    fun create(): AndroidInjector<App> {
-      return DaggerApplicationComponent.create()
+    companion object {
+        fun create(): AndroidInjector<App> {
+            return DaggerApplicationComponent.create()
+        }
     }
-  }
 }

@@ -8,16 +8,16 @@ import com.todo.list.model.mapper.TodoDocumentKeys.TITLE_KEY
 import javax.inject.Inject
 
 class TodoItemMapper @Inject constructor() {
-  fun map(todoItem: TodoItem): Map<String, String> {
-    return with(todoItem) {
-      val itemMap = mutableMapOf(
-        TITLE_KEY to title,
-        DESCRIPTION_KEY to description,
-        CREATION_DATE_KEY to creationDate.toString()
-      )
-      if (!iconUrl.isNullOrEmpty()) itemMap[LOGO_URL_KEY] = iconUrl
+    fun map(todoItem: TodoItem): Map<String, String> {
+        return with(todoItem) {
+            val itemMap = mutableMapOf(
+                TITLE_KEY to title,
+                DESCRIPTION_KEY to description,
+                CREATION_DATE_KEY to creationDate.toString()
+            )
+            if (!iconUrl.isNullOrEmpty()) itemMap[LOGO_URL_KEY] = iconUrl
 
-      itemMap
+            itemMap
+        }
     }
-  }
 }

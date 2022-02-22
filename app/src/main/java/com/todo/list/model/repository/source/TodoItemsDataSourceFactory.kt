@@ -10,16 +10,17 @@ import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class TodoItemsDataSourceFactory @Inject constructor(
-  private val collectionReference: CollectionReference,
-  private val todoDocumentMapper: TodoDocumentMapper,
-  private val todoDocumentFilter: TodoDocumentFilter
+    private val collectionReference: CollectionReference,
+    private val todoDocumentMapper: TodoDocumentMapper,
+    private val todoDocumentFilter: TodoDocumentFilter
 ) : DataSource.Factory<Int, TodoItem>() {
-  val networkStateSubject = PublishSubject.create<NetworkState>()
-  var dataSource: TodoItemsDataSource? = null
+    val networkStateSubject = PublishSubject.create<NetworkState>()
+    var dataSource: TodoItemsDataSource? = null
 
-  override fun create(): DataSource<Int, TodoItem> {
-    val source = TodoItemsDataSource(collectionReference, todoDocumentMapper, todoDocumentFilter, networkStateSubject)
-    dataSource = source
-    return source
-  }
+    override fun create(): DataSource<Int, TodoItem> {
+        val source =
+            TodoItemsDataSource(collectionReference, todoDocumentMapper, todoDocumentFilter, networkStateSubject)
+        dataSource = source
+        return source
+    }
 }

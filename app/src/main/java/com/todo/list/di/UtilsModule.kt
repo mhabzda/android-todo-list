@@ -7,6 +7,6 @@ import dagger.Module
 
 @Module
 abstract class UtilsModule {
-  @Binds
-  abstract fun provideSchedulerProvider(schedulerProvider: AndroidSchedulerProvider): SchedulerProvider
+    @Binds
+    abstract fun provideSchedulerProvider(schedulerProvider: AndroidSchedulerProvider): SchedulerProvider
 }

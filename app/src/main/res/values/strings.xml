@@ -1,20 +1,20 @@
 <resources>
-  <string name="app_name">Todo List</string>
+    <string name="app_name">Todo List</string>
 
-  <string name="delete_item_dialog_title">Delete item</string>
-  <string name="delete_item_dialog_message">Are you sure you want to delete this item?</string>
-  <string name="delete_item_dialog_delete_button">Delete</string>
-  <string name="delete_item_dialog_cancel_button">Cancel</string>
-  <string name="delete_item_confirmation_message">Item deleted successfully</string>
+    <string name="delete_item_dialog_title">Delete item</string>
+    <string name="delete_item_dialog_message">Are you sure you want to delete this item?</string>
+    <string name="delete_item_dialog_delete_button">Delete</string>
+    <string name="delete_item_dialog_cancel_button">Cancel</string>
+    <string name="delete_item_confirmation_message">Item deleted successfully</string>
 
-  <string name="item_title_hint">Title</string>
-  <string name="item_description_hint">Description</string>
-  <string name="item_icon_url_hint">Icon url</string>
-  <string name="item_empty_title_message">Title cannot be empty. Please fill this field</string>
+    <string name="item_title_hint">Title</string>
+    <string name="item_description_hint">Description</string>
+    <string name="item_icon_url_hint">Icon url</string>
+    <string name="item_empty_title_message">Title cannot be empty. Please fill this field</string>
 
-  <string name="item_creation_confirmation_message">Item created successfully</string>
-  <string name="item_creation_button_title">Save item</string>
+    <string name="item_creation_confirmation_message">Item created successfully</string>
+    <string name="item_creation_button_title">Save item</string>
 
-  <string name="item_edition_confirmation_message">Item edited successfully</string>
-  <string name="item_edition_button_title">Edit item</string>
+    <string name="item_edition_confirmation_message">Item edited successfully</string>
+    <string name="item_edition_button_title">Edit item</string>
 </resources>

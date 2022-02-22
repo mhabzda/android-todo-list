@@ -17,111 +17,111 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
 class ItemEditionPresenterTest {
-  private val view: ItemEditionContract.View = mock()
-  private val testSchedulerProvider = TestSchedulerProvider()
+    private val view: ItemEditionContract.View = mock()
+    private val testSchedulerProvider = TestSchedulerProvider()
 
-  companion object {
-    @JvmField
-    @RegisterExtension
-    val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
-  }
-
-  @Test
-  fun `when initializing then fill item data`() {
-    val presenter = createPresenter(mock())
-
-    presenter.runOnLifecycle {
-      with(testTodoItemParcelable) {
-        verify(view).fillItemData(title, description, iconUrl)
-      }
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
     }
-  }
 
-  @Test
-  fun `given title is empty when button clicked then display error`() {
-    val presenter = createPresenter(mock())
+    @Test
+    fun `when initializing then fill item data`() {
+        val presenter = createPresenter(mock())
 
-    presenter.runOnLifecycle {
-      itemButtonClicked("", "", null)
-
-      verify(view).displayEmptyTitleError()
+        presenter.runOnLifecycle {
+            with(testTodoItemParcelable) {
+                verify(view).fillItemData(title, description, iconUrl)
+            }
+        }
     }
-  }
 
-  @Test
-  fun `given can edit item when button clicked then display confirmation message and close view`() {
-    val presenter = createPresenter(mock {
-      on { editItem(testTodoItem) } doReturn Completable.complete()
-    })
+    @Test
+    fun `given title is empty when button clicked then display error`() {
+        val presenter = createPresenter(mock())
 
-    presenter.runOnLifecycle {
-      itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-      testSchedulerProvider.triggerActions()
+        presenter.runOnLifecycle {
+            itemButtonClicked("", "", null)
 
-      verify(view).displayConfirmationMessage()
-      verify(view).close()
+            verify(view).displayEmptyTitleError()
+        }
     }
-  }
 
-  @Test
-  fun `given cannot edit item when button clicked then display error`() {
-    val errorMessage = "Cannot edit item"
-    val presenter = createPresenter(mock {
-      on { editItem(testTodoItem) } doReturn Completable.error(Throwable(errorMessage))
-    })
+    @Test
+    fun `given can edit item when button clicked then display confirmation message and close view`() {
+        val presenter = createPresenter(mock {
+            on { editItem(testTodoItem) } doReturn Completable.complete()
+        })
 
-    presenter.runOnLifecycle {
-      itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-      testSchedulerProvider.triggerActions()
+        presenter.runOnLifecycle {
+            itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
+            testSchedulerProvider.triggerActions()
 
-      verify(view).displayError(errorMessage)
+            verify(view).displayConfirmationMessage()
+            verify(view).close()
+        }
     }
-  }
 
-  @Test
-  fun `given can edit item when button clicked then toggle loading`() {
-    val presenter = createPresenter(mock {
-      on { editItem(testTodoItem) } doReturn Completable.complete()
-    })
+    @Test
+    fun `given cannot edit item when button clicked then display error`() {
+        val errorMessage = "Cannot edit item"
+        val presenter = createPresenter(mock {
+            on { editItem(testTodoItem) } doReturn Completable.error(Throwable(errorMessage))
+        })
 
-    presenter.runOnLifecycle {
-      itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-      testSchedulerProvider.triggerActions()
+        presenter.runOnLifecycle {
+            itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
+            testSchedulerProvider.triggerActions()
 
-      val inOrder = InOrderOnType(view)
-      inOrder.verify(view).toggleLoading(true)
-      inOrder.verify(view).toggleLoading(false)
+            verify(view).displayError(errorMessage)
+        }
     }
-  }
 
-  @Test
-  fun `given cannot edit item when button clicked then toggle loading`() {
-    val presenter = createPresenter(mock {
-      on { editItem(testTodoItem) } doReturn Completable.error(Throwable("cannot edit"))
-    })
+    @Test
+    fun `given can edit item when button clicked then toggle loading`() {
+        val presenter = createPresenter(mock {
+            on { editItem(testTodoItem) } doReturn Completable.complete()
+        })
 
-    presenter.runOnLifecycle {
-      itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-      testSchedulerProvider.triggerActions()
+        presenter.runOnLifecycle {
+            itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
+            testSchedulerProvider.triggerActions()
 
-      val inOrder = InOrderOnType(view)
-      inOrder.verify(view).toggleLoading(true)
-      inOrder.verify(view).toggleLoading(false)
+            val inOrder = InOrderOnType(view)
+            inOrder.verify(view).toggleLoading(true)
+            inOrder.verify(view).toggleLoading(false)
+        }
     }
-  }
 
-  private fun ItemEditionPresenter.runOnLifecycle(block: ItemEditionPresenter.() -> Unit) {
-    initializeItemData()
-    block(this)
-    releaseResources()
-  }
+    @Test
+    fun `given cannot edit item when button clicked then toggle loading`() {
+        val presenter = createPresenter(mock {
+            on { editItem(testTodoItem) } doReturn Completable.error(Throwable("cannot edit"))
+        })
 
-  private fun createPresenter(todoRepository: TodoRepository): ItemEditionPresenter {
-    return ItemEditionPresenter(
-      todoRepository = todoRepository,
-      view = view,
-      schedulerProvider = testSchedulerProvider,
-      todoItemParcelable = testTodoItemParcelable
-    )
-  }
+        presenter.runOnLifecycle {
+            itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
+            testSchedulerProvider.triggerActions()
+
+            val inOrder = InOrderOnType(view)
+            inOrder.verify(view).toggleLoading(true)
+            inOrder.verify(view).toggleLoading(false)
+        }
+    }
+
+    private fun ItemEditionPresenter.runOnLifecycle(block: ItemEditionPresenter.() -> Unit) {
+        initializeItemData()
+        block(this)
+        releaseResources()
+    }
+
+    private fun createPresenter(todoRepository: TodoRepository): ItemEditionPresenter {
+        return ItemEditionPresenter(
+            todoRepository = todoRepository,
+            view = view,
+            schedulerProvider = testSchedulerProvider,
+            todoItemParcelable = testTodoItemParcelable
+        )
+    }
 }

@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="@dimen/loading_button_height"
-  android:background="@color/colorAccent"
-  app:cardCornerRadius="@dimen/default_card_elevation"
-  app:cardElevation="@dimen/default_radius"
-  >
-  <ProgressBar
-    android:id="@+id/loading_button_progress_bar"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
+    android:layout_height="@dimen/loading_button_height"
     android:background="@color/colorAccent"
-    android:indeterminate="true"
-    android:indeterminateTint="@color/colorPrimary"
-    android:indeterminateTintMode="src_atop"
-    android:visibility="gone"
-    />
+    app:cardCornerRadius="@dimen/default_card_elevation"
+    app:cardElevation="@dimen/default_radius">
 
-  <Button
-    android:id="@+id/loading_button"
-    style="@style/Widget.AppCompat.Button.Borderless"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/button_ripple_selector"
-    tools:text="@string/item_creation_button_title"
-    />
+    <ProgressBar
+        android:id="@+id/loading_button_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/loading_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_ripple_selector"
+        tools:text="@string/item_creation_button_title" />
 </androidx.cardview.widget.CardView>
