@@ -36,7 +36,7 @@ class ListViewModel @Inject constructor(
     private val stateFlow = MutableStateFlow(ListViewState())
     val state = stateFlow.asStateFlow()
 
-    fun onStart(loadStateFlow: Flow<CombinedLoadStates>) {
+    fun onCreate(loadStateFlow: Flow<CombinedLoadStates>) {
         viewModelScope.launch {
             loadStateFlow.collectLatest(::handleLoadState)
         }
@@ -57,19 +57,19 @@ class ListViewModel @Inject constructor(
 
     private fun observeItemsChanges() = viewModelScope.launch {
         todoRepository.observeItemsChanges().collectLatest {
-            refreshItems()
+            onItemsRefresh()
         }
     }
 
-    fun refreshItems() = viewModelScope.launch {
+    fun onItemsRefresh() = viewModelScope.launch {
         eventChannel.send(ListViewEvent.RefreshItems)
     }
 
-    fun floatingButtonClicked() {
+    fun onFloatingButtonClick() {
         router.openItemCreationView()
     }
 
-    fun itemLongClicked(item: TodoItem) {
+    fun onItemLongClick(item: TodoItem) {
         router.openDeleteItemConfirmationDialog {
             deleteItem(item)
         }
@@ -83,7 +83,7 @@ class ListViewModel @Inject constructor(
             .onTerminate { stateFlow.value = stateFlow.value.copy(isRefreshing = false) }
     }
 
-    fun itemClicked(item: TodoItem) {
+    fun onItemClick(item: TodoItem) {
         router.openItemEditionView(todoItemToParcelableMapper.map(item))
     }
 
