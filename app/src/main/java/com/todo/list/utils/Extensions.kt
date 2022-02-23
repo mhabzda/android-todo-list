@@ -14,7 +14,7 @@ import com.bumptech.glide.RequestManager
 import com.todo.list.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -68,5 +68,5 @@ inline fun <reified T> Flow<T>.observeWhenStarted(
     lifecycleOwner: LifecycleOwner,
     noinline action: suspend (T) -> Unit
 ): Job = lifecycleOwner.lifecycleScope.launch {
-    flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(action)
+    flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collectLatest(action)
 }

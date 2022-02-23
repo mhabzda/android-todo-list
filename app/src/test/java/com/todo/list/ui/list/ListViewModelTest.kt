@@ -7,18 +7,23 @@ import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
-import com.todo.list.testutilities.TestCoroutineExtension
 import com.todo.list.ui.TestData.testTodoItem
 import com.todo.list.ui.TestData.testTodoItemParcelable
 import com.todo.list.ui.list.data.ListViewEvent
 import com.todo.list.ui.list.navigation.ListRouter
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.given
@@ -27,9 +32,6 @@ import org.mockito.kotlin.verify
 
 @ExperimentalCoroutinesApi
 class ListViewModelTest {
-
-    @RegisterExtension
-    private val coroutinesExt = TestCoroutineExtension()
 
     private val pageSize = 10
     private val testPagingData: PagingData<TodoItem> = PagingData.from(listOf(testTodoItem))
@@ -46,103 +48,92 @@ class ListViewModelTest {
         todoItemToParcelableMapper = TodoItemToParcelableMapper()
     )
 
-    @Test
-    fun `fetch todo list when starting`() = coroutinesExt.runTest {
-        viewModel.onCreate(flowOf(defaultLoadState))
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
 
+    @Test
+    fun `fetch todo list when starting`() = runOnViewModel {
         verify(mockTodoRepository).fetchTodoItems(pageSize)
     }
 
     @Test
-    fun `show loading when refresh loading is happening`() {
-        viewModel.onCreate(flowOf(createLoadState(refresh = LoadState.Loading)))
-
+    fun `show loading when refresh loading is happening`() = runOnViewModel(
+        createLoadState(refresh = LoadState.Loading)
+    ) {
         assertEquals(true, viewModel.state.value.isRefreshing)
     }
 
     @Test
-    fun `show loading when append loading is happening`() {
-        viewModel.onCreate(flowOf(createLoadState(append = LoadState.Loading)))
-
+    fun `show loading when append loading is happening`() = runOnViewModel(
+        createLoadState(append = LoadState.Loading)
+    ) {
         assertEquals(true, viewModel.state.value.isRefreshing)
     }
 
     @Test
-    fun `hide loading when no loading is happening`() {
-        viewModel.onCreate(
-            flowOf(
-                createLoadState(
-                    refresh = LoadState.NotLoading(false),
-                    append = LoadState.NotLoading(false)
-                )
-            )
+    fun `hide loading when no loading is happening`() = runOnViewModel(
+        createLoadState(
+            refresh = LoadState.NotLoading(false),
+            append = LoadState.NotLoading(false)
         )
-
+    ) {
         assertEquals(false, viewModel.state.value.isRefreshing)
     }
 
     @Test
-    fun `display error when error occurred during refresh items loading`() = coroutinesExt.runTest {
-        val errorMessage = "Cannot load item"
-        val error = Throwable(errorMessage)
-        viewModel.onCreate(flowOf(createLoadState(refresh = LoadState.Error(error))))
-
+    fun `display error when error occurred during refresh items loading`() = runOnViewModel(
+        createLoadState(refresh = LoadState.Error(error))
+    ) {
         viewModel.events.test { assertEquals(ListViewEvent.Error(errorMessage), awaitItem()) }
     }
 
     @Test
-    fun `display error when error occurred during append items loading`() = coroutinesExt.runTest {
-        val errorMessage = "Cannot load item"
-        val error = Throwable(errorMessage)
-        viewModel.onCreate(flowOf(createLoadState(append = LoadState.Error(error))))
-
+    fun `display error when error occurred during append items loading`() = runOnViewModel(
+        createLoadState(append = LoadState.Error(error))
+    ) {
         viewModel.events.test { assertEquals(ListViewEvent.Error(errorMessage), awaitItem()) }
     }
 
     @Test
-    fun `refresh items when items have changed in the repository`() = coroutinesExt.runTest {
+    fun `refresh items when items have changed in the repository`() = runTest {
         given(mockTodoRepository.observeItemsChanges()).willReturn(flowOf(Unit))
-        viewModel.onCreate(flowOf())
+        viewModel.onCreate(flowOf(defaultLoadState))
+        runCurrent()
 
         viewModel.events.test { assertEquals(ListViewEvent.RefreshItems, awaitItem()) }
     }
 
     @Test
-    fun `open item creation view when floating action button is clicked`() {
-        viewModel.onCreate(flowOf(defaultLoadState))
-
+    fun `open item creation view when floating action button is clicked`() = runOnViewModel {
         viewModel.onFloatingButtonClick()
 
         verify(router).openItemCreationView()
     }
 
     @Test
-    fun `open item open delete item confirmation dialog view when item long is clicked`() {
-        viewModel.onCreate(flowOf(defaultLoadState))
-
+    fun `open item open delete item confirmation dialog view when item long is clicked`() = runOnViewModel {
         viewModel.onItemLongClick(testTodoItem)
 
         verify(router).openDeleteItemConfirmationDialog(any())
     }
 
     @Test
-    fun `display deletion confirmation message when item delete is clicked`() =
-        coroutinesExt.runTest {
-            given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
-            given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.success(Unit))
-            viewModel.onCreate(flowOf(defaultLoadState))
+    fun `display deletion confirmation message when item delete is clicked`() = runOnViewModel {
+        given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
+        given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.success(Unit))
 
-            viewModel.onItemLongClick(testTodoItem)
+        viewModel.onItemLongClick(testTodoItem)
 
-            viewModel.events.test { assertEquals(ListViewEvent.DisplayDeletionConfirmation, awaitItem()) }
-        }
+        viewModel.events.test { assertEquals(ListViewEvent.DisplayDeletionConfirmation, awaitItem()) }
+    }
 
     @Test
-    fun `display error when item delete is clicked but error occurred`() = coroutinesExt.runTest {
+    fun `display error when item delete is clicked but error occurred`() = runOnViewModel {
         val errorMessage = "Cannot delete item"
         given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
         given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.failure(Throwable(errorMessage)))
-        viewModel.onCreate(flowOf(defaultLoadState))
 
         viewModel.onItemLongClick(testTodoItem)
 
@@ -150,12 +141,20 @@ class ListViewModelTest {
     }
 
     @Test
-    fun `open item edition view with correct data when item is clicked`() {
-        viewModel.onCreate(flowOf(defaultLoadState))
-
+    fun `open item edition view with correct data when item is clicked`() = runOnViewModel {
         viewModel.onItemClick(testTodoItem)
 
         verify(router).openItemEditionView(testTodoItemParcelable)
+    }
+
+    private fun runOnViewModel(
+        loadState: CombinedLoadStates = defaultLoadState,
+        testBody: suspend TestScope.() -> Unit
+    ) = runTest {
+        viewModel.onCreate(flowOf(loadState))
+        runCurrent()
+
+        testBody.invoke(this)
     }
 
     private val defaultLoadState = createLoadState(
@@ -173,4 +172,10 @@ class ListViewModelTest {
         source = LoadStates(mock(), mock(), mock()),
         mediator = null
     )
+
+    companion object {
+
+        private const val errorMessage = "Cannot load item"
+        private val error = Throwable(errorMessage)
+    }
 }
