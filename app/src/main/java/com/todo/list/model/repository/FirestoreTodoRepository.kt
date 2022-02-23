@@ -10,12 +10,17 @@ import com.todo.list.model.mapper.TodoDocumentKeys.CREATION_DATE_KEY
 import com.todo.list.model.mapper.TodoDocumentMapper
 import com.todo.list.model.mapper.TodoItemMapper
 import com.todo.list.utils.isNotNull
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class FirestoreTodoRepository @Inject constructor(
     private val todoCollection: CollectionReference,
     private val todoItemMapper: TodoItemMapper,
@@ -27,14 +32,11 @@ class FirestoreTodoRepository @Inject constructor(
             TodoItemPagingSource(todoCollection, todoDocumentMapper, todoDocumentFilter)
         }.flow
 
-    override fun observeItemsChanges(): Observable<Any> {
-        return Observable.create { emitter ->
-            observeSnapshots(emitter)
-        }
-    }
+    override fun observeItemsChanges(): Flow<Unit> =
+        callbackFlow { observeSnapshots(this) }
 
-    override fun deleteItem(item: TodoItem): Completable {
-        return Completable.create { emitter ->
+    override suspend fun deleteItem(item: TodoItem): Result<Unit> =
+        suspendCoroutine { continuation ->
             val document = todoItemMapper.map(item)
             todoCollection
                 .whereEqualTo(CREATION_DATE_KEY, document[CREATION_DATE_KEY])
@@ -42,42 +44,39 @@ class FirestoreTodoRepository @Inject constructor(
                 .addOnSuccessListener {
                     val documentRef = it.documents.first().reference
                     documentRef.delete()
-                        .addOnSuccessListener { emitter.onComplete() }
-                        .addOnFailureListener { error -> emitter.onError(error) }
+                        .addOnSuccessListener { continuation.resume(Result.success(Unit)) }
+                        .addOnFailureListener { error -> continuation.resume(Result.failure(error)) }
                 }
                 .addOnFailureListener {
-                    emitter.onError(it)
+                    continuation.resume(Result.failure(it))
                 }
         }
-    }
 
-    override fun saveItem(item: TodoItem): Completable {
-        return Completable.create { emitter ->
+    override suspend fun saveItem(item: TodoItem): Result<Unit> =
+        suspendCoroutine { continuation ->
             todoCollection
                 .add(todoItemMapper.map(item))
-                .addOnSuccessListener { emitter.onComplete() }
-                .addOnFailureListener { emitter.onError(it) }
+                .addOnSuccessListener { continuation.resume(Result.success(Unit)) }
+                .addOnFailureListener { continuation.resume(Result.failure(it)) }
         }
+
+    override suspend fun editItem(item: TodoItem): Result<Unit> {
+        val deleteResult = deleteItem(item)
+        if (deleteResult.isFailure) return deleteResult
+        return saveItem(item)
     }
 
-    override fun editItem(item: TodoItem): Completable {
-        return deleteItem(item)
-            .andThen(saveItem(item))
-    }
-
-    private fun observeSnapshots(emitter: ObservableEmitter<Any>) {
+    private suspend fun observeSnapshots(scope: ProducerScope<Unit>) {
         val registration = todoCollection.addSnapshotListener { querySnapshot, exception ->
             if (exception.isNotNull()) {
                 return@addSnapshotListener
             }
 
             if (querySnapshot.isNotNull()) {
-                emitter.onNext(Any())
+                scope.trySendBlocking(Unit)
             }
         }
 
-        emitter.setCancellable {
-            registration.remove()
-        }
+        scope.awaitClose { registration.remove() }
     }
 }

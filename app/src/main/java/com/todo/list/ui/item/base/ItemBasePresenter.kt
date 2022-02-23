@@ -1,16 +1,17 @@
 package com.todo.list.ui.item.base
 
-import com.todo.list.ui.schedulers.SchedulerProvider
 import com.todo.list.utils.EMPTY
-import io.reactivex.Completable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
+import com.todo.list.utils.onTerminate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 abstract class ItemBasePresenter(
-    private val view: ItemBaseContract.View,
-    private val schedulerProvider: SchedulerProvider
+    private val view: ItemBaseContract.View
 ) : ItemBaseContract.Presenter {
-    private val compositeDisposable = CompositeDisposable()
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun itemButtonClicked(title: String, description: String, iconUrl: String?) {
         if (title.isEmpty()) {
@@ -18,24 +19,21 @@ abstract class ItemBasePresenter(
             return
         }
 
-        view.toggleLoading(true)
-        compositeDisposable.add(performItemOperation(title, description, iconUrl)
-            .observeOn(schedulerProvider.ui())
-            .doOnTerminate { view.toggleLoading(false) }
-            .subscribeBy(
-                onComplete = {
+        coroutineScope.launch {
+            view.toggleLoading(true)
+            performItemOperation(title, description, iconUrl)
+                .onSuccess {
                     view.displayConfirmationMessage()
                     view.close()
-                },
-                onError = {
-                    view.displayError(it.message ?: EMPTY)
                 }
-            ))
+                .onFailure { view.displayError(it.message ?: EMPTY) }
+                .onTerminate { view.toggleLoading(false) }
+        }
     }
 
     override fun releaseResources() {
-        compositeDisposable.clear()
+        coroutineScope.cancel()
     }
 
-    abstract fun performItemOperation(title: String, description: String, iconUrl: String?): Completable
+    abstract suspend fun performItemOperation(title: String, description: String, iconUrl: String?): Result<Unit>
 }

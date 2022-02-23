@@ -2,22 +2,16 @@ package com.todo.list.ui.list
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.todo.list.R
 import com.todo.list.ui.list.adapter.ListAdapter
 import com.todo.list.ui.list.data.ListViewEvent
 import com.todo.list.ui.list.data.ListViewState
+import com.todo.list.utils.observeWhenStarted
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_list.floating_action_button as floatingActionButton
 import kotlinx.android.synthetic.main.activity_list.swipe_refresh as swipeRefresh
@@ -67,12 +61,5 @@ class ListActivity : DaggerAppCompatActivity() {
 
     private fun displayItemDeletionConfirmationMessage() {
         Toast.makeText(this, R.string.delete_item_confirmation_message, Toast.LENGTH_SHORT).show()
-    }
-
-    private inline fun <reified T> Flow<T>.observeWhenStarted(
-        lifecycleOwner: LifecycleOwner,
-        noinline action: suspend (T) -> Unit
-    ): Job = lifecycleOwner.lifecycleScope.launch {
-        flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(action)
     }
 }

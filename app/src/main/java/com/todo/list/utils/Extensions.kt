@@ -4,10 +4,18 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.widget.ImageView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.todo.list.R
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -49,4 +57,16 @@ fun <T : Parcelable> Intent.getParcelableStrictly(key: String): T {
     getParcelableExtra<T>(key)?.let {
         return it
     } ?: throw NullPointerException()
+}
+
+fun <T> Result<T>.onTerminate(block: () -> Unit) {
+    onSuccess { block.invoke() }
+    onFailure { block.invoke() }
+}
+
+inline fun <reified T> Flow<T>.observeWhenStarted(
+    lifecycleOwner: LifecycleOwner,
+    noinline action: suspend (T) -> Unit
+): Job = lifecycleOwner.lifecycleScope.launch {
+    flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(action)
 }
