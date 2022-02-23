@@ -1,6 +1,7 @@
 package com.todo.list.di
 
 import com.todo.list.di.annotation.ActivityScope
+import com.todo.list.di.list.ListViewModule
 import com.todo.list.ui.item.creation.ItemCreationActivity
 import com.todo.list.ui.item.edition.ItemEditionActivity
 import com.todo.list.ui.list.ListActivity

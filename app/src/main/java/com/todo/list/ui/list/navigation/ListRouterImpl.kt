@@ -1,4 +1,4 @@
-package com.todo.list.ui.list
+package com.todo.list.ui.list.navigation
 
 import android.content.Context
 import android.content.Intent
@@ -10,9 +10,9 @@ import com.todo.list.ui.item.edition.ItemEditionActivity.Companion.ITEM_PARCELAB
 import com.todo.list.ui.parcel.TodoItemParcelable
 import javax.inject.Inject
 
-class ListRouter @Inject constructor(
+class ListRouterImpl @Inject constructor(
     private val navigationContext: Context
-) : ListContract.Router {
+) : ListRouter {
     override fun openItemCreationView() {
         val intent = Intent(navigationContext, ItemCreationActivity::class.java)
         navigationContext.startActivity(intent)
