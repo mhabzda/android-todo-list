@@ -2,21 +2,32 @@ package com.todo.list.ui.list
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.paging.PagingData
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.todo.list.R
-import com.todo.list.model.entities.TodoItem
 import com.todo.list.ui.list.adapter.ListAdapter
+import com.todo.list.ui.list.data.ListViewEvent
+import com.todo.list.ui.list.data.ListViewState
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_list.floating_action_button as floatingActionButton
 import kotlinx.android.synthetic.main.activity_list.swipe_refresh as swipeRefresh
 import kotlinx.android.synthetic.main.activity_list.todo_list as todoListView
 import kotlinx.android.synthetic.main.toolbar.my_toolbar as toolbar
 
-class ListActivity : DaggerAppCompatActivity(), ListContract.View {
+class ListActivity : DaggerAppCompatActivity() {
+
     @Inject
-    lateinit var presenter: ListContract.Presenter
+    lateinit var viewModel: ListViewModel
 
     private lateinit var listAdapter: ListAdapter
 
@@ -26,40 +37,42 @@ class ListActivity : DaggerAppCompatActivity(), ListContract.View {
         setSupportActionBar(toolbar)
 
         listAdapter = ListAdapter(
-            longClickAction = { presenter.itemLongClicked(it) },
-            clickAction = { presenter.itemClicked(it) }
+            longClickAction = { viewModel.itemLongClicked(it) },
+            clickAction = { viewModel.itemClicked(it) }
         )
-
         todoListView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         todoListView.adapter = listAdapter
-        swipeRefresh.setOnRefreshListener { presenter.refreshItems() }
-        floatingActionButton.setOnClickListener { presenter.floatingButtonClicked() }
 
-        presenter.onStart(listAdapter.loadStateFlow)
+        swipeRefresh.setOnRefreshListener { viewModel.refreshItems() }
+        floatingActionButton.setOnClickListener { viewModel.floatingButtonClicked() }
+
+        viewModel.state.onEach(::renderState).launchIn(lifecycleScope)
+        viewModel.events.observeWhenStarted(this, ::handleEvent)
+        viewModel.pagingEvents.onEach(listAdapter::submitData).launchIn(lifecycleScope)
+
+        viewModel.onStart(listAdapter.loadStateFlow)
     }
 
-    override fun onDestroy() {
-        presenter.clearResources()
-        super.onDestroy()
+    private fun renderState(state: ListViewState) {
+        swipeRefresh.isRefreshing = state.isRefreshing
     }
 
-    override suspend fun displayTodoList(items: PagingData<TodoItem>) {
-        listAdapter.submitData(items)
+    private fun handleEvent(event: ListViewEvent) {
+        when (event) {
+            ListViewEvent.RefreshItems -> listAdapter.refresh()
+            ListViewEvent.DisplayDeletionConfirmation -> displayItemDeletionConfirmationMessage()
+            is ListViewEvent.Error -> Toast.makeText(this, event.message, Toast.LENGTH_LONG).show()
+        }
     }
 
-    override fun setRefreshingState(isRefreshing: Boolean) {
-        swipeRefresh.isRefreshing = isRefreshing
-    }
-
-    override fun displayError(errorMessage: String) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-    }
-
-    override fun displayItemDeletionConfirmationMessage() {
+    private fun displayItemDeletionConfirmationMessage() {
         Toast.makeText(this, R.string.delete_item_confirmation_message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun refreshListItems() {
-        listAdapter.refresh()
+    private inline fun <reified T> Flow<T>.observeWhenStarted(
+        lifecycleOwner: LifecycleOwner,
+        noinline action: suspend (T) -> Unit
+    ): Job = lifecycleOwner.lifecycleScope.launch {
+        flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(action)
     }
 }
