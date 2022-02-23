@@ -1,9 +1,5 @@
 package com.todo.list.ui.item
 
-import com.nhaarman.mockitokotlin2.InOrderOnType
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.testutilities.TestSchedulerProvider
 import com.todo.list.testutilities.TimeZoneExtension
@@ -15,6 +11,10 @@ import io.reactivex.Completable
 import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import org.mockito.kotlin.InOrderOnType
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
 class ItemEditionPresenterTest {
     private val view: ItemEditionContract.View = mock()

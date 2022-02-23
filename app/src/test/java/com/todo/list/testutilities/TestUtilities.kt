@@ -1,8 +1,8 @@
 package com.todo.list.testutilities
 
 import com.google.firebase.firestore.DocumentSnapshot
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 
 private const val titleKey = "title"
 private const val descriptionKey = "description"

@@ -52,8 +52,10 @@ dependencies {
     implementation libs.androidx.coreKtx
     implementation libs.androidx.constraintlayout
     implementation libs.androidx.swiperefreshlayout
-    implementation libs.androidx.pagingKtx
-    implementation libs.androidx.pagingRxJava
+    implementation libs.androidx.paging
+
+    implementation libs.coroutines.core
+    implementation libs.coroutines.android
 
     implementation libs.dagger
     kapt libs.dagger.compiler
@@ -75,4 +77,5 @@ dependencies {
     testRuntimeOnly libs.junit5.engine
     testImplementation libs.junit5.params
     testImplementation libs.mockito.kotlin
+    testImplementation libs.coroutines.test
 }

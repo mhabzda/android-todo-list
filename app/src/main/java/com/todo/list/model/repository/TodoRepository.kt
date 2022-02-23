@@ -1,13 +1,13 @@
 package com.todo.list.model.repository
 
+import androidx.paging.PagingData
 import com.todo.list.model.entities.TodoItem
-import com.todo.list.model.repository.model.PagingObservable
 import io.reactivex.Completable
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface TodoRepository {
-    fun fetchTodoItems(pageSize: Int): PagingObservable
-    fun refreshTodoItems()
+    fun fetchTodoItems(pageSize: Int): Flow<PagingData<TodoItem>>
     fun observeItemsChanges(): Observable<Any>
     fun deleteItem(item: TodoItem): Completable
     fun saveItem(item: TodoItem): Completable

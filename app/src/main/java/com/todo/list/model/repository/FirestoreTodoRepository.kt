@@ -1,37 +1,31 @@
 package com.todo.list.model.repository
 
-import androidx.paging.PagedList
-import androidx.paging.RxPagedListBuilder
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.google.firebase.firestore.CollectionReference
 import com.todo.list.model.entities.TodoItem
+import com.todo.list.model.mapper.TodoDocumentFilter
 import com.todo.list.model.mapper.TodoDocumentKeys.CREATION_DATE_KEY
+import com.todo.list.model.mapper.TodoDocumentMapper
 import com.todo.list.model.mapper.TodoItemMapper
-import com.todo.list.model.repository.model.PagingObservable
-import com.todo.list.model.repository.source.TodoItemsDataSourceFactory
 import com.todo.list.utils.isNotNull
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class FirestoreTodoRepository @Inject constructor(
-    private val todoItemsDataSourceFactory: TodoItemsDataSourceFactory,
     private val todoCollection: CollectionReference,
-    private val todoItemMapper: TodoItemMapper
+    private val todoItemMapper: TodoItemMapper,
+    private val todoDocumentMapper: TodoDocumentMapper,
+    private val todoDocumentFilter: TodoDocumentFilter
 ) : TodoRepository {
-    override fun fetchTodoItems(pageSize: Int): PagingObservable {
-        val pagedListObservable = RxPagedListBuilder(
-            todoItemsDataSourceFactory,
-            createPagingConfig(pageSize)
-        ).buildObservable()
-        val networkStateObservable = todoItemsDataSourceFactory.networkStateSubject.hide()
-
-        return PagingObservable(pagedListObservable, networkStateObservable)
-    }
-
-    override fun refreshTodoItems() {
-        todoItemsDataSourceFactory.dataSource?.invalidate()
-    }
+    override fun fetchTodoItems(pageSize: Int): Flow<PagingData<TodoItem>> =
+        Pager(PagingConfig(pageSize = pageSize, enablePlaceholders = false)) {
+            TodoItemPagingSource(todoCollection, todoDocumentMapper, todoDocumentFilter)
+        }.flow
 
     override fun observeItemsChanges(): Observable<Any> {
         return Observable.create { emitter ->
@@ -85,12 +79,5 @@ class FirestoreTodoRepository @Inject constructor(
         emitter.setCancellable {
             registration.remove()
         }
-    }
-
-    private fun createPagingConfig(pageSize: Int): PagedList.Config {
-        return PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setPageSize(pageSize)
-            .build()
     }
 }

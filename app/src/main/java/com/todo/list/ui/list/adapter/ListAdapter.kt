@@ -3,7 +3,7 @@ package com.todo.list.ui.list.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.todo.list.R
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.item_todo.item_title as titleView
 class ListAdapter @Inject constructor(
     private val longClickAction: (TodoItem) -> Unit,
     private val clickAction: (TodoItem) -> Unit
-) : PagedListAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
+) : PagingDataAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -51,7 +51,7 @@ class ListAdapter @Inject constructor(
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TodoItem>() {
             override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
-                return oldItem.title == newItem.title
+                return oldItem.creationDate == newItem.creationDate
             }
 
             override fun areContentsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
