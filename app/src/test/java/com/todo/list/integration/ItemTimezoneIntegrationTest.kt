@@ -14,18 +14,6 @@ import org.junit.jupiter.api.extension.RegisterExtension
 
 class ItemTimezoneIntegrationTest {
 
-    companion object {
-        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698Z"
-
-        @JvmField
-        @RegisterExtension
-        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
-
-        @JvmField
-        @RegisterExtension
-        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
-    }
-
     @Test
     fun `given item saved in one timezone when read in different user timezone then format in local user timezone`() {
         val itemMapper = TodoItemMapper()
@@ -66,5 +54,17 @@ class ItemTimezoneIntegrationTest {
         val item = documentMapper.map(mockDocumentFromMap(documentMap))
 
         assertEquals("18.05.2020 21:40", item.creationDate.formatDateHour())
+    }
+
+    companion object {
+        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698Z"
+
+        @JvmField
+        @RegisterExtension
+        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
+
+        @JvmField
+        @RegisterExtension
+        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
     }
 }

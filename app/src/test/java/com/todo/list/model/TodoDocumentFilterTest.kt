@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 
 class TodoDocumentFilterTest {
+
     @ParameterizedTest
     @ArgumentsSource(InputProvider::class)
     fun `it should filter out invalid item`(input: Input) {

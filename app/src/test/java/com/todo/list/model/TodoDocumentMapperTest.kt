@@ -14,14 +14,6 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 
 class TodoDocumentMapperTest {
 
-    companion object {
-        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
-
-        @JvmField
-        @RegisterExtension
-        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
-    }
-
     @ParameterizedTest
     @ArgumentsSource(InputProvider::class)
     fun `it should map document correctly`(input: Input) {
@@ -60,4 +52,13 @@ class TodoDocumentMapperTest {
     }
 
     data class Input(val document: DocumentSnapshot, val expectedItem: TodoItem)
+
+    companion object {
+        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
+
+        @JvmField
+        @RegisterExtension
+        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
+    }
+
 }

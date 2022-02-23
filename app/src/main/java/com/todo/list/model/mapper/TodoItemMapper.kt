@@ -8,8 +8,8 @@ import com.todo.list.model.mapper.TodoDocumentKeys.TITLE_KEY
 import javax.inject.Inject
 
 class TodoItemMapper @Inject constructor() {
-    fun map(todoItem: TodoItem): Map<String, String> {
-        return with(todoItem) {
+    fun map(todoItem: TodoItem): Map<String, String> =
+        with(todoItem) {
             val itemMap = mutableMapOf(
                 TITLE_KEY to title,
                 DESCRIPTION_KEY to description,
@@ -19,5 +19,4 @@ class TodoItemMapper @Inject constructor() {
 
             itemMap
         }
-    }
 }

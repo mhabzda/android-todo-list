@@ -14,12 +14,6 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 
 class TodoItemMapperTest {
 
-    companion object {
-        @JvmField
-        @RegisterExtension
-        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
-    }
-
     @ParameterizedTest
     @ArgumentsSource(InputProvider::class)
     fun `it should map item correctly `(input: Input) {
@@ -48,4 +42,10 @@ class TodoItemMapperTest {
     }
 
     data class Input(val item: TodoItem, val expectedMap: Map<String, String>)
+
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
+    }
 }

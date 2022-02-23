@@ -23,12 +23,6 @@ class ItemEditionPresenterTest {
     @RegisterExtension
     private val coroutinesExt = TestCoroutineExtension()
 
-    companion object {
-        @JvmField
-        @RegisterExtension
-        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
-    }
-
     @Test
     fun `when initializing then fill item data`() {
         val presenter = createPresenter(mock())
@@ -121,5 +115,11 @@ class ItemEditionPresenterTest {
             view = view,
             todoItemParcelable = testTodoItemParcelable
         )
+    }
+
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val timezoneExtension = TimeZoneExtension(DateTimeZone.UTC)
     }
 }

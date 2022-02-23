@@ -17,19 +17,11 @@ import org.mockito.kotlin.verify
 
 @ExperimentalCoroutinesApi
 class ItemCreationPresenterTest {
-    private val view: ItemCreationContract.View = mock()
 
     @RegisterExtension
     private val coroutinesExt = TestCoroutineExtension()
 
-    companion object {
-        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
-        private val testItem = testTodoItem.copy(creationDate = DateTime(FIXED_DATE_TIME))
-
-        @JvmField
-        @RegisterExtension
-        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
-    }
+    private val view: ItemCreationContract.View = mock()
 
     @Test
     fun `given title is empty when button clicked then display error`() {
@@ -95,5 +87,14 @@ class ItemCreationPresenterTest {
             todoRepository = todoRepository,
             view = view
         )
+    }
+
+    companion object {
+        private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
+        private val testItem = testTodoItem.copy(creationDate = DateTime(FIXED_DATE_TIME))
+
+        @JvmField
+        @RegisterExtension
+        val fixedTimeExtension = FixedTimeExtension(FIXED_DATE_TIME)
     }
 }
