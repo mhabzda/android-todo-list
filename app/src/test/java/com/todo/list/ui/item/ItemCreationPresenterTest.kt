@@ -2,11 +2,11 @@ package com.todo.list.ui.item
 
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.testutilities.FixedTimeExtension
-import com.todo.list.testutilities.TestSchedulerProvider
+import com.todo.list.testutilities.TestCoroutineExtension
 import com.todo.list.ui.TestData.testTodoItem
 import com.todo.list.ui.item.creation.ItemCreationContract
 import com.todo.list.ui.item.creation.ItemCreationPresenter
-import io.reactivex.Completable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -15,9 +15,12 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
+@ExperimentalCoroutinesApi
 class ItemCreationPresenterTest {
     private val view: ItemCreationContract.View = mock()
-    private val testSchedulerProvider = TestSchedulerProvider()
+
+    @RegisterExtension
+    private val coroutinesExt = TestCoroutineExtension()
 
     companion object {
         private const val FIXED_DATE_TIME = "2020-05-19T12:40:04.698"
@@ -40,11 +43,10 @@ class ItemCreationPresenterTest {
     @Test
     fun `given can save item when button clicked then display confirmation message and close view`() {
         val presenter = createPresenter(mock {
-            on { saveItem(testItem) } doReturn Completable.complete()
+            onBlocking { saveItem(testItem) } doReturn Result.success(Unit)
         })
 
         presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-        testSchedulerProvider.triggerActions()
 
         verify(view).displayConfirmationMessage()
         verify(view).close()
@@ -54,11 +56,10 @@ class ItemCreationPresenterTest {
     fun `given cannot save item when button clicked then display error`() {
         val errorMessage = "Cannot save item"
         val presenter = createPresenter(mock {
-            on { saveItem(testItem) } doReturn Completable.error(Throwable(errorMessage))
+            onBlocking { saveItem(testItem) } doReturn Result.failure(Throwable(errorMessage))
         })
 
         presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-        testSchedulerProvider.triggerActions()
 
         verify(view).displayError(errorMessage)
     }
@@ -66,11 +67,10 @@ class ItemCreationPresenterTest {
     @Test
     fun `given can save item when button clicked then toggle loading`() {
         val presenter = createPresenter(mock {
-            on { saveItem(testItem) } doReturn Completable.complete()
+            onBlocking { saveItem(testItem) } doReturn Result.success(Unit)
         })
 
         presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-        testSchedulerProvider.triggerActions()
 
         val inOrder = InOrderOnType(view)
         inOrder.verify(view).toggleLoading(true)
@@ -80,11 +80,10 @@ class ItemCreationPresenterTest {
     @Test
     fun `given cannot save item when button clicked then toggle loading`() {
         val presenter = createPresenter(mock {
-            on { saveItem(testItem) } doReturn Completable.error(Throwable("cannot save"))
+            onBlocking { saveItem(testItem) } doReturn Result.failure(Throwable("cannot save"))
         })
 
         presenter.itemButtonClicked(testItem.title, testItem.description, testItem.iconUrl)
-        testSchedulerProvider.triggerActions()
 
         val inOrder = InOrderOnType(view)
         inOrder.verify(view).toggleLoading(true)
@@ -94,8 +93,7 @@ class ItemCreationPresenterTest {
     private fun createPresenter(todoRepository: TodoRepository): ItemCreationPresenter {
         return ItemCreationPresenter(
             todoRepository = todoRepository,
-            view = view,
-            schedulerProvider = testSchedulerProvider
+            view = view
         )
     }
 }

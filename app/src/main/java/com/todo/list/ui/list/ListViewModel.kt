@@ -11,10 +11,8 @@ import com.todo.list.ui.list.data.ListViewEvent.Error
 import com.todo.list.ui.list.data.ListViewState
 import com.todo.list.ui.list.navigation.ListRouter
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
-import com.todo.list.ui.schedulers.SchedulerProvider
 import com.todo.list.utils.EMPTY
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
+import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +24,6 @@ import javax.inject.Inject
 
 class ListViewModel @Inject constructor(
     private val todoRepository: TodoRepository,
-    private val schedulerProvider: SchedulerProvider,
     private val router: ListRouter,
     private val todoItemToParcelableMapper: TodoItemToParcelableMapper
 ) : ViewModel() {
@@ -38,8 +35,6 @@ class ListViewModel @Inject constructor(
 
     private val stateFlow = MutableStateFlow(ListViewState())
     val state = stateFlow.asStateFlow()
-
-    private val compositeDisposable = CompositeDisposable()
 
     fun onStart(loadStateFlow: Flow<CombinedLoadStates>) {
         viewModelScope.launch {
@@ -55,16 +50,15 @@ class ListViewModel @Inject constructor(
         )
 
         val refreshState = state.refresh
-        if (refreshState is LoadState.Error) eventChannel.send(Error(refreshState.error.message ?: ""))
         val appendState = state.append
+        if (refreshState is LoadState.Error) eventChannel.send(Error(refreshState.error.message ?: ""))
         if (appendState is LoadState.Error) eventChannel.send(Error(appendState.error.message ?: ""))
     }
 
-    private fun observeItemsChanges() {
-        compositeDisposable.add(todoRepository.observeItemsChanges()
-            .subscribeBy {
-                refreshItems()
-            })
+    private fun observeItemsChanges() = viewModelScope.launch {
+        todoRepository.observeItemsChanges().collectLatest {
+            refreshItems()
+        }
     }
 
     fun refreshItems() = viewModelScope.launch {
@@ -77,28 +71,20 @@ class ListViewModel @Inject constructor(
 
     fun itemLongClicked(item: TodoItem) {
         router.openDeleteItemConfirmationDialog {
-            stateFlow.value = stateFlow.value.copy(isRefreshing = true)
-            compositeDisposable.add(todoRepository.deleteItem(item)
-                .observeOn(schedulerProvider.ui())
-                .doOnTerminate { stateFlow.value = stateFlow.value.copy(isRefreshing = false) }
-                .subscribeBy(
-                    onComplete = {
-                        viewModelScope.launch { eventChannel.send(ListViewEvent.DisplayDeletionConfirmation) }
-                    },
-                    onError = {
-                        viewModelScope.launch { eventChannel.send(Error(it.message ?: EMPTY)) }
-                    }
-                ))
+            deleteItem(item)
         }
+    }
+
+    private fun deleteItem(item: TodoItem) = viewModelScope.launch {
+        stateFlow.value = stateFlow.value.copy(isRefreshing = true)
+        todoRepository.deleteItem(item)
+            .onSuccess { eventChannel.send(ListViewEvent.DisplayDeletionConfirmation) }
+            .onFailure { eventChannel.send(Error(it.message ?: EMPTY)) }
+            .onTerminate { stateFlow.value = stateFlow.value.copy(isRefreshing = false) }
     }
 
     fun itemClicked(item: TodoItem) {
         router.openItemEditionView(todoItemToParcelableMapper.map(item))
-    }
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
     }
 
     companion object {

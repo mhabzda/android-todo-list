@@ -1,13 +1,13 @@
 package com.todo.list.ui.item
 
 import com.todo.list.model.repository.TodoRepository
-import com.todo.list.testutilities.TestSchedulerProvider
+import com.todo.list.testutilities.TestCoroutineExtension
 import com.todo.list.testutilities.TimeZoneExtension
 import com.todo.list.ui.TestData.testTodoItem
 import com.todo.list.ui.TestData.testTodoItemParcelable
 import com.todo.list.ui.item.edition.ItemEditionContract
 import com.todo.list.ui.item.edition.ItemEditionPresenter
-import io.reactivex.Completable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -16,9 +16,12 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
+@ExperimentalCoroutinesApi
 class ItemEditionPresenterTest {
     private val view: ItemEditionContract.View = mock()
-    private val testSchedulerProvider = TestSchedulerProvider()
+
+    @RegisterExtension
+    private val coroutinesExt = TestCoroutineExtension()
 
     companion object {
         @JvmField
@@ -51,12 +54,11 @@ class ItemEditionPresenterTest {
     @Test
     fun `given can edit item when button clicked then display confirmation message and close view`() {
         val presenter = createPresenter(mock {
-            on { editItem(testTodoItem) } doReturn Completable.complete()
+            onBlocking { editItem(testTodoItem) } doReturn Result.success(Unit)
         })
 
         presenter.runOnLifecycle {
             itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-            testSchedulerProvider.triggerActions()
 
             verify(view).displayConfirmationMessage()
             verify(view).close()
@@ -67,12 +69,11 @@ class ItemEditionPresenterTest {
     fun `given cannot edit item when button clicked then display error`() {
         val errorMessage = "Cannot edit item"
         val presenter = createPresenter(mock {
-            on { editItem(testTodoItem) } doReturn Completable.error(Throwable(errorMessage))
+            onBlocking { editItem(testTodoItem) } doReturn Result.failure(Throwable(errorMessage))
         })
 
         presenter.runOnLifecycle {
             itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-            testSchedulerProvider.triggerActions()
 
             verify(view).displayError(errorMessage)
         }
@@ -81,12 +82,11 @@ class ItemEditionPresenterTest {
     @Test
     fun `given can edit item when button clicked then toggle loading`() {
         val presenter = createPresenter(mock {
-            on { editItem(testTodoItem) } doReturn Completable.complete()
+            onBlocking { editItem(testTodoItem) } doReturn Result.success(Unit)
         })
 
         presenter.runOnLifecycle {
             itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-            testSchedulerProvider.triggerActions()
 
             val inOrder = InOrderOnType(view)
             inOrder.verify(view).toggleLoading(true)
@@ -97,12 +97,11 @@ class ItemEditionPresenterTest {
     @Test
     fun `given cannot edit item when button clicked then toggle loading`() {
         val presenter = createPresenter(mock {
-            on { editItem(testTodoItem) } doReturn Completable.error(Throwable("cannot edit"))
+            onBlocking { editItem(testTodoItem) } doReturn Result.failure(Throwable("cannot edit"))
         })
 
         presenter.runOnLifecycle {
             itemButtonClicked(testTodoItem.title, testTodoItem.description, testTodoItem.iconUrl)
-            testSchedulerProvider.triggerActions()
 
             val inOrder = InOrderOnType(view)
             inOrder.verify(view).toggleLoading(true)
@@ -120,7 +119,6 @@ class ItemEditionPresenterTest {
         return ItemEditionPresenter(
             todoRepository = todoRepository,
             view = view,
-            schedulerProvider = testSchedulerProvider,
             todoItemParcelable = testTodoItemParcelable
         )
     }

@@ -75,10 +75,6 @@ dependencies {
     implementation libs.joda
     implementation libs.glide
 
-    implementation libs.rxJava
-    implementation libs.rxKotlin
-    implementation libs.rxAndroid
-
     testImplementation libs.junit5.api
     testRuntimeOnly libs.junit5.engine
     testImplementation libs.junit5.params

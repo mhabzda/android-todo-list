@@ -8,15 +8,13 @@ import app.cash.turbine.test
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.testutilities.TestCoroutineExtension
-import com.todo.list.testutilities.TestSchedulerProvider
 import com.todo.list.ui.TestData.testTodoItem
 import com.todo.list.ui.TestData.testTodoItemParcelable
 import com.todo.list.ui.list.data.ListViewEvent
 import com.todo.list.ui.list.navigation.ListRouter
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
-import io.reactivex.Completable
-import io.reactivex.Observable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -38,14 +36,12 @@ class ListViewModelTest {
 
     private val mockTodoRepository: TodoRepository = mock {
         on { fetchTodoItems(pageSize) } doReturn flowOf(testPagingData)
-        on { observeItemsChanges() } doReturn Observable.never()
+        on { observeItemsChanges() } doReturn emptyFlow()
     }
-    private val testSchedulerProvider = TestSchedulerProvider()
     private val router: ListRouter = mock()
 
     private val viewModel = ListViewModel(
         todoRepository = mockTodoRepository,
-        schedulerProvider = testSchedulerProvider,
         router = router,
         todoItemToParcelableMapper = TodoItemToParcelableMapper()
     )
@@ -105,10 +101,8 @@ class ListViewModelTest {
 
     @Test
     fun `refresh items when items have changed in the repository`() = coroutinesExt.runTest {
-        given(mockTodoRepository.observeItemsChanges()).willReturn(Observable.just(Any()))
+        given(mockTodoRepository.observeItemsChanges()).willReturn(flowOf(Unit))
         viewModel.onStart(flowOf())
-
-        testSchedulerProvider.triggerActions()
 
         viewModel.events.test { assertEquals(ListViewEvent.RefreshItems, awaitItem()) }
     }
@@ -135,11 +129,10 @@ class ListViewModelTest {
     fun `display deletion confirmation message when item delete is clicked`() =
         coroutinesExt.runTest {
             given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
-            given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Completable.complete())
+            given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.success(Unit))
             viewModel.onStart(flowOf(defaultLoadState))
 
             viewModel.itemLongClicked(testTodoItem)
-            testSchedulerProvider.triggerActions()
 
             viewModel.events.test { assertEquals(ListViewEvent.DisplayDeletionConfirmation, awaitItem()) }
         }
@@ -148,11 +141,10 @@ class ListViewModelTest {
     fun `display error when item delete is clicked but error occurred`() = coroutinesExt.runTest {
         val errorMessage = "Cannot delete item"
         given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
-        given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Completable.error(Throwable(errorMessage)))
+        given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.failure(Throwable(errorMessage)))
         viewModel.onStart(flowOf(defaultLoadState))
 
         viewModel.itemLongClicked(testTodoItem)
-        testSchedulerProvider.triggerActions()
 
         viewModel.events.test { assertEquals(ListViewEvent.Error(errorMessage), awaitItem()) }
     }
