@@ -1,6 +1,7 @@
 package com.todo.list.di
 
 import com.todo.list.App
+import com.todo.list.di.repository.RepositoryModule
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector

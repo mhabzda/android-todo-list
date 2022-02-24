@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import com.todo.list.R
-import com.todo.list.ui.itemcreation.ItemCreationActivity
-import com.todo.list.ui.item.edition.ItemEditionActivity
-import com.todo.list.ui.item.edition.ItemEditionActivity.Companion.ITEM_PARCELABLE_EXTRA_KEY
+import com.todo.list.ui.item.ItemActivity
+import com.todo.list.ui.item.ItemActivity.Companion.ITEM_PARCELABLE_EXTRA_KEY
 import com.todo.list.ui.parcel.TodoItemParcelable
 import javax.inject.Inject
 
@@ -14,12 +13,12 @@ class ListRouterImpl @Inject constructor(
     private val navigationContext: Context
 ) : ListRouter {
     override fun openItemCreationView() {
-        val intent = Intent(navigationContext, ItemCreationActivity::class.java)
+        val intent = Intent(navigationContext, ItemActivity::class.java)
         navigationContext.startActivity(intent)
     }
 
     override fun openItemEditionView(item: TodoItemParcelable) {
-        val intent = Intent(navigationContext, ItemEditionActivity::class.java)
+        val intent = Intent(navigationContext, ItemActivity::class.java)
         intent.putExtra(ITEM_PARCELABLE_EXTRA_KEY, item)
         navigationContext.startActivity(intent)
     }

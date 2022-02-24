@@ -1,4 +1,4 @@
-package com.todo.list.ui.itemcreation
+package com.todo.list.ui.item
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,8 +8,8 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.todo.list.databinding.ActivityItemBinding
-import com.todo.list.ui.itemcreation.data.ItemCreationViewEvent
-import com.todo.list.ui.itemcreation.data.ItemCreationViewState
+import com.todo.list.ui.item.data.ItemViewEvent
+import com.todo.list.ui.item.data.ItemViewState
 import com.todo.list.utils.observeWhenStarted
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.toolbar.toolbar
@@ -17,10 +17,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class ItemCreationActivity : DaggerAppCompatActivity() {
+class ItemActivity : DaggerAppCompatActivity() {
 
     @Inject
-    lateinit var viewModel: ItemCreationViewModel
+    lateinit var viewModel: ItemViewModel
 
     private lateinit var binding: ActivityItemBinding
 
@@ -35,7 +35,7 @@ class ItemCreationActivity : DaggerAppCompatActivity() {
         viewModel.state.onEach(::renderState).launchIn(lifecycleScope)
         viewModel.events.observeWhenStarted(this, ::handleEvent)
 
-        viewModel.onCreate()
+        viewModel.onCreate(intent.getParcelableExtra(ITEM_PARCELABLE_EXTRA_KEY))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -53,7 +53,7 @@ class ItemCreationActivity : DaggerAppCompatActivity() {
         buttonConfirm.loadingButton.setOnClickListener { viewModel.onItemButtonClick() }
     }
 
-    private fun renderState(state: ItemCreationViewState) = with(binding) {
+    private fun renderState(state: ItemViewState) = with(binding) {
         buttonConfirm.loadingButtonProgressBar.isVisible = state.isLoading
         buttonConfirm.loadingButton.isVisible = !state.isLoading
 
@@ -64,13 +64,13 @@ class ItemCreationActivity : DaggerAppCompatActivity() {
         buttonConfirm.loadingButton.setText(state.buttonText)
     }
 
-    private fun handleEvent(event: ItemCreationViewEvent) {
+    private fun handleEvent(event: ItemViewEvent) {
         when (event) {
-            ItemCreationViewEvent.Close -> finish()
-            is ItemCreationViewEvent.DisplayMessageRes -> {
+            ItemViewEvent.Close -> finish()
+            is ItemViewEvent.DisplayMessageRes -> {
                 Toast.makeText(this, event.messageRes, Toast.LENGTH_SHORT).show()
             }
-            is ItemCreationViewEvent.DisplayMessage -> {
+            is ItemViewEvent.DisplayMessage -> {
                 Toast.makeText(this, event.message, Toast.LENGTH_LONG).show()
             }
         }
@@ -78,5 +78,9 @@ class ItemCreationActivity : DaggerAppCompatActivity() {
 
     private fun EditText.setTextIfDiffer(text: String) {
         if (this.text.toString() != text) setText(text)
+    }
+
+    companion object {
+        const val ITEM_PARCELABLE_EXTRA_KEY = "item_parcelable_extra"
     }
 }

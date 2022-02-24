@@ -1,4 +1,4 @@
-package com.todo.list.di
+package com.todo.list.di.repository
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore

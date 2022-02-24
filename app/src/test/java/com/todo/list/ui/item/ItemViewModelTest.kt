@@ -5,10 +5,9 @@ import com.todo.list.R
 import com.todo.list.model.repository.TodoRepository
 import com.todo.list.testutilities.FixedTimeExtension
 import com.todo.list.ui.TestData.testTodoItem
-import com.todo.list.ui.itemcreation.ItemCreationViewModel
-import com.todo.list.ui.itemcreation.data.ItemCreationViewEvent.Close
-import com.todo.list.ui.itemcreation.data.ItemCreationViewEvent.DisplayMessage
-import com.todo.list.ui.itemcreation.data.ItemCreationViewEvent.DisplayMessageRes
+import com.todo.list.ui.item.data.ItemViewEvent.Close
+import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessage
+import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessageRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -24,11 +23,11 @@ import org.mockito.kotlin.given
 import org.mockito.kotlin.mock
 
 @ExperimentalCoroutinesApi
-class ItemCreationViewModelTest {
+class ItemViewModelTest {
 
     private val mockTodoRepository: TodoRepository = mock()
 
-    private val viewModel = ItemCreationViewModel(
+    private val viewModel = ItemViewModel(
         todoRepository = mockTodoRepository
     )
 
@@ -96,7 +95,7 @@ class ItemCreationViewModelTest {
         assertEquals("iconUrl", viewModel.state.value.iconUrl)
     }
 
-    private fun ItemCreationViewModel.provideData() {
+    private fun ItemViewModel.provideData() {
         onTitleChange(testItem.title)
         onDescriptionChange(testItem.description)
         onIconUrlChange(testItem.iconUrl ?: "")

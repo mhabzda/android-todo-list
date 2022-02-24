@@ -1,8 +1,6 @@
 package com.todo.list.utils
 
-import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Parcelable
 import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -51,12 +49,6 @@ fun Any?.isNotNull(): Boolean {
     }
 
     return this != null
-}
-
-fun <T : Parcelable> Intent.getParcelableStrictly(key: String): T {
-    getParcelableExtra<T>(key)?.let {
-        return it
-    } ?: throw NullPointerException()
 }
 
 fun <T> Result<T>.onTerminate(block: () -> Unit) {

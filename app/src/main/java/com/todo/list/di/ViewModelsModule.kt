@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.todo.list.di.annotation.ViewModelKey
 import com.todo.list.di.factory.ViewModelFactory
-import com.todo.list.ui.itemcreation.ItemCreationViewModel
+import com.todo.list.ui.item.ItemViewModel
 import com.todo.list.ui.list.ListViewModel
 import dagger.Binds
 import dagger.Module
@@ -24,6 +24,6 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ItemCreationViewModel::class)
-    abstract fun bindItemCreationViewModel(viewModel: ItemCreationViewModel): ViewModel
+    @ViewModelKey(ItemViewModel::class)
+    abstract fun bindItemCreationViewModel(viewModel: ItemViewModel): ViewModel
 }

@@ -1,8 +1,8 @@
-package com.todo.list.ui.itemcreation.data
+package com.todo.list.ui.item.data
 
 import com.todo.list.R
 
-data class ItemCreationViewState(
+data class ItemViewState(
     val title: String = "",
     val description: String = "",
     val iconUrl: String = "",
