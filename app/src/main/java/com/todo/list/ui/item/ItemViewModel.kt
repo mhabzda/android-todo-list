@@ -10,17 +10,20 @@ import com.todo.list.ui.item.data.ItemViewEvent.Close
 import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessage
 import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessageRes
 import com.todo.list.ui.item.data.ItemViewState
+import com.todo.list.ui.item.mapper.ItemConfirmationMessageMapper
+import com.todo.list.ui.item.mapper.ItemViewStateMapper
 import com.todo.list.ui.item.mode.ItemScreenMode
 import com.todo.list.ui.parcel.TodoItemParcelable
 import com.todo.list.utils.EMPTY
 import com.todo.list.utils.isNotNull
 import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ItemViewModel @Inject constructor(
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
+    private val itemViewStateMapper: ItemViewStateMapper,
+    private val itemConfirmationMessageMapper: ItemConfirmationMessageMapper
 ) : BaseViewModel<ItemViewState, ItemViewEvent>(ItemViewState()) {
 
     private lateinit var screenMode: ItemScreenMode
@@ -53,9 +56,9 @@ class ItemViewModel @Inject constructor(
         }
 
         updateState { copy(isLoading = true) }
-        resolveItemAction().invoke(createItem())
+        resolveItemAction().invoke(itemViewStateMapper.map(state.value, screenMode, creationDate))
             .onSuccess {
-                sendEvent(DisplayMessageRes(resolveConfirmationMessage()))
+                sendEvent(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
                 sendEvent(Close)
             }
             .onFailure { sendEvent(DisplayMessage(it.message ?: EMPTY)) }
@@ -66,19 +69,6 @@ class ItemViewModel @Inject constructor(
         when (screenMode) {
             ItemScreenMode.CREATE -> todoRepository::saveItem
             ItemScreenMode.EDIT -> todoRepository::editItem
-        }
-
-    private fun createItem() = with(state.value) {
-        when (screenMode) {
-            ItemScreenMode.CREATE -> TodoItem.create(title, description, iconUrl)
-            ItemScreenMode.EDIT -> TodoItem(title, description, DateTime(creationDate), iconUrl)
-        }
-    }
-
-    private fun resolveConfirmationMessage() =
-        when (screenMode) {
-            ItemScreenMode.CREATE -> R.string.item_creation_confirmation_message
-            ItemScreenMode.EDIT -> R.string.item_edition_confirmation_message
         }
 
     fun onTitleChange(title: String) {
