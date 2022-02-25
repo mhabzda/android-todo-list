@@ -8,10 +8,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.mapper.TodoDocumentFilter
+import com.todo.list.model.mapper.TodoDocumentKeys.CREATION_DATE_KEY
 import com.todo.list.model.mapper.TodoDocumentMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.math.max
 
 class TodoItemPagingSource(
     private val todoCollection: CollectionReference,
@@ -27,12 +27,11 @@ class TodoItemPagingSource(
     ): LoadResult<Int, TodoItem> {
         return try {
             val collection = withContext(Dispatchers.IO) { getItems(params) }
-            lastLoadedItem = collection.documents[max(collection.size() - 1, 0)]
-            pageNumber++
+            resolveNextPage(collection, params)
             LoadResult.Page(
                 data = formatItems(collection),
                 prevKey = null,
-                nextKey = if (collection.size() == params.loadSize) pageNumber else null
+                nextKey = if (isNotEndOfData(collection, params)) pageNumber else null
             )
         } catch (exception: Throwable) {
             LoadResult.Error(exception)
@@ -41,11 +40,26 @@ class TodoItemPagingSource(
 
     private fun getItems(params: LoadParams<Int>) =
         Tasks.await(todoCollection
+            .orderBy(CREATION_DATE_KEY)
             .run {
-                if (pageNumber > 0) startAfter(lastLoadedItem) else this
+                if (shouldFirstPageBeLoaded()) this else startAfter(lastLoadedItem)
             }
             .limit(params.loadSize.toLong())
             .get())
+
+    private fun shouldFirstPageBeLoaded() = pageNumber == 0
+
+    private fun resolveNextPage(collection: QuerySnapshot, params: LoadParams<Int>) {
+        pageNumber = if (isNotEndOfData(collection, params)) {
+            lastLoadedItem = collection.documents[collection.size() - 1]
+            pageNumber + 1
+        } else {
+            0
+        }
+    }
+
+    private fun isNotEndOfData(collection: QuerySnapshot, params: LoadParams<Int>) =
+        collection.size() == params.loadSize
 
     private fun formatItems(collection: QuerySnapshot): List<TodoItem> {
         return collection.documents
