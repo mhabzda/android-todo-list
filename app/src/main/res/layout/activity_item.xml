@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -21,7 +22,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_title_input_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
@@ -42,7 +43,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_description_input_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
@@ -64,7 +65,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_icon_url_input_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
@@ -83,15 +84,43 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <include
-            android:id="@+id/button_confirm"
-            layout="@layout/loading_button"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/item_button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
+            android:background="@drawable/ripple_button"
+            android:enabled="@{!viewModel.state.loading}"
+            android:onClickListener="@{() -> viewModel.onItemButtonClick()}"
+            android:text="@{viewModel.state.buttonText}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/item_creation_button_title" />
+
+        <FrameLayout
+            android:id="@+id/item_loading_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#26000000"
+            android:clickable="true"
+            android:focusable="true"
+            app:isVisible="@{viewModel.state.loading}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <ProgressBar
+                android:id="@+id/item_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/colorPrimary"
+                android:indeterminateTintMode="src_atop" />
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

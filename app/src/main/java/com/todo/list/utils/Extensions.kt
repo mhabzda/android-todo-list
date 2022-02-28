@@ -32,7 +32,7 @@ fun ImageView.loadImage(url: String?) {
 }
 
 fun RequestManager.loadImageIfUrlIsPresent(url: String?): RequestBuilder<Drawable> {
-    val placeholder = R.drawable.ic_check_box_100
+    val placeholder = R.drawable.ic_check_box
     return if (url.isNullOrEmpty()) {
         load(placeholder)
     } else {

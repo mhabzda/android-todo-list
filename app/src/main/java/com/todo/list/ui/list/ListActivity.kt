@@ -38,6 +38,7 @@ class ListActivity : DaggerAppCompatActivity() {
 
     private fun setupBinding() {
         binding = ActivityListBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
         setContentView(binding.root)
     }

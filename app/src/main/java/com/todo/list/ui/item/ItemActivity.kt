@@ -3,16 +3,11 @@ package com.todo.list.ui.item
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import com.todo.list.databinding.ActivityItemBinding
 import com.todo.list.ui.item.data.ItemViewEvent
-import com.todo.list.ui.item.data.ItemViewState
 import com.todo.list.utils.observeWhenStarted
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.toolbar.toolbar
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class ItemActivity : DaggerAppCompatActivity() {
@@ -28,8 +23,6 @@ class ItemActivity : DaggerAppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setupListeners()
-        viewModel.state.onEach(::renderState).launchIn(lifecycleScope)
         viewModel.events.observeWhenStarted(this, ::handleEvent)
 
         viewModel.onCreate(intent.getParcelableExtra(ITEM_PARCELABLE_EXTRA_KEY))
@@ -44,23 +37,9 @@ class ItemActivity : DaggerAppCompatActivity() {
 
     private fun setupBinding() {
         binding = ActivityItemBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
         setContentView(binding.root)
-    }
-
-    private fun setupListeners() = with(binding) {
-        buttonConfirm.loadingButton.setOnClickListener { this@ItemActivity.viewModel.onItemButtonClick() }
-    }
-
-    private fun renderState(state: ItemViewState) = with(binding) {
-        buttonConfirm.loadingButtonProgressBar.isVisible = state.isLoading
-        buttonConfirm.loadingButton.isVisible = !state.isLoading
-
-        itemTitleEditText.setText(state.title)
-        itemDescriptionEditText.setText(state.description)
-        itemIconUrlEditText.setText(state.iconUrl)
-
-        buttonConfirm.loadingButton.setText(state.buttonText)
     }
 
     private fun handleEvent(event: ItemViewEvent) {
