@@ -8,7 +8,6 @@ import com.todo.list.R
 import com.todo.list.databinding.ActivityListBinding
 import com.todo.list.ui.list.adapter.ListAdapter
 import com.todo.list.ui.list.data.ListViewEvent
-import com.todo.list.ui.list.data.ListViewState
 import com.todo.list.utils.observeWhenStarted
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.flow.launchIn
@@ -29,7 +28,6 @@ class ListActivity : DaggerAppCompatActivity() {
         setSupportActionBar(binding.listToolbar.toolbar)
         setupAdapter()
 
-        viewModel.state.onEach(::renderState).launchIn(lifecycleScope)
         viewModel.events.observeWhenStarted(this, ::handleEvent)
         viewModel.pagingEvents.onEach(listAdapter::submitData).launchIn(lifecycleScope)
 
@@ -50,10 +48,6 @@ class ListActivity : DaggerAppCompatActivity() {
         )
         binding.todoList.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         binding.todoList.adapter = listAdapter
-    }
-
-    private fun renderState(state: ListViewState) {
-        binding.swipeRefresh.isRefreshing = state.isRefreshing
     }
 
     private fun handleEvent(event: ListViewEvent) {

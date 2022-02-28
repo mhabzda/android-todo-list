@@ -30,7 +30,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_toolbar"
-            app:onRefreshListener="@{() -> viewModel.onItemsRefresh()}">
+            app:onRefreshListener="@{() -> viewModel.onItemsRefresh()}"
+            app:refreshing="@{viewModel.state.refreshing}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/todo_list"
