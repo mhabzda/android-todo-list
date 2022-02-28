@@ -15,7 +15,7 @@ class TodoItemMapper @Inject constructor() {
                 DESCRIPTION_KEY to description,
                 CREATION_DATE_KEY to creationDate.toString()
             )
-            if (!iconUrl.isNullOrEmpty()) itemMap[LOGO_URL_KEY] = iconUrl
+            if (iconUrl.isNotEmpty()) itemMap[LOGO_URL_KEY] = iconUrl
 
             itemMap
         }

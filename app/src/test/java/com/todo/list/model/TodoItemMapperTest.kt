@@ -35,7 +35,7 @@ class TodoItemMapperTest {
                     createDocumentMap("Buy", "desc", "2020-05-19T12:40:04.698Z", null)
                 ),
                 Input(
-                    TodoItem("Buy", "desc", DateTime("2020-05-19T12:40:04.698Z"), null),
+                    TodoItem("Buy", "desc", DateTime("2020-05-19T12:40:04.698Z"), ""),
                     createDocumentMap("Buy", "desc", "2020-05-19T12:40:04.698Z", null)
                 )
             )

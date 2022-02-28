@@ -15,6 +15,6 @@ class TodoDocumentMapper @Inject constructor() {
             title = document.getString(TITLE_KEY) ?: "",
             description = document.getString(DESCRIPTION_KEY) ?: "",
             creationDate = DateTime(document.getString(CREATION_DATE_KEY)),
-            iconUrl = document.getString(LOGO_URL_KEY)
+            iconUrl = document.getString(LOGO_URL_KEY) ?: ""
         )
 }

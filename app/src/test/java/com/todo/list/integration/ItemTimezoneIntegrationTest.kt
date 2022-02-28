@@ -20,7 +20,7 @@ class ItemTimezoneIntegrationTest {
         val documentMapper = TodoDocumentMapper()
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(7))
-        val documentMap = itemMapper.map(TodoItem.create("title", "desc", null))
+        val documentMap = itemMapper.map(TodoItem.create("title", "desc", ""))
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(-3))
         val item = documentMapper.map(mockDocumentFromMap(documentMap))
@@ -34,7 +34,7 @@ class ItemTimezoneIntegrationTest {
         val documentMapper = TodoDocumentMapper()
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(8))
-        val documentMap = itemMapper.map(TodoItem.create("title", "desc", null))
+        val documentMap = itemMapper.map(TodoItem.create("title", "desc", ""))
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(19))
         val item = documentMapper.map(mockDocumentFromMap(documentMap))
@@ -48,7 +48,7 @@ class ItemTimezoneIntegrationTest {
         val documentMapper = TodoDocumentMapper()
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(-4))
-        val documentMap = itemMapper.map(TodoItem.create("title", "desc", null))
+        val documentMap = itemMapper.map(TodoItem.create("title", "desc", ""))
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(-15))
         val item = documentMapper.map(mockDocumentFromMap(documentMap))

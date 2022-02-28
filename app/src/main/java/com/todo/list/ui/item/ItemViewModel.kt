@@ -43,7 +43,7 @@ class ItemViewModel @Inject constructor(
         copy(
             title = todoItemParcelable.title,
             description = todoItemParcelable.description,
-            iconUrl = todoItemParcelable.iconUrl ?: "",
+            iconUrl = todoItemParcelable.iconUrl,
             buttonText = R.string.item_edition_button_title
         )
     }

@@ -44,7 +44,7 @@ class TodoDocumentMapperTest {
                 ),
                 Input(
                     mockDocument("Buy", "desc", dateTime, null),
-                    TodoItem("Buy", "desc", DateTime(dateTime), null)
+                    TodoItem("Buy", "desc", DateTime(dateTime), "")
                 )
             )
 
