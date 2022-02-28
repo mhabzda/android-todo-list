@@ -20,8 +20,6 @@ import org.joda.time.format.DateTimeFormatter
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-const val EMPTY = ""
-
 fun DateTime.formatDateHour(): String {
     val formatter: DateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm")
     return formatter.print(this)

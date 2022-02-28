@@ -11,7 +11,6 @@ import com.todo.list.ui.list.data.ListViewEvent.Error
 import com.todo.list.ui.list.data.ListViewState
 import com.todo.list.ui.list.navigation.ListRouter
 import com.todo.list.ui.parcel.TodoItemToParcelableMapper
-import com.todo.list.utils.EMPTY
 import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -67,7 +66,7 @@ class ListViewModel @Inject constructor(
         updateState { copy(isRefreshing = true) }
         todoRepository.deleteItem(item)
             .onSuccess { sendEvent(ListViewEvent.DisplayDeletionConfirmation) }
-            .onFailure { sendEvent(Error(it.message ?: EMPTY)) }
+            .onFailure { sendEvent(Error(it.message ?: "")) }
             .onTerminate { updateState { copy(isRefreshing = false) } }
     }
 

@@ -14,7 +14,6 @@ import com.todo.list.ui.item.mapper.ItemConfirmationMessageMapper
 import com.todo.list.ui.item.mapper.ItemViewStateMapper
 import com.todo.list.ui.item.mode.ItemScreenMode
 import com.todo.list.ui.parcel.TodoItemParcelable
-import com.todo.list.utils.EMPTY
 import com.todo.list.utils.isNotNull
 import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.launch
@@ -61,7 +60,7 @@ class ItemViewModel @Inject constructor(
                 sendEvent(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
                 sendEvent(Close)
             }
-            .onFailure { sendEvent(DisplayMessage(it.message ?: EMPTY)) }
+            .onFailure { sendEvent(DisplayMessage(it.message ?: "")) }
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 

@@ -27,6 +27,7 @@ class FirestoreTodoRepository @Inject constructor(
     private val todoDocumentMapper: TodoDocumentMapper,
     private val todoDocumentFilter: TodoDocumentFilter
 ) : TodoRepository {
+
     override fun fetchTodoItems(pageSize: Int): Flow<PagingData<TodoItem>> =
         Pager(PagingConfig(pageSize = pageSize, enablePlaceholders = false)) {
             TodoItemPagingSource(todoCollection, todoDocumentMapper, todoDocumentFilter)
