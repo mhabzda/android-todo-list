@@ -69,7 +69,7 @@ class ItemViewModelTest {
 
     @Test
     fun `given title is empty when button clicked then display error`() = runOnViewModel {
-        viewModel.onTitleChange("")
+        viewModel.state.value.title = ""
 
         viewModel.onItemButtonClick()
         runCurrent()
@@ -134,27 +134,6 @@ class ItemViewModelTest {
         assertEquals(false, viewModel.state.value.isLoading)
     }
 
-    @Test
-    fun `update state when title is changed`() {
-        viewModel.onTitleChange("title")
-
-        assertEquals("title", viewModel.state.value.title)
-    }
-
-    @Test
-    fun `update state when description is changed`() {
-        viewModel.onDescriptionChange("description")
-
-        assertEquals("description", viewModel.state.value.description)
-    }
-
-    @Test
-    fun `update state when icon url is changed`() {
-        viewModel.onIconUrlChange("iconUrl")
-
-        assertEquals("iconUrl", viewModel.state.value.iconUrl)
-    }
-
     private fun runOnViewModel(
         todoItemParcelable: TodoItemParcelable? = null,
         testBody: suspend TestScope.() -> Unit
@@ -164,9 +143,9 @@ class ItemViewModelTest {
     }
 
     private fun ItemViewModel.provideData() {
-        onTitleChange(testItem.title)
-        onDescriptionChange(testItem.description)
-        onIconUrlChange(testItem.iconUrl ?: "")
+        state.value.title = testItem.title
+        state.value.description = testItem.description
+        state.value.iconUrl = testItem.iconUrl ?: ""
     }
 
     companion object {

@@ -2,10 +2,8 @@ package com.todo.list.ui.item
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.todo.list.databinding.ActivityItemBinding
 import com.todo.list.ui.item.data.ItemViewEvent
@@ -26,8 +24,7 @@ class ItemActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityItemBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setupBinding()
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -45,21 +42,23 @@ class ItemActivity : DaggerAppCompatActivity() {
         } else super.onOptionsItemSelected(item)
     }
 
-    private fun setupListeners() = with(binding) {
-        editTextTitle.doAfterTextChanged { viewModel.onTitleChange(it.toString()) }
-        editTextDescription.doAfterTextChanged { viewModel.onDescriptionChange(it.toString()) }
-        editTextIconUrl.doAfterTextChanged { viewModel.onIconUrlChange(it.toString()) }
+    private fun setupBinding() {
+        binding = ActivityItemBinding.inflate(layoutInflater)
+        binding.viewModel = viewModel
+        setContentView(binding.root)
+    }
 
-        buttonConfirm.loadingButton.setOnClickListener { viewModel.onItemButtonClick() }
+    private fun setupListeners() = with(binding) {
+        buttonConfirm.loadingButton.setOnClickListener { this@ItemActivity.viewModel.onItemButtonClick() }
     }
 
     private fun renderState(state: ItemViewState) = with(binding) {
         buttonConfirm.loadingButtonProgressBar.isVisible = state.isLoading
         buttonConfirm.loadingButton.isVisible = !state.isLoading
 
-        editTextTitle.setTextIfDiffer(state.title)
-        editTextDescription.setTextIfDiffer(state.description)
-        editTextIconUrl.setTextIfDiffer(state.iconUrl)
+        itemTitleEditText.setText(state.title)
+        itemDescriptionEditText.setText(state.description)
+        itemIconUrlEditText.setText(state.iconUrl)
 
         buttonConfirm.loadingButton.setText(state.buttonText)
     }
@@ -74,10 +73,6 @@ class ItemActivity : DaggerAppCompatActivity() {
                 Toast.makeText(this, event.message, Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    private fun EditText.setTextIfDiffer(text: String) {
-        if (this.text.toString() != text) setText(text)
     }
 
     companion object {

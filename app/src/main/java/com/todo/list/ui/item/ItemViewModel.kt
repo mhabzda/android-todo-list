@@ -69,16 +69,4 @@ class ItemViewModel @Inject constructor(
             ItemScreenMode.CREATE -> todoRepository::saveItem
             ItemScreenMode.EDIT -> todoRepository::editItem
         }
-
-    fun onTitleChange(title: String) {
-        updateState { copy(title = title) }
-    }
-
-    fun onDescriptionChange(description: String) {
-        updateState { copy(description = description) }
-    }
-
-    fun onIconUrlChange(iconUrl: String) {
-        updateState { copy(iconUrl = iconUrl) }
-    }
 }
