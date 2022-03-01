@@ -24,7 +24,7 @@ class ItemFragment : DaggerFragment() {
     private lateinit var binding: FragmentItemBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentItemBinding.inflate(layoutInflater)
+        binding = FragmentItemBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         return binding.root

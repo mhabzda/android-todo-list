@@ -1,21 +1,16 @@
 package com.todo.list.ui.list.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.todo.list.R
+import com.todo.list.databinding.ItemTodoBinding
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.utils.formatDateHour
 import com.todo.list.utils.loadImage
-import kotlinx.android.extensions.LayoutContainer
 import org.joda.time.DateTime
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.item_todo.item_creation_date as creationTimeView
-import kotlinx.android.synthetic.main.item_todo.item_image as imageIconView
-import kotlinx.android.synthetic.main.item_todo.item_title as titleView
 
 class ListAdapter @Inject constructor(
     private val longClickAction: (DateTime) -> Unit,
@@ -23,28 +18,26 @@ class ListAdapter @Inject constructor(
 ) : PagingDataAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_todo, parent, false)
-
-        return ViewHolder(view)
+        val binding = ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class ViewHolder(private val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TodoItem?) {
             item?.let {
-                containerView.setOnLongClickListener {
+                binding.root.setOnLongClickListener {
                     longClickAction.invoke(item.creationDate)
                     true
                 }
-                containerView.setOnClickListener { clickAction(item.creationDate) }
+                binding.root.setOnClickListener { clickAction(item.creationDate) }
 
-                titleView.text = it.title
-                creationTimeView.text = it.creationDate.formatDateHour()
-                imageIconView.loadImage(it.iconUrl)
+                binding.itemImage.loadImage(it.iconUrl)
+                binding.itemTitle.text = it.title
+                binding.itemCreationDate.text = it.creationDate.formatDateHour()
             }
         }
     }

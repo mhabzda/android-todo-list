@@ -26,7 +26,7 @@ class ListFragment : DaggerFragment() {
     private lateinit var listAdapter: ListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentListBinding.inflate(layoutInflater)
+        binding = FragmentListBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         return binding.root
