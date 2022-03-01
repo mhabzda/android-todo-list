@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Todo List</string>
 
+    <string name="list_fragment_label">List</string>
+    <string name="item_fragment_label">Item</string>
+
     <string name="delete_item_dialog_title">Delete item</string>
     <string name="delete_item_dialog_message">Are you sure you want to delete this item?</string>
     <string name="delete_item_dialog_delete_button">Delete</string>

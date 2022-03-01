@@ -15,6 +15,7 @@
         android:layout_height="match_parent">
 
         <include
+            android:id="@+id/item_toolbar"
             layout="@layout/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +30,7 @@
             android:hint="@string/item_title_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:layout_constraintTop_toBottomOf="@id/item_toolbar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_title_edit_text"

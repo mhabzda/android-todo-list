@@ -28,7 +28,7 @@ class ItemViewModel @Inject constructor(
     private lateinit var screenMode: ItemScreenMode
     private var creationDate: DateTime? = null
 
-    fun onCreate(id: DateTime?) {
+    fun onStart(id: DateTime?) {
         screenMode = if (id.isNotNull()) {
             initializeData(id)
             creationDate = id

@@ -19,7 +19,6 @@ abstract class RepositoryModule {
     companion object {
         private const val COLLECTION_NAME = "todo_items"
 
-        @JvmStatic
         @Provides
         fun provideTodoCollection(): CollectionReference {
             return Firebase.firestore.collection(COLLECTION_NAME)

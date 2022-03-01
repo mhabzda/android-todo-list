@@ -1,30 +1,25 @@
 package com.todo.list.ui.list.navigation
 
-import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AlertDialog
+import android.app.AlertDialog
+import androidx.navigation.NavController
 import com.todo.list.R
-import com.todo.list.ui.item.ItemActivity
-import com.todo.list.ui.item.ItemActivity.Companion.ITEM_ID_EXTRA_KEY
+import com.todo.list.ui.list.ListFragmentDirections
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ListRouterImpl @Inject constructor(
-    private val navigationContext: Context
+    private val navigationController: NavController
 ) : ListRouter {
     override fun openItemCreationView() {
-        val intent = Intent(navigationContext, ItemActivity::class.java)
-        navigationContext.startActivity(intent)
+        navigationController.navigate(ListFragmentDirections.actionToItemFragment())
     }
 
     override fun openItemEditionView(id: DateTime) {
-        val intent = Intent(navigationContext, ItemActivity::class.java)
-        intent.putExtra(ITEM_ID_EXTRA_KEY, id)
-        navigationContext.startActivity(intent)
+        navigationController.navigate(ListFragmentDirections.actionToItemFragment(id))
     }
 
     override fun openDeleteItemConfirmationDialog(deleteItemAction: () -> Unit) {
-        AlertDialog.Builder(navigationContext)
+        AlertDialog.Builder(navigationController.context)
             .setTitle(R.string.delete_item_dialog_title)
             .setMessage(R.string.delete_item_dialog_message)
             .setPositiveButton(R.string.delete_item_dialog_delete_button) { _, _ -> deleteItemAction() }

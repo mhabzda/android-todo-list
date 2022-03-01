@@ -98,7 +98,7 @@ class ListViewModelTest {
     @Test
     fun `refresh items when items have changed in the repository`() = runTest {
         given(mockTodoRepository.observeItemsChanges()).willReturn(flowOf(Unit))
-        viewModel.onCreate(flowOf(defaultLoadState))
+        viewModel.onStart(flowOf(defaultLoadState))
         runCurrent()
 
         viewModel.events.test { assertEquals(ListViewEvent.RefreshItems, awaitItem()) }
@@ -150,7 +150,7 @@ class ListViewModelTest {
         loadState: CombinedLoadStates = defaultLoadState,
         testBody: suspend TestScope.() -> Unit
     ) = runTest {
-        viewModel.onCreate(flowOf(loadState))
+        viewModel.onStart(flowOf(loadState))
         runCurrent()
 
         testBody.invoke(this)

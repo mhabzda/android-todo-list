@@ -23,7 +23,7 @@ class ListViewModel @Inject constructor(
 
     val pagingEvents = todoRepository.fetchTodoItems(PAGE_SIZE)
 
-    fun onCreate(loadStateFlow: Flow<CombinedLoadStates>) {
+    fun onStart(loadStateFlow: Flow<CombinedLoadStates>) {
         viewModelScope.launch {
             loadStateFlow.collectLatest(::handleLoadState)
         }

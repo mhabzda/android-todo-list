@@ -138,7 +138,7 @@ class ItemViewModelTest {
         itemId: DateTime? = null,
         testBody: suspend TestScope.() -> Unit
     ) = runTest {
-        viewModel.onCreate(itemId)
+        viewModel.onStart(itemId)
         runCurrent()
         testBody.invoke(this)
     }
