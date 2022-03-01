@@ -36,8 +36,8 @@ class ListViewModel @Inject constructor(
 
         val refreshState = state.refresh
         val appendState = state.append
-        if (refreshState is LoadState.Error) sendEvent(Error(refreshState.error.message ?: ""))
-        if (appendState is LoadState.Error) sendEvent(Error(appendState.error.message ?: ""))
+        if (refreshState is LoadState.Error) sendEvent(Error(refreshState.error.message.orEmpty()))
+        if (appendState is LoadState.Error) sendEvent(Error(appendState.error.message.orEmpty()))
     }
 
     private fun observeItemsChanges() = viewModelScope.launch {
@@ -64,7 +64,7 @@ class ListViewModel @Inject constructor(
         updateState { copy(isRefreshing = true) }
         todoRepository.deleteItem(id)
             .onSuccess { sendEvent(ListViewEvent.DisplayDeletionConfirmation) }
-            .onFailure { sendEvent(Error(it.message ?: "")) }
+            .onFailure { sendEvent(Error(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isRefreshing = false) } }
     }
 
