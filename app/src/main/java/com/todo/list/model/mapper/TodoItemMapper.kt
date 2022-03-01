@@ -13,7 +13,7 @@ class TodoItemMapper @Inject constructor() {
             val itemMap = mutableMapOf(
                 TITLE_KEY to title,
                 DESCRIPTION_KEY to description,
-                CREATION_DATE_KEY to creationDate.toString()
+                CREATION_DATE_KEY to creationDate.toCreationDateString()
             )
             if (iconUrl.isNotEmpty()) itemMap[LOGO_URL_KEY] = iconUrl
 

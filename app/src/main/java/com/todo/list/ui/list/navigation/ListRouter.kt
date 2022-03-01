@@ -1,9 +1,9 @@
 package com.todo.list.ui.list.navigation
 
-import com.todo.list.ui.parcel.TodoItemParcelable
+import org.joda.time.DateTime
 
 interface ListRouter {
     fun openItemCreationView()
-    fun openItemEditionView(item: TodoItemParcelable)
+    fun openItemEditionView(id: DateTime)
     fun openDeleteItemConfirmationDialog(deleteItemAction: () -> Unit)
 }

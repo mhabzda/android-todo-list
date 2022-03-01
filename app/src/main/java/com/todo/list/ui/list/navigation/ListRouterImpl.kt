@@ -5,8 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import com.todo.list.R
 import com.todo.list.ui.item.ItemActivity
-import com.todo.list.ui.item.ItemActivity.Companion.ITEM_PARCELABLE_EXTRA_KEY
-import com.todo.list.ui.parcel.TodoItemParcelable
+import com.todo.list.ui.item.ItemActivity.Companion.ITEM_ID_EXTRA_KEY
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ListRouterImpl @Inject constructor(
@@ -17,9 +17,9 @@ class ListRouterImpl @Inject constructor(
         navigationContext.startActivity(intent)
     }
 
-    override fun openItemEditionView(item: TodoItemParcelable) {
+    override fun openItemEditionView(id: DateTime) {
         val intent = Intent(navigationContext, ItemActivity::class.java)
-        intent.putExtra(ITEM_PARCELABLE_EXTRA_KEY, item)
+        intent.putExtra(ITEM_ID_EXTRA_KEY, id)
         navigationContext.startActivity(intent)
     }
 

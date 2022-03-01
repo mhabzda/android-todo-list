@@ -8,6 +8,7 @@ import com.todo.list.ui.item.data.ItemViewEvent
 import com.todo.list.utils.observeWhenStarted
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.toolbar.toolbar
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ItemActivity : DaggerAppCompatActivity() {
@@ -25,7 +26,7 @@ class ItemActivity : DaggerAppCompatActivity() {
 
         viewModel.events.observeWhenStarted(this, ::handleEvent)
 
-        viewModel.onCreate(intent.getParcelableExtra(ITEM_PARCELABLE_EXTRA_KEY))
+        viewModel.onCreate(intent.getSerializableExtra(ITEM_ID_EXTRA_KEY) as DateTime?)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -55,6 +56,6 @@ class ItemActivity : DaggerAppCompatActivity() {
     }
 
     companion object {
-        const val ITEM_PARCELABLE_EXTRA_KEY = "item_parcelable_extra"
+        const val ITEM_ID_EXTRA_KEY = "item_id_extra"
     }
 }

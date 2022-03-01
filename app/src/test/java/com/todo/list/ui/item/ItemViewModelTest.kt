@@ -11,7 +11,6 @@ import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessageRes
 import com.todo.list.ui.item.data.ItemViewState
 import com.todo.list.ui.item.mapper.ItemConfirmationMessageMapper
 import com.todo.list.ui.item.mapper.ItemViewStateMapper
-import com.todo.list.ui.parcel.TodoItemParcelable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -35,6 +34,7 @@ class ItemViewModelTest {
     private val mockTodoRepository: TodoRepository = mock {
         onBlocking { saveItem(any()) } doReturn Result.failure(Throwable("not initialized"))
         onBlocking { editItem(any()) } doReturn Result.failure(Throwable("not initialized"))
+        onBlocking { getItem(existingItemId) } doReturn Result.success(testItem.copy(creationDate = existingItemId))
     }
 
     private val viewModel = ItemViewModel(
@@ -54,7 +54,7 @@ class ItemViewModelTest {
     }
 
     @Test
-    fun `initialize data on start when there is a edit item mode`() = runOnViewModel(testItemParcelable) {
+    fun `initialize data on start when there is a edit item mode`() = runOnViewModel(existingItemId) {
         assertEquals(
             ItemViewState(
                 title = title,
@@ -107,8 +107,8 @@ class ItemViewModelTest {
 
     @Test
     fun `given can edit item when button clicked then display confirmation message and close view`() =
-        runOnViewModel(testItemParcelable) {
-            given(mockTodoRepository.editItem(testItem.copy(creationDate = DateTime(existingItemTime))))
+        runOnViewModel(existingItemId) {
+            given(mockTodoRepository.editItem(testItem.copy(creationDate = existingItemId)))
                 .willReturn(Result.success(Unit))
 
             viewModel.onItemButtonClick()
@@ -122,9 +122,9 @@ class ItemViewModelTest {
         }
 
     @Test
-    fun `given cannot edit item when button clicked then display error`() = runOnViewModel(testItemParcelable) {
+    fun `given cannot edit item when button clicked then display error`() = runOnViewModel(existingItemId) {
         val errorMessage = "Cannot edit item"
-        given(mockTodoRepository.editItem(testItem.copy(creationDate = DateTime(existingItemTime))))
+        given(mockTodoRepository.editItem(testItem.copy(creationDate = existingItemId)))
             .willReturn(Result.failure(Throwable(errorMessage)))
 
         viewModel.onItemButtonClick()
@@ -135,17 +135,18 @@ class ItemViewModelTest {
     }
 
     private fun runOnViewModel(
-        todoItemParcelable: TodoItemParcelable? = null,
+        itemId: DateTime? = null,
         testBody: suspend TestScope.() -> Unit
     ) = runTest {
-        viewModel.onCreate(todoItemParcelable)
+        viewModel.onCreate(itemId)
+        runCurrent()
         testBody.invoke(this)
     }
 
     private fun ItemViewModel.provideData() {
         state.value.title = testItem.title
         state.value.description = testItem.description
-        state.value.iconUrl = testItem.iconUrl ?: ""
+        state.value.iconUrl = testItem.iconUrl
     }
 
     companion object {
@@ -154,19 +155,14 @@ class ItemViewModelTest {
         private const val iconUrl = "logo.com"
 
         private const val currentTime = "2022-02-25T12:40:04.698"
+        private val currentItemId = DateTime(currentTime)
         private const val existingItemTime = "2022-02-23T12:40:04.698"
+        private val existingItemId = DateTime(existingItemTime)
 
         private val testItem = TodoItem(
             title = title,
             description = description,
-            creationDate = DateTime(currentTime),
-            iconUrl = iconUrl
-        )
-
-        private val testItemParcelable = TodoItemParcelable(
-            title = title,
-            description = description,
-            creationDate = existingItemTime,
+            creationDate = currentItemId,
             iconUrl = iconUrl
         )
 

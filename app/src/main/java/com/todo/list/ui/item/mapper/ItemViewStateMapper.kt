@@ -11,11 +11,11 @@ class ItemViewStateMapper @Inject constructor() {
     fun map(
         state: ItemViewState,
         screenMode: ItemScreenMode,
-        creationDate: String?
+        creationDate: DateTime?
     ) = with(state) {
         when (screenMode) {
             ItemScreenMode.CREATE -> TodoItem.create(title, description, iconUrl)
-            ItemScreenMode.EDIT -> TodoItem(title, description, DateTime(creationDate), iconUrl)
+            ItemScreenMode.EDIT -> TodoItem(title, description, creationDate!!, iconUrl)
         }
     }
 }

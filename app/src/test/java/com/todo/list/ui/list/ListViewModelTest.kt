@@ -7,11 +7,10 @@ import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.todo.list.model.entities.TodoItem
 import com.todo.list.model.repository.TodoRepository
+import com.todo.list.ui.TestData.testItemId
 import com.todo.list.ui.TestData.testTodoItem
-import com.todo.list.ui.TestData.testTodoItemParcelable
 import com.todo.list.ui.list.data.ListViewEvent
 import com.todo.list.ui.list.navigation.ListRouter
-import com.todo.list.ui.parcel.TodoItemToParcelableMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -39,13 +38,13 @@ class ListViewModelTest {
     private val mockTodoRepository: TodoRepository = mock {
         on { fetchTodoItems(pageSize) } doReturn flowOf(testPagingData)
         on { observeItemsChanges() } doReturn emptyFlow()
+        onBlocking { getItem(testItemId) } doReturn Result.success(testTodoItem)
     }
     private val router: ListRouter = mock()
 
     private val viewModel = ListViewModel(
         todoRepository = mockTodoRepository,
-        router = router,
-        todoItemToParcelableMapper = TodoItemToParcelableMapper()
+        router = router
     )
 
     @BeforeEach
@@ -114,7 +113,7 @@ class ListViewModelTest {
 
     @Test
     fun `open item open delete item confirmation dialog view when item long is clicked`() = runOnViewModel {
-        viewModel.onItemLongClick(testTodoItem)
+        viewModel.onItemLongClick(testItemId)
 
         verify(router).openDeleteItemConfirmationDialog(any())
     }
@@ -122,9 +121,9 @@ class ListViewModelTest {
     @Test
     fun `display deletion confirmation message when item delete is clicked`() = runOnViewModel {
         given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
-        given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.success(Unit))
+        given(mockTodoRepository.deleteItem(testItemId)).willReturn(Result.success(Unit))
 
-        viewModel.onItemLongClick(testTodoItem)
+        viewModel.onItemLongClick(testItemId)
 
         viewModel.events.test { assertEquals(ListViewEvent.DisplayDeletionConfirmation, awaitItem()) }
     }
@@ -133,18 +132,18 @@ class ListViewModelTest {
     fun `display error when item delete is clicked but error occurred`() = runOnViewModel {
         val errorMessage = "Cannot delete item"
         given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
-        given(mockTodoRepository.deleteItem(testTodoItem)).willReturn(Result.failure(Throwable(errorMessage)))
+        given(mockTodoRepository.deleteItem(testItemId)).willReturn(Result.failure(Throwable(errorMessage)))
 
-        viewModel.onItemLongClick(testTodoItem)
+        viewModel.onItemLongClick(testItemId)
 
         viewModel.events.test { assertEquals(ListViewEvent.Error(errorMessage), awaitItem()) }
     }
 
     @Test
     fun `open item edition view with correct data when item is clicked`() = runOnViewModel {
-        viewModel.onItemClick(testTodoItem)
+        viewModel.onItemClick(testItemId)
 
-        verify(router).openItemEditionView(testTodoItemParcelable)
+        verify(router).openItemEditionView(testItemId)
     }
 
     private fun runOnViewModel(

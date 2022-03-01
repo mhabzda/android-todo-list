@@ -11,14 +11,15 @@ import com.todo.list.model.entities.TodoItem
 import com.todo.list.utils.formatDateHour
 import com.todo.list.utils.loadImage
 import kotlinx.android.extensions.LayoutContainer
+import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.item_todo.item_creation_date as creationTimeView
 import kotlinx.android.synthetic.main.item_todo.item_image as imageIconView
 import kotlinx.android.synthetic.main.item_todo.item_title as titleView
 
 class ListAdapter @Inject constructor(
-    private val longClickAction: (TodoItem) -> Unit,
-    private val clickAction: (TodoItem) -> Unit
+    private val longClickAction: (DateTime) -> Unit,
+    private val clickAction: (DateTime) -> Unit
 ) : PagingDataAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,10 +37,10 @@ class ListAdapter @Inject constructor(
         fun bind(item: TodoItem?) {
             item?.let {
                 containerView.setOnLongClickListener {
-                    longClickAction.invoke(item)
+                    longClickAction.invoke(item.creationDate)
                     true
                 }
-                containerView.setOnClickListener { clickAction(item) }
+                containerView.setOnClickListener { clickAction(item.creationDate) }
 
                 titleView.text = it.title
                 creationTimeView.text = it.creationDate.formatDateHour()

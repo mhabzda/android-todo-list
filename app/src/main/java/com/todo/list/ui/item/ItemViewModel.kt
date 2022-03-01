@@ -13,10 +13,10 @@ import com.todo.list.ui.item.data.ItemViewState
 import com.todo.list.ui.item.mapper.ItemConfirmationMessageMapper
 import com.todo.list.ui.item.mapper.ItemViewStateMapper
 import com.todo.list.ui.item.mode.ItemScreenMode
-import com.todo.list.ui.parcel.TodoItemParcelable
 import com.todo.list.utils.isNotNull
 import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ItemViewModel @Inject constructor(
@@ -26,12 +26,13 @@ class ItemViewModel @Inject constructor(
 ) : BaseViewModel<ItemViewState, ItemViewEvent>(ItemViewState()) {
 
     private lateinit var screenMode: ItemScreenMode
-    private var creationDate: String? = null
+    private var creationDate: DateTime? = null
 
-    fun onCreate(todoItemParcelable: TodoItemParcelable?) {
-        screenMode = if (todoItemParcelable.isNotNull()) {
-            initializeData(todoItemParcelable)
-            creationDate = todoItemParcelable.creationDate
+    fun onCreate(id: DateTime?) {
+        screenMode = if (id.isNotNull()) {
+            initializeData(id)
+            creationDate = id
+            updateState { copy(buttonText = R.string.item_edition_button_title) }
             ItemScreenMode.EDIT
         } else {
             updateState { copy(buttonText = R.string.item_creation_button_title) }
@@ -39,13 +40,14 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    private fun initializeData(todoItemParcelable: TodoItemParcelable) = updateState {
-        copy(
-            title = todoItemParcelable.title,
-            description = todoItemParcelable.description,
-            iconUrl = todoItemParcelable.iconUrl,
-            buttonText = R.string.item_edition_button_title
-        )
+    private fun initializeData(id: DateTime) = viewModelScope.launch {
+        updateState { copy(isLoading = true) }
+        todoRepository.getItem(id)
+            .onSuccess {
+                updateState { copy(title = it.title, description = it.description, iconUrl = it.iconUrl) }
+            }
+            .onFailure { sendEvent(DisplayMessage(it.message.orEmpty())) }
+            .onTerminate { updateState { copy(isLoading = false) } }
     }
 
     fun onItemButtonClick() = viewModelScope.launch {
@@ -60,7 +62,7 @@ class ItemViewModel @Inject constructor(
                 sendEvent(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
                 sendEvent(Close)
             }
-            .onFailure { sendEvent(DisplayMessage(it.message ?: "")) }
+            .onFailure { sendEvent(DisplayMessage(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 
