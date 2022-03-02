@@ -2,7 +2,7 @@
 # Plugins
 android-gradle = "7.1.1"
 google-services = "4.3.10"
-junit5-gradle = "1.8.2.0"
+junit5-android = "1.8.2.0"
 kotlin = "1.6.10"
 
 # AndroidX
@@ -30,14 +30,15 @@ junit5 = "5.8.2"
 mockito-kotlin = "4.0.0"
 turbine = "0.7.0"
 
-[libraries]
-# Plugins
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
-androidx-safe-args = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
-google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
-junit5-gradle = { module = "de.mannodermaus.gradle.plugins:android-junit5", version.ref = "junit5-gradle" }
-kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle" }
+androidx-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+junit5-android = { id = "de.mannodermaus.android-junit5", version.ref = "junit5-android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
+[libraries]
 # AndroidX
 androidx-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appCompat" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
