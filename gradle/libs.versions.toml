@@ -1,10 +1,10 @@
 [versions]
 # Plugins
-android-gradle = "7.1.1"
+android-gradle = "7.1.2"
 google-services = "4.3.10"
 junit5-android = "1.8.2.0"
 kotlin = "1.6.10"
-versions = "0.41.0"
+versions = "0.42.0"
 versions-catalog-update = "0.3.1"
 
 # AndroidX
@@ -23,7 +23,7 @@ coroutines = "1.6.0"
 dagger = "2.41"
 firebase-analytics = "20.1.0"
 firestore = "24.0.1"
-glide = "4.13.0"
+glide = "4.13.1"
 joda = "2.10.13"
 material = "1.5.0"
 
