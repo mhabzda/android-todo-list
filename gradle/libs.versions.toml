@@ -4,6 +4,8 @@ android-gradle = "7.1.1"
 google-services = "4.3.10"
 junit5-android = "1.8.2.0"
 kotlin = "1.6.10"
+versions = "0.41.0"
+versions-catalog-update = "0.3.1"
 
 # AndroidX
 androidx-appCompat = "1.4.1"
@@ -37,6 +39,8 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 junit5-android = { id = "de.mannodermaus.android-junit5", version.ref = "junit5-android" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+versions-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "versions-catalog-update" }
 
 [libraries]
 # AndroidX
