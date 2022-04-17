@@ -7,6 +7,7 @@ import com.todo.list.testutilities.FixedTimeExtension
 import com.todo.list.testutilities.TimeZoneExtension
 import com.todo.list.testutilities.mockDocumentFromMap
 import com.todo.list.utils.formatDateHour
+import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -20,7 +21,7 @@ class ItemTimezoneIntegrationTest {
         val documentMapper = TodoDocumentMapper()
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(7))
-        val documentMap = itemMapper.map(TodoItem.create("title", "desc", ""))
+        val documentMap = itemMapper.map(TodoItem("title", "desc", DateTime.now(), ""))
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(-3))
         val item = documentMapper.map(mockDocumentFromMap(documentMap))
@@ -34,7 +35,7 @@ class ItemTimezoneIntegrationTest {
         val documentMapper = TodoDocumentMapper()
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(8))
-        val documentMap = itemMapper.map(TodoItem.create("title", "desc", ""))
+        val documentMap = itemMapper.map(TodoItem("title", "desc", DateTime.now(), ""))
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(19))
         val item = documentMapper.map(mockDocumentFromMap(documentMap))
@@ -48,7 +49,7 @@ class ItemTimezoneIntegrationTest {
         val documentMapper = TodoDocumentMapper()
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(-4))
-        val documentMap = itemMapper.map(TodoItem.create("title", "desc", ""))
+        val documentMap = itemMapper.map(TodoItem("title", "desc", DateTime.now(), ""))
 
         DateTimeZone.setDefault(DateTimeZone.forOffsetHours(-15))
         val item = documentMapper.map(mockDocumentFromMap(documentMap))

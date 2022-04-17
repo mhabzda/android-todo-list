@@ -102,6 +102,7 @@ class ItemViewModelTest {
         runCurrent()
 
         viewModel.events.test { assertEquals(DisplayMessage(errorMessage), awaitItem()) }
+        runCurrent()
         assertEquals(false, viewModel.state.value.isLoading)
     }
 
@@ -131,6 +132,7 @@ class ItemViewModelTest {
         runCurrent()
 
         viewModel.events.test { assertEquals(DisplayMessage(errorMessage), awaitItem()) }
+        runCurrent()
         assertEquals(false, viewModel.state.value.isLoading)
     }
 

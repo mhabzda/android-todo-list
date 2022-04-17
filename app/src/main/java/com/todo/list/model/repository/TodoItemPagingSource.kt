@@ -31,7 +31,7 @@ class TodoItemPagingSource(
             LoadResult.Page(
                 data = formatItems(collection),
                 prevKey = null,
-                nextKey = if (isNotEndOfData(collection, params)) pageNumber else null
+                nextKey = if (isEndOfData(collection, params)) null else pageNumber
             )
         } catch (exception: Throwable) {
             LoadResult.Error(exception)
@@ -50,16 +50,16 @@ class TodoItemPagingSource(
     private fun shouldFirstPageBeLoaded() = pageNumber == 0
 
     private fun resolveNextPage(collection: QuerySnapshot, params: LoadParams<Int>) {
-        pageNumber = if (isNotEndOfData(collection, params)) {
+        pageNumber = if (isEndOfData(collection, params)) {
+            0
+        } else {
             lastLoadedItem = collection.documents[collection.size() - 1]
             pageNumber + 1
-        } else {
-            0
         }
     }
 
-    private fun isNotEndOfData(collection: QuerySnapshot, params: LoadParams<Int>) =
-        collection.size() == params.loadSize
+    private fun isEndOfData(collection: QuerySnapshot, params: LoadParams<Int>) =
+        collection.size() != params.loadSize
 
     private fun formatItems(collection: QuerySnapshot): List<TodoItem> {
         return collection.documents

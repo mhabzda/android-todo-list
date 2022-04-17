@@ -16,7 +16,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -53,73 +52,80 @@ class ListViewModelTest {
     }
 
     @Test
-    fun `fetch todo list when starting`() = runOnViewModel {
+    fun `fetch todo list when starting`() = runTest {
         verify(mockTodoRepository).fetchTodoItems(pageSize)
     }
 
     @Test
-    fun `show loading when refresh loading is happening`() = runOnViewModel(
-        createLoadState(refresh = LoadState.Loading)
-    ) {
+    fun `show loading when refresh loading is happening`() = runTest {
+        viewModel.onLoadStateChange(createLoadState(refresh = LoadState.Loading))
+        runCurrent()
+
         assertEquals(true, viewModel.state.value.isRefreshing)
     }
 
     @Test
-    fun `show loading when append loading is happening`() = runOnViewModel(
-        createLoadState(append = LoadState.Loading)
-    ) {
+    fun `show loading when append loading is happening`() = runTest {
+        viewModel.onLoadStateChange(createLoadState(append = LoadState.Loading))
+        runCurrent()
+
         assertEquals(true, viewModel.state.value.isRefreshing)
     }
 
     @Test
-    fun `hide loading when no loading is happening`() = runOnViewModel(
-        createLoadState(
-            refresh = LoadState.NotLoading(false),
-            append = LoadState.NotLoading(false)
+    fun `hide loading when no loading is happening`() = runTest {
+        viewModel.onLoadStateChange(
+            createLoadState(
+                refresh = LoadState.NotLoading(false),
+                append = LoadState.NotLoading(false)
+            )
         )
-    ) {
+        runCurrent()
+
         assertEquals(false, viewModel.state.value.isRefreshing)
     }
 
     @Test
-    fun `display error when error occurred during refresh items loading`() = runOnViewModel(
-        createLoadState(refresh = LoadState.Error(error))
-    ) {
+    fun `display error when error occurred during refresh items loading`() = runTest {
+        viewModel.onLoadStateChange(createLoadState(refresh = LoadState.Error(error)))
+        runCurrent()
+
         viewModel.events.test { assertEquals(ListViewEvent.Error(errorMessage), awaitItem()) }
     }
 
     @Test
-    fun `display error when error occurred during append items loading`() = runOnViewModel(
-        createLoadState(append = LoadState.Error(error))
-    ) {
+    fun `display error when error occurred during append items loading`() = runTest {
+        viewModel.onLoadStateChange(createLoadState(append = LoadState.Error(error)))
+        runCurrent()
+
         viewModel.events.test { assertEquals(ListViewEvent.Error(errorMessage), awaitItem()) }
     }
 
     @Test
     fun `refresh items when items have changed in the repository`() = runTest {
         given(mockTodoRepository.observeItemsChanges()).willReturn(flowOf(Unit))
-        viewModel.onStart(flowOf(defaultLoadState))
+        viewModel.onStart()
         runCurrent()
 
         viewModel.events.test { assertEquals(ListViewEvent.RefreshItems, awaitItem()) }
     }
 
     @Test
-    fun `open item creation view when floating action button is clicked`() = runOnViewModel {
+    fun `open item creation view when floating action button is clicked`() = runTest {
         viewModel.onFloatingButtonClick()
 
         verify(router).openItemCreationView()
     }
 
     @Test
-    fun `open item open delete item confirmation dialog view when item long is clicked`() = runOnViewModel {
+    fun `open item open delete item confirmation dialog view when item long is clicked`() = runTest {
         viewModel.onItemLongClick(testItemId)
 
         verify(router).openDeleteItemConfirmationDialog(any())
     }
 
     @Test
-    fun `display deletion confirmation message when item delete is clicked`() = runOnViewModel {
+    fun `display deletion confirmation message when item delete is clicked`() = runTest {
         given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
         given(mockTodoRepository.deleteItem(testItemId)).willReturn(Result.success(Unit))
 
@@ -129,7 +135,7 @@ class ListViewModelTest {
     }
 
     @Test
-    fun `display error when item delete is clicked but error occurred`() = runOnViewModel {
+    fun `display error when item delete is clicked but error occurred`() = runTest {
         val errorMessage = "Cannot delete item"
         given(router.openDeleteItemConfirmationDialog(any())).willAnswer { it.getArgument<() -> Unit>(0).invoke() }
         given(mockTodoRepository.deleteItem(testItemId)).willReturn(Result.failure(Throwable(errorMessage)))
@@ -140,26 +146,11 @@ class ListViewModelTest {
     }
 
     @Test
-    fun `open item edition view with correct data when item is clicked`() = runOnViewModel {
+    fun `open item edition view with correct data when item is clicked`() = runTest {
         viewModel.onItemClick(testItemId)
 
         verify(router).openItemEditionView(testItemId)
     }
-
-    private fun runOnViewModel(
-        loadState: CombinedLoadStates = defaultLoadState,
-        testBody: suspend TestScope.() -> Unit
-    ) = runTest {
-        viewModel.onStart(flowOf(loadState))
-        runCurrent()
-
-        testBody.invoke(this)
-    }
-
-    private val defaultLoadState = createLoadState(
-        refresh = LoadState.Loading,
-        append = LoadState.NotLoading(false)
-    )
 
     private fun createLoadState(
         refresh: LoadState = LoadState.NotLoading(false),

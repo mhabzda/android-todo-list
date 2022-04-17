@@ -10,7 +10,6 @@ import com.todo.list.ui.list.data.ListViewEvent.Error
 import com.todo.list.ui.list.data.ListViewState
 import com.todo.list.ui.list.navigation.ListRouter
 import com.todo.list.utils.onTerminate
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
@@ -23,27 +22,19 @@ class ListViewModel @Inject constructor(
 
     val pagingEvents = todoRepository.fetchTodoItems(PAGE_SIZE)
 
-    fun onStart(loadStateFlow: Flow<CombinedLoadStates>) {
-        viewModelScope.launch {
-            loadStateFlow.collectLatest(::handleLoadState)
+    fun onStart() = viewModelScope.launch {
+        todoRepository.observeItemsChanges().collectLatest {
+            onItemsRefresh()
         }
-
-        observeItemsChanges()
     }
 
-    private suspend fun handleLoadState(state: CombinedLoadStates) {
+    fun onLoadStateChange(state: CombinedLoadStates) = viewModelScope.launch {
         updateState { copy(isRefreshing = state.refresh is LoadState.Loading || state.append is LoadState.Loading) }
 
         val refreshState = state.refresh
         val appendState = state.append
         if (refreshState is LoadState.Error) sendEvent(Error(refreshState.error.message.orEmpty()))
         if (appendState is LoadState.Error) sendEvent(Error(appendState.error.message.orEmpty()))
-    }
-
-    private fun observeItemsChanges() = viewModelScope.launch {
-        todoRepository.observeItemsChanges().collectLatest {
-            onItemsRefresh()
-        }
     }
 
     fun onItemsRefresh() = viewModelScope.launch {

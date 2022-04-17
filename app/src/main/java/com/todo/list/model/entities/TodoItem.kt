@@ -7,10 +7,4 @@ data class TodoItem(
     val description: String,
     val creationDate: DateTime,
     val iconUrl: String
-) {
-    companion object {
-        fun create(title: String, description: String, iconUrl: String): TodoItem {
-            return TodoItem(title, description, DateTime.now(), iconUrl)
-        }
-    }
-}
+)

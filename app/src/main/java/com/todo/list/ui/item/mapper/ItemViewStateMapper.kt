@@ -14,7 +14,7 @@ class ItemViewStateMapper @Inject constructor() {
         creationDate: DateTime?
     ) = with(state) {
         when (screenMode) {
-            ItemScreenMode.CREATE -> TodoItem.create(title, description, iconUrl)
+            ItemScreenMode.CREATE -> TodoItem(title, description, DateTime.now(), iconUrl)
             ItemScreenMode.EDIT -> TodoItem(title, description, creationDate!!, iconUrl)
         }
     }

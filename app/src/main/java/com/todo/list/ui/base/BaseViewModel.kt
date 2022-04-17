@@ -10,7 +10,7 @@ abstract class BaseViewModel<State, Event>(defaultState: State) : ViewModel() {
     private val stateFlow = MutableStateFlow(defaultState)
     val state = stateFlow.asStateFlow()
 
-    private val eventChannel = Channel<Event>(Channel.BUFFERED)
+    private val eventChannel = Channel<Event>()
     val events = eventChannel.receiveAsFlow()
 
     protected fun updateState(block: State.() -> State) {

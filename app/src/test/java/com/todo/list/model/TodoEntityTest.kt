@@ -14,7 +14,7 @@ class TodoEntityTest {
         val title = "title"
         val description = "desc"
         val logoUrl = "logo.com"
-        val item = TodoItem.create(title, description, logoUrl)
+        val item = TodoItem(title, description, DateTime.now(), logoUrl)
 
         assertEquals(TodoItem(title, description, DateTime(FIXED_DATE_TIME), logoUrl), item)
     }
