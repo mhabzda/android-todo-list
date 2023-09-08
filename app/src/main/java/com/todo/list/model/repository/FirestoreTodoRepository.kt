@@ -23,7 +23,6 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class FirestoreTodoRepository @Inject constructor(
     private val todoCollection: CollectionReference,
     private val todoItemMapper: TodoItemMapper,
