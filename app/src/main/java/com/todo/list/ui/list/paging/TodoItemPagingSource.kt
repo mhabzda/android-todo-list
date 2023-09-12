@@ -14,23 +14,21 @@ class TodoItemPagingSource(
     private var itemIdFrom: String? = null
     private var pageNumber: Int = 0
 
-    override suspend fun load(
-        params: LoadParams<Int>
-    ): LoadResult<Int, TodoItem> {
-        return try {
-            val itemsList = withContext(Dispatchers.IO) {
-                getTodoItemListUseCase.invoke(pageSize = params.loadSize, itemIdFrom = itemIdFrom)
-            }
-            resolveNextPage(itemsList, params)
-            LoadResult.Page(
-                data = itemsList,
-                prevKey = null,
-                nextKey = if (isEndOfData(itemsList, params)) null else pageNumber
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TodoItem> =
+        getTodoItemListUseCase.invoke(pageSize = params.loadSize, itemIdFrom = itemIdFrom)
+            .fold(
+                onSuccess = { itemsList ->
+                    resolveNextPage(itemsList, params)
+                    LoadResult.Page(
+                        data = itemsList,
+                        prevKey = null,
+                        nextKey = if (isEndOfData(itemsList, params)) null else pageNumber,
+                    )
+                },
+                onFailure = {
+                    LoadResult.Error(it)
+                }
             )
-        } catch (exception: Throwable) {
-            LoadResult.Error(exception)
-        }
-    }
 
     private fun resolveNextPage(itemsList: List<TodoItem>, params: LoadParams<Int>) {
         if (isEndOfData(itemsList, params)) {
