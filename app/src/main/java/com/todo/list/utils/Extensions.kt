@@ -14,12 +14,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-fun LocalDateTime.formatDateHour(): String =
+fun ZonedDateTime.format(): String =
     format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
 
 fun ImageView.loadImage(url: String?) {

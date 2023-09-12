@@ -1,6 +1,6 @@
 package com.mhabzda.todolist.data.mapper
 
-import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.CREATION_DATE_KEY
+import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.CREATION_DATE_TIME_KEY
 import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.DESCRIPTION_KEY
 import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.LOGO_URL_KEY
 import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.TITLE_KEY
@@ -19,7 +19,7 @@ internal class TodoItemMapper @Inject constructor() {
             DESCRIPTION_KEY to description,
         )
         iconUrl?.let { itemMap[LOGO_URL_KEY] = it }
-        creationDate?.let { itemMap[CREATION_DATE_KEY] = it.toString() }
+        creationDate?.let { itemMap[CREATION_DATE_TIME_KEY] = it.toString() }
 
         return itemMap
     }

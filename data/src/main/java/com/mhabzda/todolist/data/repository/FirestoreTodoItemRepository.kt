@@ -5,7 +5,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.mhabzda.todolist.data.mapper.TodoDocumentFilter
-import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.CREATION_DATE_KEY
+import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.CREATION_DATE_TIME_KEY
 import com.mhabzda.todolist.data.mapper.TodoDocumentMapper
 import com.mhabzda.todolist.data.mapper.TodoItemMapper
 import com.mhabzda.todolist.data.time.CurrentDateTimeProvider
@@ -36,7 +36,7 @@ internal class FirestoreTodoItemRepository @Inject constructor(
 
         return Tasks.await(
             todoCollection
-                .orderBy(CREATION_DATE_KEY)
+                .orderBy(CREATION_DATE_TIME_KEY)
                 .run { if (lastItem == null) this else startAfter(lastItem) }
                 .limit(pageSize.toLong())
                 .get()

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.todo.list.databinding.ItemTodoBinding
-import com.todo.list.utils.formatDateHour
+import com.todo.list.utils.format
 import com.todo.list.utils.loadImage
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class ListAdapter @Inject constructor(
 
                 binding.itemImage.loadImage(it.iconUrl)
                 binding.itemTitle.text = it.title
-                binding.itemCreationDate.text = it.creationDate.formatDateHour()
+                binding.itemCreationDate.text = it.creationDateTime.format()
             }
         }
     }
@@ -44,7 +44,7 @@ class ListAdapter @Inject constructor(
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TodoItem>() {
             override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
-                return oldItem.creationDate == newItem.creationDate
+                return oldItem.creationDateTime == newItem.creationDateTime
             }
 
             override fun areContentsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {

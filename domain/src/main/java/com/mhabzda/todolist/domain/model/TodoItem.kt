@@ -1,12 +1,11 @@
 package com.mhabzda.todolist.domain.model
 
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 data class TodoItem(
     val id: String,
     val title: String,
     val description: String,
-    // TODO use zoned date time
-    val creationDate: LocalDateTime,
+    val creationDateTime: ZonedDateTime,
     val iconUrl: String?
 )
