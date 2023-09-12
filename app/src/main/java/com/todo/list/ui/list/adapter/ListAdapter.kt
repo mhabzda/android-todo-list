@@ -5,16 +5,15 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.mhabzda.todolist.domain.model.TodoItem
 import com.todo.list.databinding.ItemTodoBinding
-import com.todo.list.model.entities.TodoItem
 import com.todo.list.utils.formatDateHour
 import com.todo.list.utils.loadImage
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ListAdapter @Inject constructor(
-    private val longClickAction: (DateTime) -> Unit,
-    private val clickAction: (DateTime) -> Unit
+    private val longClickAction: (String) -> Unit,
+    private val clickAction: (String) -> Unit
 ) : PagingDataAdapter<TodoItem, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,10 +29,10 @@ class ListAdapter @Inject constructor(
         fun bind(item: TodoItem?) {
             item?.let {
                 binding.root.setOnLongClickListener {
-                    longClickAction.invoke(item.creationDate)
+                    longClickAction.invoke(item.id)
                     true
                 }
-                binding.root.setOnClickListener { clickAction(item.creationDate) }
+                binding.root.setOnClickListener { clickAction(item.id) }
 
                 binding.itemImage.loadImage(it.iconUrl)
                 binding.itemTitle.text = it.title

@@ -14,16 +14,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-fun DateTime.formatDateHour(): String {
-    val formatter: DateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm")
-    return formatter.print(this)
-}
+fun LocalDateTime.formatDateHour(): String =
+    format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
 
 fun ImageView.loadImage(url: String?) {
     Glide.with(context)

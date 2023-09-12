@@ -30,7 +30,7 @@
         <argument
             android:name="id"
             android:defaultValue="@null"
-            app:argType="org.joda.time.DateTime"
+            app:argType="string"
             app:nullable="true" />
     </fragment>
 

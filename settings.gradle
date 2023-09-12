@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = 'android-todo-list'
 include ':app'
+include ':domain'
+include ':data'

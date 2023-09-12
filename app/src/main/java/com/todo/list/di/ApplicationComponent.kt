@@ -1,7 +1,7 @@
 package com.todo.list.di
 
+import com.mhabzda.todolist.data.di.DataModule
 import com.todo.list.App
-import com.todo.list.di.repository.RepositoryModule
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
@@ -12,7 +12,7 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         ScreensModule::class,
-        RepositoryModule::class,
+        DataModule::class,
         ViewModelsModule::class
     ]
 )
