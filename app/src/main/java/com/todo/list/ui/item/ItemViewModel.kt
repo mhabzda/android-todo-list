@@ -1,9 +1,10 @@
 package com.todo.list.ui.item
 
 import androidx.lifecycle.viewModelScope
+import com.mhabzda.todolist.domain.usecase.EditTodoItemUseCase
+import com.mhabzda.todolist.domain.usecase.GetTodoItemUseCase
+import com.mhabzda.todolist.domain.usecase.SaveTodoItemUseCase
 import com.todo.list.R
-import com.todo.list.model.entities.TodoItem
-import com.todo.list.model.repository.TodoRepository
 import com.todo.list.ui.base.BaseViewModel
 import com.todo.list.ui.item.data.ItemViewEvent
 import com.todo.list.ui.item.data.ItemViewEvent.Close
@@ -11,27 +12,26 @@ import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessage
 import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessageRes
 import com.todo.list.ui.item.data.ItemViewState
 import com.todo.list.ui.item.mapper.ItemConfirmationMessageMapper
-import com.todo.list.ui.item.mapper.ItemViewStateMapper
 import com.todo.list.ui.item.mode.ItemScreenMode
 import com.todo.list.utils.isNotNull
 import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ItemViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
-    private val itemViewStateMapper: ItemViewStateMapper,
+    private val getTodoItemUseCase: GetTodoItemUseCase,
+    private val saveTodoItemUseCase: SaveTodoItemUseCase,
+    private val editTodoItemUseCase: EditTodoItemUseCase,
     private val itemConfirmationMessageMapper: ItemConfirmationMessageMapper
 ) : BaseViewModel<ItemViewState, ItemViewEvent>(ItemViewState()) {
 
     private lateinit var screenMode: ItemScreenMode
-    private var creationDate: DateTime? = null
+    private lateinit var id: String
 
-    fun onStart(id: DateTime?) {
+    fun onStart(id: String?) {
         screenMode = if (id.isNotNull()) {
             initializeData(id)
-            creationDate = id
+            this.id = id
             updateState { copy(buttonText = R.string.item_edition_button_title) }
             ItemScreenMode.EDIT
         } else {
@@ -40,11 +40,11 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    private fun initializeData(id: DateTime) = viewModelScope.launch {
+    private fun initializeData(id: String) = viewModelScope.launch {
         updateState { copy(isLoading = true) }
-        todoRepository.getItem(id)
+        getTodoItemUseCase.invoke(id)
             .onSuccess {
-                updateState { copy(title = it.title, description = it.description, iconUrl = it.iconUrl) }
+                updateState { copy(title = it.title, description = it.description, iconUrl = it.iconUrl.orEmpty()) }
             }
             .onFailure { sendEvent(DisplayMessage(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isLoading = false) } }
@@ -57,7 +57,8 @@ class ItemViewModel @Inject constructor(
         }
 
         updateState { copy(isLoading = true) }
-        resolveItemAction().invoke(itemViewStateMapper.map(state.value, screenMode, creationDate))
+
+        invokeItemAction()
             .onSuccess {
                 sendEvent(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
                 sendEvent(Close)
@@ -66,9 +67,20 @@ class ItemViewModel @Inject constructor(
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 
-    private fun resolveItemAction(): suspend (TodoItem) -> Result<Unit> =
+    private suspend fun invokeItemAction(): Result<Unit> = with(state.value) {
         when (screenMode) {
-            ItemScreenMode.CREATE -> todoRepository::saveItem
-            ItemScreenMode.EDIT -> todoRepository::editItem
+            ItemScreenMode.CREATE -> saveTodoItemUseCase.invoke(
+                title = title,
+                description = description,
+                iconUrl = iconUrl,
+            )
+
+            ItemScreenMode.EDIT -> editTodoItemUseCase.invoke(
+                id = id,
+                title = title,
+                description = description,
+                iconUrl = iconUrl,
+            )
         }
+    }
 }

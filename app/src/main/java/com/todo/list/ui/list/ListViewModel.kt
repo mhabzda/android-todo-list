@@ -3,29 +3,33 @@ package com.todo.list.ui.list
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import com.todo.list.model.repository.TodoRepository
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import com.mhabzda.todolist.domain.usecase.DeleteTodoItemUseCase
+import com.mhabzda.todolist.domain.usecase.GetTodoItemListUseCase
 import com.todo.list.ui.base.BaseViewModel
 import com.todo.list.ui.list.data.ListViewEvent
 import com.todo.list.ui.list.data.ListViewEvent.Error
 import com.todo.list.ui.list.data.ListViewState
 import com.todo.list.ui.list.navigation.ListRouter
+import com.todo.list.ui.list.paging.TodoItemPagingSource
 import com.todo.list.utils.onTerminate
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ListViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
+    private val getTodoItemListUseCase: GetTodoItemListUseCase,
+    private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
     private val router: ListRouter
 ) : BaseViewModel<ListViewState, ListViewEvent>(ListViewState()) {
 
-    val pagingEvents = todoRepository.fetchTodoItems(PAGE_SIZE)
+    val pagingEvents = Pager(PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false)) {
+        TodoItemPagingSource(getTodoItemListUseCase)
+    }.flow
 
-    fun onStart() = viewModelScope.launch {
-        todoRepository.observeItemsChanges().collectLatest {
-            onItemsRefresh()
-        }
+    fun onStart() {
+        // TODO refresh only when needed
+        onItemsRefresh()
     }
 
     fun onLoadStateChange(state: CombinedLoadStates) = viewModelScope.launch {
@@ -37,29 +41,32 @@ class ListViewModel @Inject constructor(
         if (appendState is LoadState.Error) sendEvent(Error(appendState.error.message.orEmpty()))
     }
 
-    fun onItemsRefresh() = viewModelScope.launch {
-        sendEvent(ListViewEvent.RefreshItems)
-    }
-
     fun onFloatingButtonClick() {
         router.openItemCreationView()
     }
 
-    fun onItemLongClick(id: DateTime) {
+    fun onItemLongClick(id: String) {
         router.openDeleteItemConfirmationDialog {
             deleteItem(id)
         }
     }
 
-    private fun deleteItem(id: DateTime) = viewModelScope.launch {
+    private fun deleteItem(id: String) = viewModelScope.launch {
         updateState { copy(isRefreshing = true) }
-        todoRepository.deleteItem(id)
-            .onSuccess { sendEvent(ListViewEvent.DisplayDeletionConfirmation) }
+        deleteTodoItemUseCase.invoke(id)
+            .onSuccess {
+                sendEvent(ListViewEvent.DisplayDeletionConfirmation)
+                onItemsRefresh()
+            }
             .onFailure { sendEvent(Error(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isRefreshing = false) } }
     }
 
-    fun onItemClick(id: DateTime) {
+    fun onItemsRefresh() = viewModelScope.launch {
+        sendEvent(ListViewEvent.RefreshItems)
+    }
+
+    fun onItemClick(id: String) {
         router.openItemEditionView(id)
     }
 

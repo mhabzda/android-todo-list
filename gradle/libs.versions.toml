@@ -21,7 +21,6 @@ dagger = "2.48"
 firebase-analytics = "21.3.0"
 firestore = "24.7.1"
 glide = "4.16.0"
-joda = "2.12.5"
 material = "1.9.0"
 # Testing
 junit5 = "5.8.2"
@@ -30,11 +29,13 @@ turbine = "1.0.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-library = { id = "com.android.library", version.ref = "android-gradle" }
 androidx-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidx-navigation" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 junit5-android = { id = "de.mannodermaus.android-junit5", version.ref = "junit5-android" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 versions-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "versions-catalog-update" }
 
@@ -62,7 +63,6 @@ dagger-support = { module = "com.google.dagger:dagger-android-support", version.
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }
 firestore = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firestore" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
-joda = { module = "joda-time:joda-time", version.ref = "joda" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 # Testing
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }

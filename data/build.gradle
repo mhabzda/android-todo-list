@@ -1,0 +1,28 @@
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.kapt
+}
+
+kotlin {
+    jvmToolchain 17
+}
+
+android {
+    namespace 'com.mhabzda.todolist.data'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 28
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation project(':domain')
+
+    implementation libs.dagger
+    kapt libs.dagger.compiler
+    implementation libs.firestore
+}

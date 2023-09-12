@@ -1,6 +1,6 @@
-package com.todo.list.model.mapper
+package com.mhabzda.todolist.data.mapper
 
-object TodoDocumentKeys {
+internal object TodoDocumentKeys {
     const val TITLE_KEY = "title"
     const val DESCRIPTION_KEY = "description"
     const val CREATION_DATE_KEY = "creationDate"

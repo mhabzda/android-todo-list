@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import androidx.navigation.NavController
 import com.todo.list.R
 import com.todo.list.ui.list.ListFragmentDirections
-import org.joda.time.DateTime
 import javax.inject.Inject
 
 class ListRouterImpl @Inject constructor(
@@ -14,7 +13,7 @@ class ListRouterImpl @Inject constructor(
         navigationController.navigate(ListFragmentDirections.actionToItemFragment())
     }
 
-    override fun openItemEditionView(id: DateTime) {
+    override fun openItemEditionView(id: String) {
         navigationController.navigate(ListFragmentDirections.actionToItemFragment(id))
     }
 
