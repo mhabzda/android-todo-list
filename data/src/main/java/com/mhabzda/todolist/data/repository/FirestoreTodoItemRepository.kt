@@ -1,10 +1,7 @@
 package com.mhabzda.todolist.data.repository
 
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
-import com.mhabzda.todolist.data.mapper.TodoDocumentFilter
 import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.CREATION_DATE_TIME_KEY
 import com.mhabzda.todolist.data.mapper.TodoDocumentMapper
 import com.mhabzda.todolist.data.mapper.TodoItemMapper
@@ -20,28 +17,26 @@ internal class FirestoreTodoItemRepository @Inject constructor(
     private val todoCollection: CollectionReference,
     private val todoItemMapper: TodoItemMapper,
     private val todoDocumentMapper: TodoDocumentMapper,
-    private val todoDocumentFilter: TodoDocumentFilter,
     private val currentDateTimeProvider: CurrentDateTimeProvider,
 ) : TodoItemRepository {
 
-    // TODO decide how to handle filtering and errors
-    override suspend fun getItems(pageSize: Int, itemIdFrom: String?): List<TodoItem> =
+    override suspend fun getItems(pageSize: Int, itemIdFrom: String?): Result<List<TodoItem>> =
         queryItems(pageSize = pageSize, itemIdFrom = itemIdFrom)
-            .documents
-            .filter { document -> todoDocumentFilter.filter(document) }
-            .map { document -> todoDocumentMapper.map(document) }
+            .mapCatching { documents -> documents.map { todoDocumentMapper.map(it) } }
 
-    private suspend fun queryItems(pageSize: Int, itemIdFrom: String?): QuerySnapshot {
-        val lastItem = if (itemIdFrom == null) null else getItemById(itemIdFrom).getOrThrow()
-
-        return Tasks.await(
-            todoCollection
-                .orderBy(CREATION_DATE_TIME_KEY)
-                .run { if (lastItem == null) this else startAfter(lastItem) }
-                .limit(pageSize.toLong())
-                .get()
-        )
-    }
+    private suspend fun queryItems(pageSize: Int, itemIdFrom: String?): Result<List<DocumentSnapshot>> =
+        (if (itemIdFrom == null) Result.success(null) else getItemById(itemIdFrom))
+            .mapCatching { document ->
+                suspendCoroutine { continuation ->
+                    todoCollection
+                        .orderBy(CREATION_DATE_TIME_KEY)
+                        .run { if (document == null) this else startAfter(document) }
+                        .limit(pageSize.toLong())
+                        .get()
+                        .addOnSuccessListener { continuation.resume(it.documents) }
+                        .addOnFailureListener { continuation.resumeWithException(it) }
+                }
+            }
 
     override suspend fun getItem(id: String): Result<TodoItem> =
         getItemById(id).mapCatching { todoDocumentMapper.map(it) }
