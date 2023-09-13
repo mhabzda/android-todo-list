@@ -78,7 +78,6 @@ dependencies {
     testImplementation libs.coroutines.test
     testImplementation libs.junit5.api
     testRuntimeOnly libs.junit5.engine
-    testImplementation libs.junit5.params
     testImplementation libs.mockito.kotlin
     testImplementation libs.turbine
 }

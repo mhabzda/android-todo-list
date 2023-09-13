@@ -2,6 +2,7 @@ plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
     alias libs.plugins.kotlin.kapt
+    alias libs.plugins.junit5.android
 }
 
 apply from: "$rootDir/gradle/settings.gradle"
@@ -28,4 +29,8 @@ dependencies {
     implementation libs.dagger
     kapt libs.dagger.compiler
     implementation libs.firestore
+
+    testImplementation libs.junit5.api
+    testRuntimeOnly libs.junit5.engine
+    testImplementation libs.mockito.kotlin
 }

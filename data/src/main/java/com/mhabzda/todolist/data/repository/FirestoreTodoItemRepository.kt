@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.mhabzda.todolist.data.mapper.TodoDocumentKeys.CREATION_DATE_TIME_KEY
 import com.mhabzda.todolist.data.mapper.TodoDocumentMapper
 import com.mhabzda.todolist.data.mapper.TodoItemMapper
-import com.mhabzda.todolist.data.time.CurrentDateTimeProvider
+import com.mhabzda.todolist.data.time.CurrentTimeProvider
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.mhabzda.todolist.domain.repository.TodoItemRepository
 import javax.inject.Inject
@@ -17,7 +17,7 @@ internal class FirestoreTodoItemRepository @Inject constructor(
     private val todoCollection: CollectionReference,
     private val todoItemMapper: TodoItemMapper,
     private val todoDocumentMapper: TodoDocumentMapper,
-    private val currentDateTimeProvider: CurrentDateTimeProvider,
+    private val currentTimeProvider: CurrentTimeProvider,
 ) : TodoItemRepository {
 
     override suspend fun getItems(pageSize: Int, itemIdFrom: String?): Result<List<TodoItem>> =
@@ -58,7 +58,7 @@ internal class FirestoreTodoItemRepository @Inject constructor(
                         title = title,
                         description = description,
                         iconUrl = iconUrl,
-                        creationDate = currentDateTimeProvider.getCurrentDateTime(),
+                        creationTime = currentTimeProvider.getCurrentDateTime(),
                     )
                 )
                 .addOnSuccessListener { continuation.resume(Result.success(Unit)) }
