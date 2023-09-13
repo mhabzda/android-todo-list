@@ -67,6 +67,5 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 # Testing
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
 junit5-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
-junit5-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
