@@ -7,19 +7,21 @@ plugins {
     alias libs.plugins.androidx.safe.args
 }
 
+apply from: "$rootDir/gradle/settings.gradle"
+
 kotlin {
-    jvmToolchain 17
+    jvmToolchain settings.jvmToolchain
 }
 
 android {
     namespace 'com.todo.list'
 
-    compileSdk 33
+    compileSdk settings.compileSdkVersion
 
     defaultConfig {
         applicationId "com.todo.list"
-        minSdkVersion 28
-        targetSdkVersion 33
+        minSdkVersion settings.minSdkVersion
+        targetSdkVersion settings.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
