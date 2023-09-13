@@ -1,0 +1,9 @@
+ext {
+    settings = [
+            minSdkVersion    : 28,
+            targetSdkVersion : 33,
+            compileSdkVersion: 33,
+            jvmToolchain     : 17,
+            javaVersion      : JavaVersion.VERSION_17,
+    ]
+}

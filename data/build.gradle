@@ -4,16 +4,19 @@ plugins {
     alias libs.plugins.kotlin.kapt
 }
 
+apply from: "$rootDir/gradle/settings.gradle"
+
 kotlin {
     jvmToolchain 17
 }
 
 android {
     namespace 'com.mhabzda.todolist.data'
-    compileSdk 33
+    compileSdk settings.compileSdkVersion
 
     defaultConfig {
-        minSdk 28
+        minSdkVersion settings.minSdkVersion
+        targetSdkVersion settings.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
