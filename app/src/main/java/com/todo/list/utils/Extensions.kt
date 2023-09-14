@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 fun ZonedDateTime.format(): String =
     format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
@@ -35,15 +33,6 @@ fun RequestManager.loadImageIfUrlIsPresent(url: String?): RequestBuilder<Drawabl
     } else {
         load(url).placeholder(placeholder)
     }
-}
-
-@OptIn(ExperimentalContracts::class)
-fun Any?.isNotNull(): Boolean {
-    contract {
-        returns(true) implies (this@isNotNull != null)
-    }
-
-    return this != null
 }
 
 fun <T> Result<T>.onTerminate(block: () -> Unit) {

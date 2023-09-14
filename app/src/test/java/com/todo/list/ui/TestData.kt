@@ -1,10 +1,14 @@
 package com.todo.list.ui
 
-import com.todo.list.model.entities.TodoItem
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+import com.mhabzda.todolist.domain.model.TodoItem
+import java.time.ZonedDateTime
 
 object TestData {
-    val testItemId = DateTime("2020-05-19T12:40:04.698Z", DateTimeZone.UTC)
-    val testTodoItem = TodoItem("title", "desc", testItemId, "logo.com")
+    val testTodoItem = TodoItem(
+        id = "11",
+        title = "title",
+        description = "desc",
+        creationDateTime = ZonedDateTime.parse("2023-09-13T17:23:34.000000234+02:00[Europe/Paris]"),
+        iconUrl = "logo.com",
+    )
 }

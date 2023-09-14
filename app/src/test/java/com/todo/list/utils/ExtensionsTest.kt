@@ -1,46 +1,23 @@
 package com.todo.list.utils
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
+import java.time.ZonedDateTime
 
 class ExtensionsTest {
     @Test
-    fun `when format date time then return text with day month year hour and minute`() {
-        val timezone = DateTimeZone.getDefault()
-        DateTimeZone.setDefault(DateTimeZone.UTC)
+    fun `WHEN format date time THEN return text with day month year hour and minute`() {
+        val givenDateTime = ZonedDateTime.parse("2023-09-13T17:23:34.000000234+02:00[Europe/Paris]")
 
-        val dateTime = DateTime("2020-05-19T12:40:04.698Z")
-        val result = dateTime.formatDateHour()
+        val result = givenDateTime.format()
 
-        assertEquals("19.05.2020 12:40", result)
-
-        DateTimeZone.setDefault(timezone)
+        assertEquals("13.09.2023 17:23", result)
     }
 
     @Test
-    fun `given null value when isNotNull check then return false`() {
-        val value: Any? = null
-
-        val result = value.isNotNull()
-
-        assertEquals(false, result)
-    }
-
-    @Test
-    fun `given non-null value when isNotNull check then return true`() {
-        val value: Any? = Any()
-
-        val result = value.isNotNull()
-
-        assertEquals(true, result)
-    }
-
-    @Test
-    fun `invoke success and terminate block when there is a Result success`() {
+    fun `GIVEN result is success WHEN invoke THEN trigger success and terminate blocks`() {
         val successBlock: () -> Unit = mock()
         val terminateBlock: () -> Unit = mock()
         Result.success(Unit)
@@ -53,7 +30,7 @@ class ExtensionsTest {
     }
 
     @Test
-    fun `invoke failure and terminate block when there is a Result success`() {
+    fun `GIVEN result is failure WHEN invoke THEN trigger success and terminate blocks`() {
         val failureBlock: () -> Unit = mock()
         val terminateBlock: () -> Unit = mock()
         Result.failure<Unit>(Throwable())
