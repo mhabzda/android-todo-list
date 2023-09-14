@@ -2,9 +2,9 @@ package com.todo.list.ui.list.data
 
 sealed class ListViewEvent {
 
-    object RefreshItems : ListViewEvent()
+    data object RefreshItems : ListViewEvent()
 
-    object DisplayDeletionConfirmation : ListViewEvent()
+    data object DisplayDeletionConfirmation : ListViewEvent()
 
     data class Error(val message: String) : ListViewEvent()
 }

@@ -13,7 +13,6 @@ import com.todo.list.ui.item.data.ItemViewEvent.DisplayMessageRes
 import com.todo.list.ui.item.data.ItemViewState
 import com.todo.list.ui.item.mapper.ItemConfirmationMessageMapper
 import com.todo.list.ui.item.mode.ItemScreenMode
-import com.todo.list.utils.isNotNull
 import com.todo.list.utils.onTerminate
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class ItemViewModel @Inject constructor(
     private lateinit var id: String
 
     fun onStart(id: String?) {
-        screenMode = if (id.isNotNull()) {
+        screenMode = if (id != null) {
             initializeData(id)
             this.id = id
             updateState { copy(buttonText = R.string.item_edition_button_title) }
