@@ -11,16 +11,16 @@ import com.mhabzda.todolist.ui.base.BaseViewModel
 import com.mhabzda.todolist.ui.list.data.ListViewEvent
 import com.mhabzda.todolist.ui.list.data.ListViewEvent.Error
 import com.mhabzda.todolist.ui.list.data.ListViewState
-import com.mhabzda.todolist.ui.list.navigation.ListRouter
 import com.mhabzda.todolist.ui.list.paging.TodoItemPagingSource
 import com.mhabzda.todolist.utils.onTerminate
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ListViewModel @Inject constructor(
     private val getTodoItemListUseCase: GetTodoItemListUseCase,
     private val deleteTodoItemUseCase: DeleteTodoItemUseCase,
-    private val router: ListRouter
 ) : BaseViewModel<ListViewState, ListViewEvent>(ListViewState()) {
 
     val pagingEvents = Pager(PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false)) {
@@ -41,17 +41,7 @@ class ListViewModel @Inject constructor(
         if (appendState is LoadState.Error) sendEvent(Error(appendState.error.message.orEmpty()))
     }
 
-    fun onFloatingButtonClick() {
-        router.openItemCreationView()
-    }
-
-    fun onItemLongClick(id: String) {
-        router.openDeleteItemConfirmationDialog {
-            deleteItem(id)
-        }
-    }
-
-    private fun deleteItem(id: String) = viewModelScope.launch {
+    fun deleteItem(id: String) = viewModelScope.launch {
         updateState { copy(isRefreshing = true) }
         deleteTodoItemUseCase.invoke(id)
             .onSuccess {
@@ -62,12 +52,8 @@ class ListViewModel @Inject constructor(
             .onTerminate { updateState { copy(isRefreshing = false) } }
     }
 
-    fun onItemsRefresh() = viewModelScope.launch {
+    private fun onItemsRefresh() = viewModelScope.launch {
         sendEvent(ListViewEvent.RefreshItems)
-    }
-
-    fun onItemClick(id: String) {
-        router.openItemEditionView(id)
     }
 
     companion object {

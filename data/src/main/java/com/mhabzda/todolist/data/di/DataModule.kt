@@ -8,9 +8,12 @@ import com.mhabzda.todolist.domain.repository.TodoItemRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class DataModule {
     @Singleton
     @Binds
@@ -19,10 +22,8 @@ abstract class DataModule {
     ): TodoItemRepository
 
     companion object {
-        private const val COLLECTION_NAME = "todo_items"
-
         @Provides
         fun provideTodoCollection(): CollectionReference =
-            Firebase.firestore.collection(COLLECTION_NAME)
+            Firebase.firestore.collection("todo_items")
     }
 }
