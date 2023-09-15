@@ -1,12 +1,20 @@
 package com.mhabzda.todolist
 
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.mhabzda.todolist.theme.TodoListTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : FragmentActivity() {
-
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        setContent {
+            TodoListTheme {
+                TodoListNavHost()
+            }
+        }
     }
 }

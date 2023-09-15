@@ -11,5 +11,5 @@ java {
 }
 
 dependencies {
-    implementation libs.dagger
+    compileOnly libs.javax.inject
 }
