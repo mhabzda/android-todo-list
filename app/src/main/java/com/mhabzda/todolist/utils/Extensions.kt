@@ -1,15 +1,9 @@
 package com.mhabzda.todolist.utils
 
-import android.graphics.drawable.Drawable
-import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.RequestManager
-import com.mhabzda.todolist.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -19,21 +13,6 @@ import java.time.format.DateTimeFormatter
 
 fun ZonedDateTime.format(): String =
     format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-
-fun ImageView.loadImage(url: String?) {
-    Glide.with(context)
-        .loadImageIfUrlIsPresent(url)
-        .into(this)
-}
-
-fun RequestManager.loadImageIfUrlIsPresent(url: String?): RequestBuilder<Drawable> {
-    val placeholder = R.drawable.ic_check_box
-    return if (url.isNullOrEmpty()) {
-        load(placeholder)
-    } else {
-        load(url).placeholder(placeholder)
-    }
-}
 
 fun <T> Result<T>.onTerminate(block: () -> Unit) {
     onSuccess { block.invoke() }
