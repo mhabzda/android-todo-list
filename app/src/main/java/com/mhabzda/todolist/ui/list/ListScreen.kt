@@ -1,5 +1,6 @@
 package com.mhabzda.todolist.ui.list
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -27,11 +28,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,50 +47,51 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.mhabzda.todolist.theme.defaultMargin
+import com.mhabzda.todolist.ui.list.ListContract.ListEffect
 import com.mhabzda.todolist.utils.format
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListScreen(
-    lazyPagingItems: LazyPagingItems<TodoItem>,
+    viewModel: ListViewModel = hiltViewModel(),
     navigateToAddItem: () -> Unit,
     navigateToEditItem: (String) -> Unit,
-    deleteItem: (String) -> Unit,
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToAddItem,
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.secondary,
-            ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val state = viewModel.state.collectAsState()
+    val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
+
+    val deleteConfirmationMessage = stringResource(id = R.string.delete_item_confirmation_message)
+    LaunchedEffect(viewModel.effects) {
+        viewModel.effects.collectLatest {
+            when (it) {
+                ListEffect.RefreshItems -> lazyPagingItems.refresh()
+                ListEffect.DisplayDeletionConfirmation -> launch { snackbarHostState.showSnackbar(deleteConfirmationMessage) }
+                is ListEffect.Error -> launch { snackbarHostState.showSnackbar(it.message) }
             }
-        },
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = { ListTopAppBar() },
+        floatingActionButton = { ListFloatingActionButton(navigateToAddItem) },
         content = {
             val refreshLoadState = lazyPagingItems.loadState.refresh
             val appendLoadState = lazyPagingItems.loadState.append
-            val isRefreshing = refreshLoadState == LoadState.Loading
+            val isRefreshing = refreshLoadState == LoadState.Loading || state.value.showDeleteLoading
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = isRefreshing,
                 onRefresh = { lazyPagingItems.refresh() },
@@ -137,9 +143,11 @@ fun ListScreen(
                 }
 
                 if (refreshLoadState is LoadState.Error) {
-                    ErrorDialog(
-                        errorMessage = stringResource(id = R.string.list_error_description_refresh),
-                        retryAction = { lazyPagingItems.refresh() },
+                    ListAlertDialog(
+                        titleResId = R.string.error_title,
+                        textResId = R.string.list_error_description_refresh,
+                        confirmButtonTextResId = R.string.retry,
+                        confirmAction = { lazyPagingItems.refresh() },
                     )
                 }
 
@@ -149,16 +157,47 @@ fun ListScreen(
                     modifier = Modifier.align(Alignment.TopCenter),
                 )
 
-                // TODO add loading on deletion
                 itemToDeleteId.value?.let {
-                    DeleteDialogAlert(
-                        confirmAction = { deleteItem(it) },
+                    ListAlertDialog(
+                        titleResId = R.string.delete_item_dialog_title,
+                        textResId = R.string.delete_item_dialog_message,
+                        confirmButtonTextResId = R.string.delete_item_dialog_delete_button,
+                        confirmAction = {
+                            viewModel.deleteItem(it)
+                            itemToDeleteId.value = null
+                        },
+                        dismissButtonTextResId = R.string.delete_item_dialog_cancel_button,
                         dismissAction = { itemToDeleteId.value = null },
                     )
                 }
             }
         }
     )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun ListTopAppBar() {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
+    )
+}
+
+@Composable
+private fun ListFloatingActionButton(onClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = onClick,
+        shape = CircleShape,
+        containerColor = MaterialTheme.colorScheme.secondary,
+    ) {
+        Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+    }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalFoundationApi::class)
@@ -213,58 +252,41 @@ private fun ItemView(
     }
 }
 
-// TODO unify dialogs
 @Composable
-private fun DeleteDialogAlert(
+private fun ListAlertDialog(
+    @StringRes titleResId: Int,
+    @StringRes textResId: Int,
+    @StringRes confirmButtonTextResId: Int,
     confirmAction: () -> Unit,
-    dismissAction: () -> Unit,
+    @StringRes dismissButtonTextResId: Int? = null,
+    dismissAction: () -> Unit = {},
 ) {
     AlertDialog(
-        title = { Text(text = stringResource(id = R.string.delete_item_dialog_title)) },
+        title = { Text(text = stringResource(id = titleResId)) },
         text = {
             Text(
-                text = stringResource(id = R.string.delete_item_dialog_message),
+                text = stringResource(id = textResId),
                 style = MaterialTheme.typography.bodyLarge,
             )
         },
-        onDismissRequest = { dismissAction() },
+        onDismissRequest = dismissAction,
         confirmButton = {
             TextButton(onClick = confirmAction) {
                 Text(
-                    text = stringResource(id = R.string.delete_item_dialog_delete_button),
+                    text = stringResource(id = confirmButtonTextResId),
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }
         },
         dismissButton = {
-            TextButton(onClick = dismissAction) {
-                Text(
-                    text = stringResource(id = R.string.delete_item_dialog_cancel_button),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+            dismissButtonTextResId?.let {
+                TextButton(onClick = dismissAction) {
+                    Text(
+                        text = stringResource(id = it),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
             }
         }
-    )
-}
-
-@Composable
-private fun ErrorDialog(errorMessage: String, retryAction: () -> Unit) {
-    AlertDialog(
-        title = { Text(text = stringResource(id = R.string.error_title)) },
-        text = {
-            Text(
-                text = errorMessage,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        },
-        onDismissRequest = { },
-        confirmButton = {
-            TextButton(onClick = retryAction) {
-                Text(
-                    text = stringResource(id = R.string.retry),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
-        },
     )
 }

@@ -45,13 +45,13 @@ class ItemViewModel @Inject constructor(
             .onSuccess {
                 updateState { copy(title = it.title, description = it.description, iconUrl = it.iconUrl.orEmpty()) }
             }
-            .onFailure { sendEvent(DisplayMessage(it.message.orEmpty())) }
+            .onFailure { sendEffect(DisplayMessage(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 
     fun onItemButtonClick() = viewModelScope.launch {
         if (state.value.title.isEmpty()) {
-            sendEvent(DisplayMessageRes(R.string.item_empty_title_message))
+            sendEffect(DisplayMessageRes(R.string.item_empty_title_message))
             return@launch
         }
 
@@ -59,10 +59,10 @@ class ItemViewModel @Inject constructor(
 
         invokeItemAction()
             .onSuccess {
-                sendEvent(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
-                sendEvent(Close)
+                sendEffect(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
+                sendEffect(Close)
             }
-            .onFailure { sendEvent(DisplayMessage(it.message.orEmpty())) }
+            .onFailure { sendEffect(DisplayMessage(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 

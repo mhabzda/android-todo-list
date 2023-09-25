@@ -35,7 +35,7 @@ class ItemFragment : Fragment() {
         binding.itemToolbar.toolbar.setupWithNavController(findNavController())
         binding.itemToolbar.toolbar.setTitle(R.string.app_name)
 
-        viewModel.events.observeWhenStarted(viewLifecycleOwner, ::handleEvent)
+        viewModel.effects.observeWhenStarted(viewLifecycleOwner, ::handleEvent)
         viewModel.onStart(arguments.id)
     }
 
