@@ -10,6 +10,15 @@ java {
     targetCompatibility = settings.javaVersion
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compileOnly libs.javax.inject
+
+    testImplementation libs.junit5.api
+    testRuntimeOnly libs.junit5.engine
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.coroutines.test
 }

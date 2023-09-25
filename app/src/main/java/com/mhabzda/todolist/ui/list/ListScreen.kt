@@ -46,35 +46,64 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
+import com.mhabzda.todolist.theme.TodoListTheme
 import com.mhabzda.todolist.theme.defaultMargin
 import com.mhabzda.todolist.ui.list.ListContract.ListEffect
+import com.mhabzda.todolist.ui.list.ListContract.ListViewState
 import com.mhabzda.todolist.utils.format
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.ZonedDateTime
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListScreen(
     viewModel: ListViewModel = hiltViewModel(),
     navigateToAddItem: () -> Unit,
     navigateToEditItem: (String) -> Unit,
 ) {
+    ListScreen(
+        pagingFlow = viewModel.pagingFlow,
+        viewState = viewModel.state,
+        effects = viewModel.effects,
+        navigateToAddItem = navigateToAddItem,
+        navigateToEditItem = navigateToEditItem,
+        deleteItem = viewModel::deleteItem,
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ListScreen(
+    pagingFlow: Flow<PagingData<TodoItem>>,
+    viewState: StateFlow<ListViewState>,
+    effects: SharedFlow<ListEffect>,
+    navigateToAddItem: () -> Unit,
+    navigateToEditItem: (String) -> Unit,
+    deleteItem: (String) -> Unit,
+) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val state = viewModel.state.collectAsState()
-    val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
+    val state = viewState.collectAsState()
+    val lazyPagingItems = pagingFlow.collectAsLazyPagingItems()
 
     val deleteConfirmationMessage = stringResource(id = R.string.delete_item_confirmation_message)
-    LaunchedEffect(viewModel.effects) {
-        viewModel.effects.collectLatest {
+    LaunchedEffect(effects) {
+        effects.collectLatest {
             when (it) {
                 ListEffect.RefreshItems -> lazyPagingItems.refresh()
                 ListEffect.DisplayDeletionConfirmation -> launch { snackbarHostState.showSnackbar(deleteConfirmationMessage) }
@@ -163,7 +192,7 @@ fun ListScreen(
                         textResId = R.string.delete_item_dialog_message,
                         confirmButtonTextResId = R.string.delete_item_dialog_delete_button,
                         confirmAction = {
-                            viewModel.deleteItem(it)
+                            deleteItem(it)
                             itemToDeleteId.value = null
                         },
                         dismissButtonTextResId = R.string.delete_item_dialog_cancel_button,
@@ -290,3 +319,42 @@ private fun ListAlertDialog(
         }
     )
 }
+
+@Preview
+@Composable
+fun ListScreenPreviewLongList() {
+    TodoListTheme {
+        ListScreen(
+            pagingFlow = MutableStateFlow(PagingData.from(List(10) { getTodoItem() })),
+            viewState = MutableStateFlow(ListViewState()),
+            effects = MutableSharedFlow(),
+            navigateToAddItem = { },
+            navigateToEditItem = {},
+            deleteItem = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ListScreenPreviewShortList() {
+    TodoListTheme {
+        ListScreen(
+            pagingFlow = MutableStateFlow(PagingData.from(List(5) { getTodoItem() })),
+            viewState = MutableStateFlow(ListViewState()),
+            effects = MutableSharedFlow(),
+            navigateToAddItem = { },
+            navigateToEditItem = {},
+            deleteItem = {},
+        )
+    }
+}
+
+@Composable
+private fun getTodoItem() = TodoItem(
+    id = "11",
+    title = "title",
+    description = "desc",
+    creationDateTime = ZonedDateTime.parse("2023-09-13T17:23:34.000000234+02:00[Europe/Paris]"),
+    iconUrl = null,
+)
