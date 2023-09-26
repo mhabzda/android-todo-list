@@ -1,5 +1,5 @@
 ext {
-    settings = [
+    config = [
             minSdkVersion    : 28,
             targetSdkVersion : 33,
             compileSdkVersion: 34,
