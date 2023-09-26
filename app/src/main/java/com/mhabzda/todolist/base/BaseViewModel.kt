@@ -6,7 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-abstract class BaseViewModel<State, Effect>(defaultState: State) : ViewModel() {
+abstract class BaseViewModel<State, Effect>(
+    defaultState: State,
+    private val emitSnackbarMessage: suspend (String) -> Unit = {},
+) : ViewModel() {
     private val stateFlow = MutableStateFlow(defaultState)
     val state = stateFlow.asStateFlow()
 
@@ -19,5 +22,9 @@ abstract class BaseViewModel<State, Effect>(defaultState: State) : ViewModel() {
 
     protected suspend fun sendEffect(effect: Effect) {
         effectsFlow.emit(effect)
+    }
+
+    suspend fun showSnackbar(message: String) {
+        emitSnackbarMessage(message)
     }
 }

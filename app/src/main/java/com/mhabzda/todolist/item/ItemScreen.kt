@@ -23,8 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -47,24 +45,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhabzda.todolist.R
-import com.mhabzda.todolist.theme.marginDefault
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.Close
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessage
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessageRes
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitDescription
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitIconUrl
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitTitle
+import com.mhabzda.todolist.theme.marginDefault
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 // TODO split into components & hide keyboard on outside click and back button & change buttons corners
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(
     viewModel: ItemViewModel = hiltViewModel(),
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
     val state = viewModel.state.collectAsState()
     val effects = viewModel.effects
 
@@ -78,15 +76,14 @@ fun ItemScreen(
                 is InitTitle -> titleText = it.title
                 is InitDescription -> descriptionText = it.description
                 is InitIconUrl -> iconUrlText = it.iconUrl
-                is DisplayMessageRes -> snackbarHostState.showSnackbar(context.resources.getString(it.messageRes))
-                is DisplayMessage -> snackbarHostState.showSnackbar(it.message)
+                is DisplayMessageRes -> launch { viewModel.showSnackbar(context.resources.getString(it.messageRes)) }
+                is DisplayMessage -> launch { viewModel.showSnackbar(it.message) }
                 Close -> navigateBack()
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(

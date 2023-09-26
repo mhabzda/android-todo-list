@@ -18,6 +18,7 @@ import com.mhabzda.todolist.item.ItemContract.ItemViewState
 import com.mhabzda.todolist.item.ItemScreenDestination.ITEM_ID_ARG_NAME
 import com.mhabzda.todolist.item.mapper.ItemConfirmationMessageMapper
 import com.mhabzda.todolist.item.mode.ItemScreenMode
+import com.mhabzda.todolist.util.SnackbarFlow
 import com.mhabzda.todolist.util.onTerminate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -29,8 +30,12 @@ class ItemViewModel @Inject constructor(
     private val getTodoItemUseCase: GetTodoItemUseCase,
     private val createTodoItemUseCase: CreateTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
-    private val itemConfirmationMessageMapper: ItemConfirmationMessageMapper
-) : BaseViewModel<ItemViewState, ItemEffect>(ItemViewState()) {
+    private val itemConfirmationMessageMapper: ItemConfirmationMessageMapper,
+    snackbarFlow: SnackbarFlow,
+) : BaseViewModel<ItemViewState, ItemEffect>(
+    defaultState = ItemViewState(),
+    emitSnackbarMessage = snackbarFlow::emit
+) {
 
     private val itemId: String? = savedStateHandle[ITEM_ID_ARG_NAME]
     private val screenMode: ItemScreenMode

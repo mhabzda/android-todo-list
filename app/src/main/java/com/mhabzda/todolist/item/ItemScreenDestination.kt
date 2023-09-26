@@ -39,7 +39,7 @@ data object ItemScreenDestination : Destination() {
             exitTransition = { slideOutOfContainer(towards = Right, animationSpec = tween(NAVIGATION_ANIMATION_DURATION_MILLIS)) },
         ) {
             ItemScreen(
-                navigateBack = navController::navigateUp
+                navigateBack = navController::navigateUp,
             )
         }
     }

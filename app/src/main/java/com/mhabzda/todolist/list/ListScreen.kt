@@ -28,8 +28,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -57,10 +55,10 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
-import com.mhabzda.todolist.theme.TodoListTheme
-import com.mhabzda.todolist.theme.marginDefault
 import com.mhabzda.todolist.list.ListContract.ListEffect
 import com.mhabzda.todolist.list.ListContract.ListViewState
+import com.mhabzda.todolist.theme.TodoListTheme
+import com.mhabzda.todolist.theme.marginDefault
 import com.mhabzda.todolist.util.format
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -81,6 +79,7 @@ fun ListScreen(
         pagingFlow = viewModel.pagingFlow,
         viewState = viewModel.state,
         effects = viewModel.effects,
+        showSnackbar = viewModel::showSnackbar,
         navigateToCreateItem = navigateToCreateItem,
         navigateToEditItem = navigateToEditItem,
         deleteItem = viewModel::deleteItem,
@@ -93,11 +92,11 @@ fun ListScreen(
     pagingFlow: Flow<PagingData<TodoItem>>,
     viewState: StateFlow<ListViewState>,
     effects: SharedFlow<ListEffect>,
+    showSnackbar: suspend (String) -> Unit,
     navigateToCreateItem: () -> Unit,
     navigateToEditItem: (String) -> Unit,
     deleteItem: (String) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     val state = viewState.collectAsState()
     val lazyPagingItems = pagingFlow.collectAsLazyPagingItems()
 
@@ -106,14 +105,13 @@ fun ListScreen(
         effects.collectLatest {
             when (it) {
                 ListEffect.RefreshItems -> lazyPagingItems.refresh()
-                ListEffect.DisplayDeletionConfirmation -> launch { snackbarHostState.showSnackbar(deleteConfirmationMessage) }
-                is ListEffect.Error -> launch { snackbarHostState.showSnackbar(it.message) }
+                ListEffect.DisplayDeletionConfirmation -> launch { showSnackbar(deleteConfirmationMessage) }
+                is ListEffect.Error -> launch { showSnackbar(it.message) }
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { ListTopAppBar() },
         floatingActionButton = { ListFloatingActionButton(navigateToCreateItem) },
@@ -328,6 +326,7 @@ fun ListScreenPreviewLongList() {
             pagingFlow = MutableStateFlow(PagingData.from(List(10) { getTodoItem() })),
             viewState = MutableStateFlow(ListViewState()),
             effects = MutableSharedFlow(),
+            showSnackbar = {},
             navigateToCreateItem = {},
             navigateToEditItem = {},
             deleteItem = {},
@@ -343,6 +342,7 @@ fun ListScreenPreviewShortList() {
             pagingFlow = MutableStateFlow(PagingData.from(List(5) { getTodoItem() })),
             viewState = MutableStateFlow(ListViewState()),
             effects = MutableSharedFlow(),
+            showSnackbar = {},
             navigateToCreateItem = {},
             navigateToEditItem = {},
             deleteItem = {},
