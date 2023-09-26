@@ -50,7 +50,7 @@ internal class FirestoreTodoItemRepository @Inject constructor(
             }
         }
 
-    override suspend fun saveItem(title: String, description: String, iconUrl: String?): Result<Unit> =
+    override suspend fun createItem(title: String, description: String, iconUrl: String?): Result<Unit> =
         suspendCoroutine { continuation ->
             todoCollection
                 .add(

@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-val defaultMargin = 16.dp
+val marginDefault = 16.dp
 
 private val LightColors = lightColorScheme(
     primary = Color(0xFF052CA3),

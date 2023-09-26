@@ -1,36 +1,43 @@
 package com.mhabzda.todolist.ui.item
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.mhabzda.todolist.Destination.ItemScreen.ITEM_ID_ARG_NAME
 import com.mhabzda.todolist.R
+import com.mhabzda.todolist.domain.usecase.CreateTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.EditTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.GetTodoItemUseCase
-import com.mhabzda.todolist.domain.usecase.SaveTodoItemUseCase
 import com.mhabzda.todolist.ui.base.BaseViewModel
-import com.mhabzda.todolist.ui.item.data.ItemViewEvent
-import com.mhabzda.todolist.ui.item.data.ItemViewEvent.Close
-import com.mhabzda.todolist.ui.item.data.ItemViewEvent.DisplayMessage
-import com.mhabzda.todolist.ui.item.data.ItemViewEvent.DisplayMessageRes
-import com.mhabzda.todolist.ui.item.data.ItemViewState
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.Close
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.DisplayMessage
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.DisplayMessageRes
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitDescription
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitIconUrl
+import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitTitle
+import com.mhabzda.todolist.ui.item.ItemContract.ItemViewState
 import com.mhabzda.todolist.ui.item.mapper.ItemConfirmationMessageMapper
 import com.mhabzda.todolist.ui.item.mode.ItemScreenMode
 import com.mhabzda.todolist.utils.onTerminate
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ItemViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getTodoItemUseCase: GetTodoItemUseCase,
-    private val saveTodoItemUseCase: SaveTodoItemUseCase,
+    private val createTodoItemUseCase: CreateTodoItemUseCase,
     private val editTodoItemUseCase: EditTodoItemUseCase,
     private val itemConfirmationMessageMapper: ItemConfirmationMessageMapper
-) : BaseViewModel<ItemViewState, ItemViewEvent>(ItemViewState()) {
+) : BaseViewModel<ItemViewState, ItemEffect>(ItemViewState()) {
 
-    private lateinit var screenMode: ItemScreenMode
-    private lateinit var id: String
+    private val itemId: String? = savedStateHandle[ITEM_ID_ARG_NAME]
+    private val screenMode: ItemScreenMode
 
-    fun onStart(id: String?) {
-        screenMode = if (id != null) {
-            initializeData(id)
-            this.id = id
+    init {
+        screenMode = if (itemId != null) {
+            initializeData(itemId)
             updateState { copy(buttonText = R.string.item_edition_button_title) }
             ItemScreenMode.EDIT
         } else {
@@ -43,21 +50,23 @@ class ItemViewModel @Inject constructor(
         updateState { copy(isLoading = true) }
         getTodoItemUseCase.invoke(id)
             .onSuccess {
-                updateState { copy(title = it.title, description = it.description, iconUrl = it.iconUrl.orEmpty()) }
+                sendEffect(InitTitle(it.title))
+                sendEffect(InitDescription(it.description))
+                sendEffect(InitIconUrl(it.iconUrl.orEmpty()))
             }
             .onFailure { sendEffect(DisplayMessage(it.message.orEmpty())) }
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 
-    fun onItemButtonClick() = viewModelScope.launch {
-        if (state.value.title.isEmpty()) {
+    fun onButtonClick(title: String, description: String, iconUrl: String) = viewModelScope.launch {
+        if (title.isEmpty()) {
             sendEffect(DisplayMessageRes(R.string.item_empty_title_message))
             return@launch
         }
 
         updateState { copy(isLoading = true) }
 
-        invokeItemAction()
+        invokeItemAction(title = title, description = description, iconUrl = iconUrl.ifEmpty { null })
             .onSuccess {
                 sendEffect(DisplayMessageRes(itemConfirmationMessageMapper.map(screenMode)))
                 sendEffect(Close)
@@ -66,20 +75,18 @@ class ItemViewModel @Inject constructor(
             .onTerminate { updateState { copy(isLoading = false) } }
     }
 
-    private suspend fun invokeItemAction(): Result<Unit> = with(state.value) {
+    private suspend fun invokeItemAction(title: String, description: String, iconUrl: String?): Result<Unit> =
         when (screenMode) {
-            ItemScreenMode.CREATE -> saveTodoItemUseCase.invoke(
+            ItemScreenMode.CREATE -> createTodoItemUseCase.invoke(
                 title = title,
                 description = description,
                 iconUrl = iconUrl,
             )
-
             ItemScreenMode.EDIT -> editTodoItemUseCase.invoke(
-                id = id,
+                id = itemId.orEmpty(),
                 title = title,
                 description = description,
                 iconUrl = iconUrl,
             )
         }
-    }
 }

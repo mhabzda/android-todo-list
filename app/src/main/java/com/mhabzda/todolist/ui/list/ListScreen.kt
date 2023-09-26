@@ -58,7 +58,7 @@ import com.bumptech.glide.integration.compose.placeholder
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.mhabzda.todolist.theme.TodoListTheme
-import com.mhabzda.todolist.theme.defaultMargin
+import com.mhabzda.todolist.theme.marginDefault
 import com.mhabzda.todolist.ui.list.ListContract.ListEffect
 import com.mhabzda.todolist.ui.list.ListContract.ListViewState
 import com.mhabzda.todolist.utils.format
@@ -74,14 +74,14 @@ import java.time.ZonedDateTime
 @Composable
 fun ListScreen(
     viewModel: ListViewModel = hiltViewModel(),
-    navigateToAddItem: () -> Unit,
+    navigateToCreateItem: () -> Unit,
     navigateToEditItem: (String) -> Unit,
 ) {
     ListScreen(
         pagingFlow = viewModel.pagingFlow,
         viewState = viewModel.state,
         effects = viewModel.effects,
-        navigateToAddItem = navigateToAddItem,
+        navigateToCreateItem = navigateToCreateItem,
         navigateToEditItem = navigateToEditItem,
         deleteItem = viewModel::deleteItem,
     )
@@ -93,7 +93,7 @@ fun ListScreen(
     pagingFlow: Flow<PagingData<TodoItem>>,
     viewState: StateFlow<ListViewState>,
     effects: SharedFlow<ListEffect>,
-    navigateToAddItem: () -> Unit,
+    navigateToCreateItem: () -> Unit,
     navigateToEditItem: (String) -> Unit,
     deleteItem: (String) -> Unit,
 ) {
@@ -116,7 +116,7 @@ fun ListScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { ListTopAppBar() },
-        floatingActionButton = { ListFloatingActionButton(navigateToAddItem) },
+        floatingActionButton = { ListFloatingActionButton(navigateToCreateItem) },
         content = {
             val refreshLoadState = lazyPagingItems.loadState.refresh
             val appendLoadState = lazyPagingItems.loadState.append
@@ -161,7 +161,7 @@ fun ListScreen(
                             Text(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(all = defaultMargin),
+                                    .padding(all = marginDefault),
                                 text = stringResource(id = R.string.list_error_description_append),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.error,
@@ -328,7 +328,7 @@ fun ListScreenPreviewLongList() {
             pagingFlow = MutableStateFlow(PagingData.from(List(10) { getTodoItem() })),
             viewState = MutableStateFlow(ListViewState()),
             effects = MutableSharedFlow(),
-            navigateToAddItem = { },
+            navigateToCreateItem = {},
             navigateToEditItem = {},
             deleteItem = {},
         )
@@ -343,7 +343,7 @@ fun ListScreenPreviewShortList() {
             pagingFlow = MutableStateFlow(PagingData.from(List(5) { getTodoItem() })),
             viewState = MutableStateFlow(ListViewState()),
             effects = MutableSharedFlow(),
-            navigateToAddItem = { },
+            navigateToCreateItem = {},
             navigateToEditItem = {},
             deleteItem = {},
         )
