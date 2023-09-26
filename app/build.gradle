@@ -4,7 +4,6 @@ plugins {
     alias libs.plugins.junit5.android
     alias libs.plugins.kotlin.android
     alias libs.plugins.kotlin.kapt
-    alias libs.plugins.androidx.safe.args
     alias libs.plugins.hilt
 }
 
@@ -30,13 +29,11 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
-        dataBinding true
         compose true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     buildTypes {
@@ -57,26 +54,14 @@ dependencies {
     implementation project(':domain')
     implementation project(':data')
 
-    implementation libs.androidx.appCompat
-    implementation libs.androidx.constraintlayout
-    implementation libs.androidx.coreKtx
-    implementation libs.androidx.lifecycle.viewmodel
-    implementation libs.androidx.lifecycle.runtime
-    implementation libs.androidx.navigation.fragment
-    implementation libs.androidx.navigation.ui
-    implementation libs.androidx.paging
-    implementation libs.androidx.swiperefreshlayout
-
     implementation libs.androidx.paging.compose
     implementation libs.androidx.activity.compose
     implementation libs.androidx.navigation.compose
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.compose.material
     implementation libs.androidx.compose.material3
-    implementation libs.androidx.compose.runtime
     implementation libs.androidx.compose.ui.tooling.preview
     debugImplementation libs.androidx.compose.ui.tooling
-    implementation libs.glide.compose
 
     implementation libs.androidx.hilt.navigation.compose
     implementation libs.hilt.android
@@ -86,9 +71,8 @@ dependencies {
     implementation libs.coroutines.android
     implementation libs.coroutines.core
 
-    implementation libs.firebase.analytics
     implementation libs.firestore
-    implementation libs.glide
+    implementation libs.glide.compose
     implementation libs.material
 
     testImplementation libs.coroutines.test
