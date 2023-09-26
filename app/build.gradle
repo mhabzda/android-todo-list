@@ -7,21 +7,21 @@ plugins {
     alias libs.plugins.hilt
 }
 
-apply from: "$rootDir/gradle/settings.gradle"
+apply from: "$rootDir/gradle/config.gradle"
 
 kotlin {
-    jvmToolchain settings.jvmToolchain
+    jvmToolchain config.jvmToolchain
 }
 
 android {
     namespace 'com.mhabzda.todolist'
 
-    compileSdk settings.compileSdkVersion
+    compileSdk config.compileSdkVersion
 
     defaultConfig {
         applicationId "com.todo.list"
-        minSdkVersion settings.minSdkVersion
-        targetSdkVersion settings.targetSdkVersion
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
