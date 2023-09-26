@@ -1,12 +1,7 @@
 <resources>
 
-    <!-- // TODO update theme -->
-    <style name="Theme.TodoList" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:textColor">@android:color/black</item>
+    <style name="Theme.TodoList" parent="Theme.Material3.DayNight">
+        <item name="android:statusBarColor">#051DA3</item>
     </style>
 
 </resources>

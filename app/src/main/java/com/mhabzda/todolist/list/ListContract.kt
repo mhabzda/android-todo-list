@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.list
+package com.mhabzda.todolist.list
 
 interface ListContract {
     data class ListViewState(

@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.utils
+package com.mhabzda.todolist.util
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

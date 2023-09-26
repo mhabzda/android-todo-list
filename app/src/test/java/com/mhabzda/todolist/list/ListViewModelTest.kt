@@ -1,12 +1,12 @@
-package com.mhabzda.todolist.ui.list
+package com.mhabzda.todolist.list
 
 import app.cash.turbine.test
 import com.mhabzda.todolist.domain.usecase.DeleteTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.GetTodoItemListUseCase
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect.DisplayDeletionConfirmation
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect.Error
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect.RefreshItems
-import com.mhabzda.todolist.ui.list.ListContract.ListViewState
+import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayDeletionConfirmation
+import com.mhabzda.todolist.list.ListContract.ListEffect.Error
+import com.mhabzda.todolist.list.ListContract.ListEffect.RefreshItems
+import com.mhabzda.todolist.list.ListContract.ListViewState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ensureActive
