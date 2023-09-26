@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.list.paging
+package com.mhabzda.todolist.list.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

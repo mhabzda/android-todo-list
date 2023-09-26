@@ -10,8 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mhabzda.todolist.Destination.ItemScreen
 import com.mhabzda.todolist.Destination.ListScreen
-import com.mhabzda.todolist.ui.item.ItemScreen
-import com.mhabzda.todolist.ui.list.ListScreen
+import com.mhabzda.todolist.item.ItemScreen
+import com.mhabzda.todolist.list.ListScreen
 
 @Composable
 fun TodoListNavHost(
@@ -38,7 +38,7 @@ fun TodoListNavHost(
     }
 }
 
-// TODO move to separate files
+// TODO move to separate files & fix animation
 sealed class Destination {
 
     abstract val name: String

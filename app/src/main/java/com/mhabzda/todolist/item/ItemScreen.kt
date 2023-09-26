@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.item
+package com.mhabzda.todolist.item
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,15 +48,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.theme.marginDefault
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.Close
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.DisplayMessage
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.DisplayMessageRes
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitDescription
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitIconUrl
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitTitle
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.Close
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessage
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessageRes
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitDescription
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitIconUrl
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitTitle
 import kotlinx.coroutines.flow.collectLatest
 
-// TODO split into components and move outside ui package
+// TODO split into components & hide keyboard on outside click and back button & change buttons corners
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(

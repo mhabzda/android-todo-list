@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.item
+package com.mhabzda.todolist.item
 
 //import app.cash.turbine.test
 //import com.todo.list.R

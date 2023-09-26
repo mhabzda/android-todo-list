@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui
+package com.mhabzda.todolist
 
 import com.mhabzda.todolist.domain.model.TodoItem
 import java.time.ZonedDateTime

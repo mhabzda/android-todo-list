@@ -1,7 +1,7 @@
-package com.mhabzda.todolist.ui.item.mapper
+package com.mhabzda.todolist.item.mapper
 
 import com.mhabzda.todolist.R
-import com.mhabzda.todolist.ui.item.mode.ItemScreenMode
+import com.mhabzda.todolist.item.mode.ItemScreenMode
 import javax.inject.Inject
 
 class ItemConfirmationMessageMapper @Inject constructor() {

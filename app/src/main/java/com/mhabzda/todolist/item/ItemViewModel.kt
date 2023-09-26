@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.item
+package com.mhabzda.todolist.item
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -7,18 +7,18 @@ import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.usecase.CreateTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.EditTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.GetTodoItemUseCase
-import com.mhabzda.todolist.ui.base.BaseViewModel
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.Close
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.DisplayMessage
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.DisplayMessageRes
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitDescription
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitIconUrl
-import com.mhabzda.todolist.ui.item.ItemContract.ItemEffect.InitTitle
-import com.mhabzda.todolist.ui.item.ItemContract.ItemViewState
-import com.mhabzda.todolist.ui.item.mapper.ItemConfirmationMessageMapper
-import com.mhabzda.todolist.ui.item.mode.ItemScreenMode
-import com.mhabzda.todolist.utils.onTerminate
+import com.mhabzda.todolist.base.BaseViewModel
+import com.mhabzda.todolist.item.ItemContract.ItemEffect
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.Close
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessage
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessageRes
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitDescription
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitIconUrl
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitTitle
+import com.mhabzda.todolist.item.ItemContract.ItemViewState
+import com.mhabzda.todolist.item.mapper.ItemConfirmationMessageMapper
+import com.mhabzda.todolist.item.mode.ItemScreenMode
+import com.mhabzda.todolist.util.onTerminate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

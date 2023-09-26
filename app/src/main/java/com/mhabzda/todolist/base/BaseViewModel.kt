@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.base
+package com.mhabzda.todolist.base
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

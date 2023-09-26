@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.ui.list
+package com.mhabzda.todolist.list
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -59,9 +59,9 @@ import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.mhabzda.todolist.theme.TodoListTheme
 import com.mhabzda.todolist.theme.marginDefault
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect
-import com.mhabzda.todolist.ui.list.ListContract.ListViewState
-import com.mhabzda.todolist.utils.format
+import com.mhabzda.todolist.list.ListContract.ListEffect
+import com.mhabzda.todolist.list.ListContract.ListViewState
+import com.mhabzda.todolist.util.format
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

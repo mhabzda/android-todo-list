@@ -1,18 +1,18 @@
-package com.mhabzda.todolist.ui.list
+package com.mhabzda.todolist.list
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mhabzda.todolist.domain.usecase.DeleteTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.GetTodoItemListUseCase
-import com.mhabzda.todolist.ui.base.BaseViewModel
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect.DisplayDeletionConfirmation
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect.Error
-import com.mhabzda.todolist.ui.list.ListContract.ListEffect.RefreshItems
-import com.mhabzda.todolist.ui.list.ListContract.ListViewState
-import com.mhabzda.todolist.ui.list.paging.TodoItemPagingSource
-import com.mhabzda.todolist.utils.onTerminate
+import com.mhabzda.todolist.base.BaseViewModel
+import com.mhabzda.todolist.list.ListContract.ListEffect
+import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayDeletionConfirmation
+import com.mhabzda.todolist.list.ListContract.ListEffect.Error
+import com.mhabzda.todolist.list.ListContract.ListEffect.RefreshItems
+import com.mhabzda.todolist.list.ListContract.ListViewState
+import com.mhabzda.todolist.list.paging.TodoItemPagingSource
+import com.mhabzda.todolist.util.onTerminate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
