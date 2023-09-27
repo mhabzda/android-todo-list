@@ -1,0 +1,37 @@
+// Delete the library when material3 pull refresh is released https://issuetracker.google.com/issues/261760718
+
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+}
+
+apply from: "$rootDir/gradle/config.gradle"
+
+kotlin {
+    jvmToolchain config.jvmToolchain
+}
+
+android {
+    namespace 'androidx.compose.material3.pullrefresh'
+    compileSdk config.compileSdkVersion
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
+
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    compileOnly platform(libs.androidx.compose.bom)
+    compileOnly libs.androidx.compose.material3
+}

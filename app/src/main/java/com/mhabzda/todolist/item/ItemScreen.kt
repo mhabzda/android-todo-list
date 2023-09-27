@@ -55,7 +55,11 @@ import com.mhabzda.todolist.theme.marginDefault
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-// TODO split into components & hide keyboard on outside click and back button & change buttons corners
+// TODO split into components
+//  & hide keyboard on outside click and back button
+//  & change buttons corners
+//  & Previews
+//  & Error on title field
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(
