@@ -18,9 +18,9 @@
     <string name="item_icon_url_hint">Icon url</string>
     <string name="item_empty_title_message">Title cannot be empty. Please fill in this field.</string>
 
-    <string name="item_creation_confirmation_message">Item created successfully</string>
-    <string name="item_creation_button_title">Create item</string>
+    <string name="item_create_confirmation_message">Item created successfully</string>
+    <string name="item_create_button_title">Create item</string>
 
-    <string name="item_edition_confirmation_message">Item edited successfully</string>
-    <string name="item_edition_button_title">Edit item</string>
+    <string name="item_edit_confirmation_message">Item edited successfully</string>
+    <string name="item_edit_button_title">Edit item</string>
 </resources>

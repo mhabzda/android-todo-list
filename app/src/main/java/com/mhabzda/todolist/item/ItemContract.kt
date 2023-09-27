@@ -5,7 +5,7 @@ import com.mhabzda.todolist.R
 
 interface ItemContract {
     data class ItemViewState(
-        val buttonText: Int = R.string.item_creation_button_title,
+        val buttonText: Int = R.string.item_create_button_title,
         val isLoading: Boolean = false,
     )
 
