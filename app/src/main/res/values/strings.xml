@@ -4,9 +4,6 @@
     <string name="error_title">Error</string>
     <string name="retry">Retry</string>
 
-    <string name="list_fragment_label">List</string>
-    <string name="item_fragment_label">Item</string>
-
     <string name="list_error_description_refresh">Error occurred while loading items. Try again.</string>
     <string name="list_error_description_append">Error occurred while loading more items. Swipe to the top to refresh.</string>
 
@@ -19,10 +16,10 @@
     <string name="item_title_hint">Title</string>
     <string name="item_description_hint">Description</string>
     <string name="item_icon_url_hint">Icon url</string>
-    <string name="item_empty_title_message">Title cannot be empty. Please fill this field</string>
+    <string name="item_empty_title_message">Title cannot be empty. Please fill in this field.</string>
 
     <string name="item_creation_confirmation_message">Item created successfully</string>
-    <string name="item_creation_button_title">Save item</string>
+    <string name="item_creation_button_title">Create item</string>
 
     <string name="item_edition_confirmation_message">Item edited successfully</string>
     <string name="item_edition_button_title">Edit item</string>
