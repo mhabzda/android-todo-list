@@ -11,6 +11,7 @@ import com.mhabzda.todolist.item.ItemContract.ItemEffect
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.Close
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessage
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessageRes
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayTitleError
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitDescription
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitIconUrl
 import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitTitle
@@ -65,7 +66,7 @@ class ItemViewModel @Inject constructor(
 
     fun onButtonClick(title: String, description: String, iconUrl: String) = viewModelScope.launch {
         if (title.isEmpty()) {
-            sendEffect(DisplayMessageRes(R.string.item_empty_title_message))
+            sendEffect(DisplayTitleError)
             return@launch
         }
 
