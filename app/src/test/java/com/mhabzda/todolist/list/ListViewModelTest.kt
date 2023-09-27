@@ -7,6 +7,7 @@ import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayDeletionConfirma
 import com.mhabzda.todolist.list.ListContract.ListEffect.Error
 import com.mhabzda.todolist.list.ListContract.ListEffect.RefreshItems
 import com.mhabzda.todolist.list.ListContract.ListViewState
+import com.mhabzda.todolist.util.SnackbarFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ensureActive
@@ -18,18 +19,21 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.givenBlocking
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyBlocking
 
-@ExperimentalCoroutinesApi
 class ListViewModelTest {
 
     private val mockGetTodoItemListUseCase: GetTodoItemListUseCase = mock()
     private val mockDeleteTodoItemListUseCase: DeleteTodoItemUseCase = mock()
+    private val mockSnackbarFlow: SnackbarFlow = mock()
 
     private val viewModel = ListViewModel(
         getTodoItemListUseCase = mockGetTodoItemListUseCase,
         deleteTodoItemUseCase = mockDeleteTodoItemListUseCase,
+        snackbarFlow = mockSnackbarFlow,
     )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -69,5 +73,13 @@ class ListViewModelTest {
             assertEquals(Error(errorMessage), awaitItem())
             assertEquals(ListViewState(showDeleteLoading = false), viewModel.state.value)
         }
+    }
+
+    @Test
+    fun `WHEN show snackbar THEN emit snackbar message`() = runTest {
+        val message = "message"
+        viewModel.showSnackbar(message)
+
+        verifyBlocking(mockSnackbarFlow) { emit(message) }
     }
 }

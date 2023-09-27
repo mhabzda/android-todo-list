@@ -44,10 +44,10 @@ class ItemViewModel @Inject constructor(
     init {
         screenMode = if (itemId != null) {
             initializeData(itemId)
-            updateState { copy(buttonText = R.string.item_edition_button_title) }
+            updateState { copy(buttonText = R.string.item_edit_button_title) }
             ItemScreenMode.EDIT
         } else {
-            updateState { copy(buttonText = R.string.item_creation_button_title) }
+            updateState { copy(buttonText = R.string.item_create_button_title) }
             ItemScreenMode.CREATE
         }
     }

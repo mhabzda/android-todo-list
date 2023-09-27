@@ -1,175 +1,240 @@
 package com.mhabzda.todolist.item
 
-//import app.cash.turbine.test
-//import com.todo.list.R
-//import com.todo.list.model.entities.TodoItem
-//import com.todo.list.model.repository.TodoRepository
-//import com.todo.list.testutilities.FixedTimeExtension
-//import com.mhabzda.todolist.ui.item.data.ItemViewEvent.Close
-//import com.mhabzda.todolist.ui.item.data.ItemViewEvent.DisplayMessage
-//import com.mhabzda.todolist.ui.item.data.ItemViewEvent.DisplayMessageRes
-//import com.mhabzda.todolist.ui.item.data.ItemViewState
-//import com.mhabzda.todolist.ui.item.mapper.ItemConfirmationMessageMapper
-//import com.todo.list.ui.item.mapper.ItemViewStateMapper
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.test.StandardTestDispatcher
-//import kotlinx.coroutines.test.TestScope
-//import kotlinx.coroutines.test.runCurrent
-//import kotlinx.coroutines.test.runTest
-//import kotlinx.coroutines.test.setMain
-//import org.joda.time.DateTime
-//import org.junit.jupiter.api.Assertions.assertEquals
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.Test
-//import org.junit.jupiter.api.extension.RegisterExtension
-//import org.mockito.kotlin.any
-//import org.mockito.kotlin.doReturn
-//import org.mockito.kotlin.given
-//import org.mockito.kotlin.mock
-//
-//@ExperimentalCoroutinesApi
-//class ItemViewModelTest {
-//
-//    private val mockTodoRepository: TodoRepository = mock {
-//        onBlocking { saveItem(any()) } doReturn Result.failure(Throwable("not initialized"))
-//        onBlocking { editItem(any()) } doReturn Result.failure(Throwable("not initialized"))
-//        onBlocking { getItem(existingItemId) } doReturn Result.success(testItem.copy(creationDate = existingItemId))
-//    }
-//
-//    private val viewModel = ItemViewModel(
-//        todoRepository = mockTodoRepository,
-//        itemViewStateMapper = ItemViewStateMapper(),
-//        itemConfirmationMessageMapper = ItemConfirmationMessageMapper()
-//    )
-//
-//    @BeforeEach
-//    fun setUp() {
-//        Dispatchers.setMain(StandardTestDispatcher())
-//    }
-//
-//    @Test
-//    fun `set proper button text on start when there is a create item mode`() = runOnViewModel {
-//        assertEquals(R.string.item_creation_button_title, viewModel.state.value.buttonText)
-//    }
-//
-//    @Test
-//    fun `initialize data on start when there is a edit item mode`() = runOnViewModel(existingItemId) {
-//        assertEquals(
-//            ItemViewState(
-//                title = title,
-//                description = description,
-//                iconUrl = iconUrl,
-//                buttonText = R.string.item_edition_button_title,
-//                isLoading = false
-//            ),
-//            viewModel.state.value
-//        )
-//    }
-//
-//    @Test
-//    fun `given title is empty when button clicked then display error`() = runOnViewModel {
-//        viewModel.state.value.title = ""
-//
-//        viewModel.onItemButtonClick()
-//        runCurrent()
-//
-//        viewModel.events.test { assertEquals(DisplayMessageRes(R.string.item_empty_title_message), awaitItem()) }
-//    }
-//
-//    @Test
-//    fun `given can save item when button clicked then display confirmation message and close view`() = runOnViewModel {
-//        given(mockTodoRepository.saveItem(testItem)).willReturn(Result.success(Unit))
-//        viewModel.provideData()
-//
-//        viewModel.onItemButtonClick()
-//        runCurrent()
-//
-//        viewModel.events.test {
-//            assertEquals(DisplayMessageRes(R.string.item_creation_confirmation_message), awaitItem())
-//            assertEquals(Close, awaitItem())
-//        }
-//        assertEquals(false, viewModel.state.value.isLoading)
-//    }
-//
-//    @Test
-//    fun `given cannot save item when button clicked then display error`() = runOnViewModel {
-//        val errorMessage = "Cannot save item"
-//        given(mockTodoRepository.saveItem(testItem)).willReturn(Result.failure(Throwable(errorMessage)))
-//        viewModel.provideData()
-//
-//        viewModel.onItemButtonClick()
-//        runCurrent()
-//
-//        viewModel.events.test { assertEquals(DisplayMessage(errorMessage), awaitItem()) }
-//        runCurrent()
-//        assertEquals(false, viewModel.state.value.isLoading)
-//    }
-//
-//    @Test
-//    fun `given can edit item when button clicked then display confirmation message and close view`() =
-//        runOnViewModel(existingItemId) {
-//            given(mockTodoRepository.editItem(testItem.copy(creationDate = existingItemId)))
-//                .willReturn(Result.success(Unit))
-//
-//            viewModel.onItemButtonClick()
-//            runCurrent()
-//
-//            viewModel.events.test {
-//                assertEquals(DisplayMessageRes(R.string.item_edition_confirmation_message), awaitItem())
-//                assertEquals(Close, awaitItem())
-//            }
-//            assertEquals(false, viewModel.state.value.isLoading)
-//        }
-//
-//    @Test
-//    fun `given cannot edit item when button clicked then display error`() = runOnViewModel(existingItemId) {
-//        val errorMessage = "Cannot edit item"
-//        given(mockTodoRepository.editItem(testItem.copy(creationDate = existingItemId)))
-//            .willReturn(Result.failure(Throwable(errorMessage)))
-//
-//        viewModel.onItemButtonClick()
-//        runCurrent()
-//
-//        viewModel.events.test { assertEquals(DisplayMessage(errorMessage), awaitItem()) }
-//        runCurrent()
-//        assertEquals(false, viewModel.state.value.isLoading)
-//    }
-//
-//    private fun runOnViewModel(
-//        itemId: DateTime? = null,
-//        testBody: suspend TestScope.() -> Unit
-//    ) = runTest {
-//        viewModel.onStart(itemId)
-//        runCurrent()
-//        testBody.invoke(this)
-//    }
-//
-//    private fun ItemViewModel.provideData() {
-//        state.value.title = testItem.title
-//        state.value.description = testItem.description
-//        state.value.iconUrl = testItem.iconUrl
-//    }
-//
-//    companion object {
-//        private const val title = "title"
-//        private const val description = "desc"
-//        private const val iconUrl = "logo.com"
-//
-//        private const val currentTime = "2022-02-25T12:40:04.698"
-//        private val currentItemId = DateTime(currentTime)
-//        private const val existingItemTime = "2022-02-23T12:40:04.698"
-//        private val existingItemId = DateTime(existingItemTime)
-//
-//        private val testItem = TodoItem(
-//            title = title,
-//            description = description,
-//            creationDate = currentItemId,
-//            iconUrl = iconUrl
-//        )
-//
-//        @JvmField
-//        @RegisterExtension
-//        val fixedTimeExtension = FixedTimeExtension(currentTime)
-//    }
-//}
+import androidx.lifecycle.SavedStateHandle
+import app.cash.turbine.test
+import com.mhabzda.todolist.R
+import com.mhabzda.todolist.domain.model.TodoItem
+import com.mhabzda.todolist.domain.usecase.CreateTodoItemUseCase
+import com.mhabzda.todolist.domain.usecase.EditTodoItemUseCase
+import com.mhabzda.todolist.domain.usecase.GetTodoItemUseCase
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.Close
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessage
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayMessageRes
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.DisplayTitleError
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitDescription
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitIconUrl
+import com.mhabzda.todolist.item.ItemContract.ItemEffect.InitTitle
+import com.mhabzda.todolist.item.ItemContract.ItemViewState
+import com.mhabzda.todolist.item.mapper.ItemConfirmationMessageMapper
+import com.mhabzda.todolist.util.SnackbarFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.given
+import org.mockito.kotlin.givenBlocking
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyBlocking
+import java.time.ZonedDateTime
+
+class ItemViewModelTest {
+
+    private val itemIdKey = "itemId"
+
+    private val itemId = "akdlfj24903jfd"
+    private val title = "title"
+    private val description = "description"
+    private val iconUrl = "logo.com"
+    private val testTodoItem = TodoItem(
+        id = itemId,
+        title = title,
+        description = description,
+        creationDateTime = ZonedDateTime.parse("2023-09-13T17:23:34.000000234+02:00[Europe/Paris]"),
+        iconUrl = iconUrl,
+    )
+
+    private val testDispatcher = StandardTestDispatcher()
+
+    private val mockSavedStateHandle: SavedStateHandle = mock {
+        on { get<String?>(itemIdKey) } doReturn null
+    }
+    private val mockGetTodoItemUseCase: GetTodoItemUseCase = mock {
+        onBlocking { invoke(itemId) } doReturn Result.success(testTodoItem)
+    }
+    private val mockCreateTodoItemUseCase: CreateTodoItemUseCase = mock()
+    private val mockEditTodoItemUseCase: EditTodoItemUseCase = mock()
+    private val mockSnackbarFlow: SnackbarFlow = mock()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @Test
+    fun `GIVEN create item mode WHEN init THEN set proper button text`() {
+        given { mockSavedStateHandle.get<String?>(itemIdKey) }.willReturn(null)
+        val viewModel = createViewModel()
+
+        assertEquals(
+            ItemViewState(
+                buttonText = R.string.item_create_button_title,
+                isLoading = false,
+            ),
+            viewModel.state.value,
+        )
+    }
+
+    @Test
+    fun `GIVEN edit item mode WHEN init THEN initialize data`() = runTest {
+        given { mockSavedStateHandle.get<String>(itemIdKey) }.willReturn(itemId)
+        val viewModel = createViewModel()
+
+        viewModel.effects.test {
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(InitTitle(title), awaitItem())
+            assertEquals(InitDescription(description), awaitItem())
+            assertEquals(InitIconUrl(iconUrl), awaitItem())
+            ensureAllEventsConsumed()
+        }
+        assertEquals(
+            ItemViewState(
+                buttonText = R.string.item_edit_button_title,
+                isLoading = false,
+            ),
+            viewModel.state.value,
+        )
+    }
+
+    @Test
+    fun `GIVEN edit item mode but can't get an item WHEN init THEN display error message`() = runTest {
+        given { mockSavedStateHandle.get<String>("itemId") }.willReturn(itemId)
+        givenBlocking { mockGetTodoItemUseCase.invoke(itemId) }.willReturn(Result.failure(Exception("Error")))
+        val viewModel = createViewModel()
+
+        viewModel.effects.test {
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(DisplayMessage("Error"), awaitItem())
+            ensureAllEventsConsumed()
+        }
+        assertEquals(
+            ItemViewState(
+                buttonText = R.string.item_edit_button_title,
+                isLoading = false,
+            ),
+            viewModel.state.value,
+        )
+    }
+
+    @Test
+    fun `GIVEN title is empty WHEN button click THEN display title error`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.effects.test {
+            viewModel.onButtonClick("", "", "")
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(DisplayTitleError, awaitItem())
+            ensureAllEventsConsumed()
+        }
+    }
+
+    @Test
+    fun `GIVEN can create an item WHEN button click THEN display confirmation message and close screen`() = runTest {
+        given { mockSavedStateHandle.get<String?>(itemIdKey) }.willReturn(null)
+        givenBlocking { mockCreateTodoItemUseCase.invoke(title, description, iconUrl) }.willReturn(Result.success(Unit))
+        val viewModel = createViewModel()
+
+        viewModel.effects.test {
+            viewModel.onButtonClick(title, description, iconUrl)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(DisplayMessageRes(R.string.item_create_confirmation_message), awaitItem())
+            assertEquals(Close, awaitItem())
+            ensureAllEventsConsumed()
+        }
+        assertEquals(false, viewModel.state.value.isLoading)
+    }
+
+    @Test
+    fun `GIVEN cannot create an item WHEN button click THEN display an error`() = runTest {
+        val errorMessage = "Cannot create item"
+        given { mockSavedStateHandle.get<String?>(itemIdKey) }.willReturn(null)
+        givenBlocking { mockCreateTodoItemUseCase.invoke(title, description, iconUrl) }.willReturn(Result.failure(Exception(errorMessage)))
+        val viewModel = createViewModel()
+
+        viewModel.effects.test {
+            viewModel.onButtonClick(title, description, iconUrl)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(DisplayMessage(errorMessage), awaitItem())
+            ensureAllEventsConsumed()
+        }
+        assertEquals(false, viewModel.state.value.isLoading)
+    }
+
+    @Test
+    fun `GIVEN can edit an item WHEN button click THEN display confirmation message and close screen`() = runTest {
+        given { mockSavedStateHandle.get<String?>(itemIdKey) }.willReturn(itemId)
+        givenBlocking { mockEditTodoItemUseCase.invoke(itemId, title, description, iconUrl) }.willReturn(Result.success(Unit))
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.runCurrent()
+
+        viewModel.effects.test {
+            viewModel.onButtonClick(title, description, iconUrl)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(DisplayMessageRes(R.string.item_edit_confirmation_message), awaitItem())
+            assertEquals(Close, awaitItem())
+            ensureAllEventsConsumed()
+        }
+        assertEquals(false, viewModel.state.value.isLoading)
+    }
+
+    @Test
+    fun `GIVEN cannot edit an item WHEN button click THEN display an error`() = runTest {
+        val errorMessage = "Cannot edit item"
+        given { mockSavedStateHandle.get<String?>(itemIdKey) }.willReturn(itemId)
+        givenBlocking { mockEditTodoItemUseCase.invoke(itemId, title, description, iconUrl) }
+            .willReturn(Result.failure(Exception(errorMessage)))
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.runCurrent()
+
+        viewModel.effects.test {
+            viewModel.onButtonClick(title, description, iconUrl)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(DisplayMessage(errorMessage), awaitItem())
+            ensureAllEventsConsumed()
+        }
+        assertEquals(false, viewModel.state.value.isLoading)
+    }
+
+    @Test
+    fun `GIVEN icon url is empty WHEN create item THEN propagate null value`() = runTest {
+        given { mockSavedStateHandle.get<String?>(itemIdKey) }.willReturn(null)
+        givenBlocking { mockCreateTodoItemUseCase.invoke(title, description, iconUrl) }.willReturn(Result.success(Unit))
+        val viewModel = createViewModel()
+
+        viewModel.onButtonClick(title, description, "")
+        testDispatcher.scheduler.runCurrent()
+
+        verifyBlocking(mockCreateTodoItemUseCase) { invoke(title, description, null) }
+    }
+
+    @Test
+    fun `WHEN show snackbar THEN emit snackbar message`() = runTest {
+        val message = "message"
+        val viewModel = createViewModel()
+
+        viewModel.showSnackbar(message)
+
+        verifyBlocking(mockSnackbarFlow) { emit(message) }
+    }
+
+    private fun createViewModel() = ItemViewModel(
+        savedStateHandle = mockSavedStateHandle,
+        getTodoItemUseCase = mockGetTodoItemUseCase,
+        createTodoItemUseCase = mockCreateTodoItemUseCase,
+        editTodoItemUseCase = mockEditTodoItemUseCase,
+        itemConfirmationMessageMapper = ItemConfirmationMessageMapper(),
+        snackbarFlow = mockSnackbarFlow,
+    )
+}
