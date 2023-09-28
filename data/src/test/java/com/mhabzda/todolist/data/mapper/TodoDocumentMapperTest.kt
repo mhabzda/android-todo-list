@@ -30,7 +30,7 @@ class TodoDocumentMapperTest {
             id = "1",
             title = "Buy",
             description = "desc",
-            creationTime = timeString,
+            creationDateTime = timeString,
             iconUrl = "icon.com",
         )
 
@@ -54,7 +54,7 @@ class TodoDocumentMapperTest {
             id = "1",
             title = "Buy",
             description = "",
-            creationTime = timeString,
+            creationDateTime = timeString,
             iconUrl = null,
         )
 
@@ -78,7 +78,7 @@ class TodoDocumentMapperTest {
             id = "1",
             title = null,
             description = "",
-            creationTime = timeString,
+            creationDateTime = timeString,
             iconUrl = null,
         )
 
@@ -91,7 +91,7 @@ class TodoDocumentMapperTest {
             id = "1",
             title = "Buy",
             description = "",
-            creationTime = null,
+            creationDateTime = null,
             iconUrl = null,
         )
 
