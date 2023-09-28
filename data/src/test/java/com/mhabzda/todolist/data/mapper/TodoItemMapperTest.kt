@@ -1,6 +1,6 @@
 package com.mhabzda.todolist.data.mapper
 
-import com.mhabzda.todolist.data.utils.createDocumentMap
+import com.mhabzda.todolist.data.createDocumentMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime
@@ -23,7 +23,7 @@ class TodoItemMapperTest {
                 title = "Buy",
                 description = "desc",
                 creationTime = "2023-09-13T17:23:34.000000234+02:00[Europe/Paris]",
-                iconUrl = "icon.com"
+                iconUrl = "icon.com",
             ),
             result,
         )

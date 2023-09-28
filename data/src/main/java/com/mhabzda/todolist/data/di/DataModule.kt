@@ -18,7 +18,7 @@ abstract class DataModule {
     @Singleton
     @Binds
     internal abstract fun provideTodoRepository(
-        firestoreTodoItemRepository: FirestoreTodoItemRepository
+        firestoreTodoItemRepository: FirestoreTodoItemRepository,
     ): TodoItemRepository
 
     companion object {

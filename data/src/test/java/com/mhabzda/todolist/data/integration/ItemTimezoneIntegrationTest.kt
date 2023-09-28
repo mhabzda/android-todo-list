@@ -2,8 +2,8 @@ package com.mhabzda.todolist.data.integration
 
 import com.mhabzda.todolist.data.mapper.TodoDocumentMapper
 import com.mhabzda.todolist.data.mapper.TodoItemMapper
+import com.mhabzda.todolist.data.mockDocumentFromMap
 import com.mhabzda.todolist.data.time.CurrentTimeProvider
-import com.mhabzda.todolist.data.utils.mockDocumentFromMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.given

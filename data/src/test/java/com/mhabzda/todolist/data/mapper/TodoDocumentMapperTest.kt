@@ -1,7 +1,7 @@
 package com.mhabzda.todolist.data.mapper
 
+import com.mhabzda.todolist.data.mockDocument
 import com.mhabzda.todolist.data.time.CurrentTimeProvider
-import com.mhabzda.todolist.data.utils.mockDocument
 import com.mhabzda.todolist.domain.error.IncompleteDataException.ItemCreationTimeMissingException
 import com.mhabzda.todolist.domain.error.IncompleteDataException.ItemTitleMissingException
 import com.mhabzda.todolist.domain.model.TodoItem

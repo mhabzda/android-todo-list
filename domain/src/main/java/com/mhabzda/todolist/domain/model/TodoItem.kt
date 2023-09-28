@@ -7,5 +7,5 @@ data class TodoItem(
     val title: String,
     val description: String,
     val creationDateTime: ZonedDateTime,
-    val iconUrl: String?
+    val iconUrl: String?,
 )
