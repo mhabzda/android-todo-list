@@ -20,3 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep class com.google.firebase.firestore.** { *; }
+-keep class com.google.android.gms.tasks.** { *; }
+-keep class io.grpc.** { *; }
+-dontwarn io.grpc.**
