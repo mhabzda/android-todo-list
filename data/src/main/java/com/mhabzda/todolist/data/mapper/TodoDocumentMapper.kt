@@ -21,7 +21,7 @@ internal class TodoDocumentMapper @Inject constructor(
             title = document.getString(TITLE_KEY) ?: throw ItemTitleMissingException,
             description = document.getString(DESCRIPTION_KEY).orEmpty(),
             creationDateTime = document.getString(CREATION_DATE_TIME_KEY)?.toCreationDateTime() ?: throw ItemCreationTimeMissingException,
-            iconUrl = document.getString(LOGO_URL_KEY)
+            iconUrl = document.getString(LOGO_URL_KEY),
         )
 
     private fun String.toCreationDateTime(): ZonedDateTime =

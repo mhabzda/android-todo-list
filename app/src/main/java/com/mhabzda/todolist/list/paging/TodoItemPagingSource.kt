@@ -25,7 +25,7 @@ class TodoItemPagingSource(
                 },
                 onFailure = {
                     LoadResult.Error(it)
-                }
+                },
             )
 
     private fun resolveNextPage(itemsList: List<TodoItem>, params: LoadParams<Int>) {

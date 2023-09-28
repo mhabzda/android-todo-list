@@ -7,6 +7,7 @@ kotlin = "1.9.10"
 compose-compiler = "1.5.3"
 versions = "0.48.0"
 versions-catalog-update = "0.8.1"
+ktlint = "11.6.0"
 # AndroidX
 androidx-navigation = "2.7.3"
 androidx-hilt-navigation-compose = "1.0.0"
@@ -37,6 +38,7 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 versions-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "versions-catalog-update" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 [libraries]

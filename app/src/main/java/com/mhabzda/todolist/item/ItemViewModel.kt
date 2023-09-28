@@ -35,7 +35,7 @@ class ItemViewModel @Inject constructor(
     snackbarFlow: SnackbarFlow,
 ) : BaseViewModel<ItemViewState, ItemEffect>(
     defaultState = ItemViewState(),
-    emitSnackbarMessage = snackbarFlow::emit
+    emitSnackbarMessage = snackbarFlow::emit,
 ) {
 
     private val itemId: String? = savedStateHandle[ITEM_ID_ARG_NAME]

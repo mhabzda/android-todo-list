@@ -1,4 +1,4 @@
-package com.mhabzda.todolist.data.utils
+package com.mhabzda.todolist.data
 
 import com.google.firebase.firestore.DocumentSnapshot
 import org.mockito.kotlin.doReturn
@@ -14,7 +14,7 @@ fun mockDocument(
     title: String? = null,
     description: String? = null,
     creationTime: String? = null,
-    iconUrl: String? = null
+    iconUrl: String? = null,
 ): DocumentSnapshot =
     mock {
         on { this.id } doReturn id
@@ -28,7 +28,7 @@ fun createDocumentMap(
     title: String,
     description: String,
     creationTime: String? = null,
-    iconUrl: String? = null
+    iconUrl: String? = null,
 ): Map<String, String> {
     val map = mutableMapOf(
         TITLE_KEY to title,

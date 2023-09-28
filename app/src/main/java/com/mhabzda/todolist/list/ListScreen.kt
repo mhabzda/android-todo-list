@@ -127,7 +127,7 @@ fun ListScreen(
             Box(
                 modifier = Modifier
                     .padding(top = it.calculateTopPadding())
-                    .pullRefresh(pullRefreshState)
+                    .pullRefresh(pullRefreshState),
             ) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(count = lazyPagingItems.itemCount) { index ->
@@ -136,7 +136,7 @@ fun ListScreen(
                             ItemView(
                                 item = item,
                                 navigateToEditItem = navigateToEditItem,
-                                displayDeleteDialog = { itemId -> itemToDeleteId.value = itemId }
+                                displayDeleteDialog = { itemId -> itemToDeleteId.value = itemId },
                             )
                             Divider()
                         }
@@ -147,7 +147,7 @@ fun ListScreen(
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
+                                    .wrapContentWidth(Alignment.CenterHorizontally),
                             )
                         }
                     }
@@ -196,7 +196,7 @@ fun ListScreen(
                     )
                 }
             }
-        }
+        },
     )
 }
 
@@ -210,7 +210,7 @@ private fun ListTopAppBar() {
                 color = MaterialTheme.colorScheme.onPrimary,
             )
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
     )
 }
 
@@ -239,7 +239,7 @@ private fun ItemView(
             .combinedClickable(
                 onClick = { navigateToEditItem(item.id) },
                 onLongClick = { displayDeleteDialog(item.id) },
-            )
+            ),
     ) {
         GlideImage(
             model = item.iconUrl,
@@ -312,7 +312,7 @@ private fun ListAlertDialog(
                     )
                 }
             }
-        }
+        },
     )
 }
 
@@ -321,7 +321,13 @@ private fun ListAlertDialog(
 fun ListScreenPreviewLongList() {
     TodoListTheme {
         ListScreen(
-            pagingFlow = MutableStateFlow(PagingData.from(List(10) { getTodoItem() })),
+            pagingFlow = MutableStateFlow(
+                PagingData.from(
+                    List(10) {
+                        TodoItem("11", "title", "desc", ZonedDateTime.now(), null)
+                    },
+                ),
+            ),
             viewState = MutableStateFlow(ListViewState()),
             effects = MutableSharedFlow(),
             showSnackbar = {},
@@ -337,7 +343,13 @@ fun ListScreenPreviewLongList() {
 fun ListScreenPreviewShortList() {
     TodoListTheme {
         ListScreen(
-            pagingFlow = MutableStateFlow(PagingData.from(List(5) { getTodoItem() })),
+            pagingFlow = MutableStateFlow(
+                PagingData.from(
+                    List(5) {
+                        TodoItem("11", "title", "desc", ZonedDateTime.now(), null)
+                    },
+                ),
+            ),
             viewState = MutableStateFlow(ListViewState()),
             effects = MutableSharedFlow(),
             showSnackbar = {},
@@ -347,12 +359,3 @@ fun ListScreenPreviewShortList() {
         )
     }
 }
-
-@Composable
-private fun getTodoItem() = TodoItem(
-    id = "11",
-    title = "title",
-    description = "desc",
-    creationDateTime = ZonedDateTime.parse("2023-09-13T17:23:34.000000234+02:00[Europe/Paris]"),
-    iconUrl = null,
-)

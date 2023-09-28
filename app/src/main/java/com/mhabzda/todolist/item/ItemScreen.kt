@@ -124,7 +124,7 @@ fun ItemScreen(
                             top = contentPadding.calculateTopPadding() + marginDefault,
                             end = marginDefault,
                             bottom = marginDefault,
-                        )
+                        ),
                 ) {
                     val descriptionFocusRequester = remember { FocusRequester() }
                     val iconUrlFocusRequester = remember { FocusRequester() }
@@ -145,7 +145,7 @@ fun ItemScreen(
                         errorMessageResId = R.string.item_empty_title_message,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Text
+                            keyboardType = KeyboardType.Text,
                         ),
                         keyboardActions = KeyboardActions(
                             onNext = { descriptionFocusRequester.requestFocus() },
@@ -164,7 +164,7 @@ fun ItemScreen(
                         hintResId = R.string.item_description_hint,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Text
+                            keyboardType = KeyboardType.Text,
                         ),
                         keyboardActions = KeyboardActions(
                             onNext = { iconUrlFocusRequester.requestFocus() },
@@ -182,7 +182,7 @@ fun ItemScreen(
                         hintResId = R.string.item_icon_url_hint,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Uri
+                            keyboardType = KeyboardType.Uri,
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
@@ -197,7 +197,7 @@ fun ItemScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = marginDefault)
-                            .weight(1f)
+                            .weight(1f),
                     ) {
                         Button(
                             modifier = Modifier
@@ -208,7 +208,7 @@ fun ItemScreen(
                             onClick = {
                                 onButtonClick(titleText, descriptionText, iconUrlText)
                                 localFocusManager.clearFocus()
-                            }
+                            },
                         ) {
                             Text(text = stringResource(id = state.value.buttonText))
                         }
@@ -219,7 +219,7 @@ fun ItemScreen(
                     FullScreenLoading()
                 }
             }
-        }
+        },
     )
 }
 
@@ -238,7 +238,7 @@ private fun ItemTopAppBar(navigateBack: () -> Unit, localFocusManager: FocusMana
                 onClick = {
                     localFocusManager.clearFocus()
                     navigateBack()
-                }
+                },
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
@@ -261,7 +261,7 @@ private fun ItemOutlineTextField(
     @StringRes errorMessageResId: Int? = null,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -296,7 +296,7 @@ private fun FullScreenLoading() {
             .background(Color.Black.copy(alpha = 0.6f))
             .pointerInput(Unit) { detectTapGestures(onTap = {}) }
             .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
+            .wrapContentSize(Alignment.Center),
     )
 }
 

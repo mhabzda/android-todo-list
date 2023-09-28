@@ -31,7 +31,7 @@ private val Typography = Typography()
 @Composable
 fun TodoListTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colors = if (!useDarkTheme) {
         LightColors

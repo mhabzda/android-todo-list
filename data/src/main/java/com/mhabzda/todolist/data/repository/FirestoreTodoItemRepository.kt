@@ -13,6 +13,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+// TODO add tests
 internal class FirestoreTodoItemRepository @Inject constructor(
     private val todoCollection: CollectionReference,
     private val todoItemMapper: TodoItemMapper,
@@ -59,7 +60,7 @@ internal class FirestoreTodoItemRepository @Inject constructor(
                         description = description,
                         iconUrl = iconUrl,
                         creationTime = currentTimeProvider.getCurrentDateTime(),
-                    )
+                    ),
                 )
                 .addOnSuccessListener { continuation.resume(Result.success(Unit)) }
                 .addOnFailureListener { continuation.resume(Result.failure(it)) }
@@ -74,7 +75,7 @@ internal class FirestoreTodoItemRepository @Inject constructor(
                             title = title,
                             description = description,
                             iconUrl = iconUrl,
-                        )
+                        ),
                     )
                     .addOnSuccessListener { continuation.resume(Unit) }
                     .addOnFailureListener { continuation.resumeWithException(it) }

@@ -12,7 +12,7 @@ internal class TodoItemMapper @Inject constructor() {
         title: String,
         description: String,
         iconUrl: String?,
-        creationTime: ZonedDateTime? = null
+        creationTime: ZonedDateTime? = null,
     ): Map<String, String> {
         val itemMap = mutableMapOf(
             TITLE_KEY to title,
