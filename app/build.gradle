@@ -77,9 +77,9 @@ dependencies {
     implementation libs.glide.compose
     implementation libs.material
 
-    testImplementation libs.coroutines.test
     testImplementation libs.junit5.api
     testRuntimeOnly libs.junit5.engine
     testImplementation libs.mockito.kotlin
+    testImplementation libs.coroutines.test
     testImplementation libs.turbine
 }

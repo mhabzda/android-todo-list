@@ -22,7 +22,7 @@ class TodoItemMapperTest {
             createDocumentMap(
                 title = "Buy",
                 description = "desc",
-                creationTime = "2023-09-13T17:23:34.000000234+02:00[Europe/Paris]",
+                creationDateTime = "2023-09-13T17:23:34.000000234+02:00[Europe/Paris]",
                 iconUrl = "icon.com",
             ),
             result,
