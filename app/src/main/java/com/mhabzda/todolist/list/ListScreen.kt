@@ -1,5 +1,7 @@
 package com.mhabzda.todolist.list
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -104,7 +106,7 @@ fun ListScreen(
             when (it) {
                 ListEffect.RefreshItems -> lazyPagingItems.refresh()
                 ListEffect.DisplayDeletionConfirmation -> launch { showSnackbar(deleteConfirmationMessage) }
-                is ListEffect.Error -> launch { showSnackbar(it.message) }
+                is ListEffect.DisplayError -> launch { showSnackbar(it.message) }
             }
         }
     }
@@ -316,7 +318,8 @@ private fun ListAlertDialog(
     )
 }
 
-@Preview
+@Preview(uiMode = UI_MODE_NIGHT_NO)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun ListScreenPreviewLongList() {
     TodoListTheme {

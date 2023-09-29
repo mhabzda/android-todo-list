@@ -8,7 +8,7 @@ import com.mhabzda.todolist.domain.usecase.DeleteTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.GetTodoItemListUseCase
 import com.mhabzda.todolist.list.ListContract.ListEffect
 import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayDeletionConfirmation
-import com.mhabzda.todolist.list.ListContract.ListEffect.Error
+import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayError
 import com.mhabzda.todolist.list.ListContract.ListEffect.RefreshItems
 import com.mhabzda.todolist.list.ListContract.ListViewState
 import com.mhabzda.todolist.list.paging.TodoItemPagingSource
@@ -39,7 +39,7 @@ class ListViewModel @Inject constructor(
                 sendEffect(DisplayDeletionConfirmation)
                 sendEffect(RefreshItems)
             }
-            .onFailure { sendEffect(Error(it.message.orEmpty())) }
+            .onFailure { sendEffect(DisplayError(it.message.orEmpty())) }
             .onTerminate { updateState { copy(showDeleteLoading = false) } }
     }
 

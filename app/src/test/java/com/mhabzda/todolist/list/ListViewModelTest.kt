@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import com.mhabzda.todolist.domain.usecase.DeleteTodoItemUseCase
 import com.mhabzda.todolist.domain.usecase.GetTodoItemListUseCase
 import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayDeletionConfirmation
-import com.mhabzda.todolist.list.ListContract.ListEffect.Error
+import com.mhabzda.todolist.list.ListContract.ListEffect.DisplayError
 import com.mhabzda.todolist.list.ListContract.ListEffect.RefreshItems
 import com.mhabzda.todolist.list.ListContract.ListViewState
 import com.mhabzda.todolist.util.SnackbarFlow
@@ -70,7 +70,7 @@ class ListViewModelTest {
         viewModel.effects.test {
             viewModel.deleteItem(itemId)
 
-            assertEquals(Error(errorMessage), awaitItem())
+            assertEquals(DisplayError(errorMessage), awaitItem())
             assertEquals(ListViewState(showDeleteLoading = false), viewModel.state.value)
         }
     }
