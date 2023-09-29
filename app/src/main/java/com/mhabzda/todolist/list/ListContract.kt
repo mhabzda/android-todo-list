@@ -8,6 +8,6 @@ interface ListContract {
     sealed class ListEffect {
         data object RefreshItems : ListEffect()
         data object DisplayDeletionConfirmation : ListEffect()
-        data class Error(val message: String) : ListEffect()
+        data class DisplayError(val message: String) : ListEffect()
     }
 }

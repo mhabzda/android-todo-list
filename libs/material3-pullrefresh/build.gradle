@@ -1,4 +1,4 @@
-// Delete the library when material3 pull refresh has been released https://issuetracker.google.com/issues/261760718
+// Delete the library when material3 pull refresh is released https://issuetracker.google.com/issues/261760718
 
 plugins {
     alias libs.plugins.android.library
