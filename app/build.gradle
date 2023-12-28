@@ -20,7 +20,7 @@ android {
     compileSdk config.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.todo.list"
+        applicationId "com.mhabzda.todolist"
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode 1

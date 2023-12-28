@@ -1,4 +1,6 @@
-// Delete the library when material3 pull refresh is released https://issuetracker.google.com/issues/261760718
+// Delete this library when material3 pull refresh is in stable release
+// and it's ready to be used alongside Paging library
+// https://developer.android.com/jetpack/androidx/releases/compose-material3
 
 plugins {
     alias libs.plugins.android.library
