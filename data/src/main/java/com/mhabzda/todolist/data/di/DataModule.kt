@@ -14,10 +14,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
+internal abstract class DataModule {
     @Singleton
     @Binds
-    internal abstract fun provideTodoRepository(
+    abstract fun provideTodoRepository(
         firestoreTodoItemRepository: FirestoreTodoItemRepository,
     ): TodoItemRepository
 

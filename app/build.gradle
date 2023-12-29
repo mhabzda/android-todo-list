@@ -70,9 +70,6 @@ dependencies {
     kapt libs.hilt.android.compiler
     kapt libs.hilt.compiler
 
-    implementation libs.coroutines.android
-    implementation libs.coroutines.core
-
     implementation libs.firestore
     implementation libs.glide.compose
     implementation libs.material
