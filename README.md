@@ -25,7 +25,7 @@ Particular screens have been created using the MVI pattern.
 - Hilt
 - Kotlin Coroutines
 - Firestore Android SDK
-- Glide
+- Coil
 - JUnit 5
 - Mockito Kotlin
 - KtLint

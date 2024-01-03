@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -42,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,9 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
+import coil.compose.AsyncImage
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.mhabzda.todolist.list.ListContract.ListEffect
@@ -227,7 +227,7 @@ private fun ListFloatingActionButton(onClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ItemView(
     item: TodoItem,
@@ -243,11 +243,12 @@ private fun ItemView(
                 onLongClick = { displayDeleteDialog(item.id) },
             ),
     ) {
-        GlideImage(
+        AsyncImage(
+            modifier = Modifier.size(90.dp),
             model = item.iconUrl,
             contentScale = ContentScale.Fit,
-            loading = placeholder(R.drawable.ic_check_box),
-            failure = placeholder(R.drawable.ic_check_box),
+            placeholder = painterResource(R.drawable.ic_check_box),
+            error = painterResource(R.drawable.ic_check_box),
             contentDescription = null,
         )
 

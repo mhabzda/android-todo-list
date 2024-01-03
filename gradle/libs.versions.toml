@@ -21,7 +21,7 @@ hilt = "2.50"
 hilt-compiler = "1.1.0"
 javax-inject = "1"
 firestore = "24.10.0"
-glide-compose = "1.0.0-beta01"
+coil-compose = "2.5.0"
 material = "1.11.0"
 # Testing
 junit5 = "5.10.1"
@@ -57,7 +57,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hilt-compiler" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
 firestore = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firestore" }
-glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glide-compose" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 # Testing
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
