@@ -3,9 +3,15 @@
 This sample application contains the paged todo list with the possibility to create, edit, and remove items.
 Data is stored in the Firebase Cloud Firestore.
 
-In order to build the project you need a `google-services.json` file in the `app/` directory.  
+To build the project you need a `google-services.json` file in the `app/` directory.  
 You can follow these instructions to get it for your account -
 [firestore doc](https://firebase.google.com/docs/firestore/quickstart).
+
+### Demo
+
+<div align="center">
+  <video src="https://github.com/mhabzda/android-todo-list/assets/26122834/d7b2e2a6-b15f-4d33-83c1-78d216e3e6e6" width="400" />
+</div>
 
 ### Architecture
 
