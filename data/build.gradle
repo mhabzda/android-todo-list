@@ -1,7 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
-    alias libs.plugins.kotlin.kapt
+    alias libs.plugins.ksp
     alias libs.plugins.junit5.android
     alias libs.plugins.hilt
     alias libs.plugins.ktlint
@@ -10,7 +11,9 @@ plugins {
 apply from: "$rootDir/gradle/config.gradle"
 
 kotlin {
-    jvmToolchain config.jvmToolchain
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+    }
 }
 
 android {
@@ -23,18 +26,24 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        sourceCompatibility config.javaVersion
+        targetCompatibility config.javaVersion
+    }
 }
 
 dependencies {
     implementation project(':domain')
 
     implementation libs.hilt.android
-    kapt libs.hilt.android.compiler
-    kapt libs.hilt.compiler
+    ksp libs.hilt.android.compiler
 
+    implementation platform(libs.firebase.bom)
     implementation libs.firestore
 
     testImplementation libs.junit5.api
     testRuntimeOnly libs.junit5.engine
+    testRuntimeOnly libs.junit.platform.launcher
     testImplementation libs.mockito.kotlin
 }

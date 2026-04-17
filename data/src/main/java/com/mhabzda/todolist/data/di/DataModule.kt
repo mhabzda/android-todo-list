@@ -1,8 +1,7 @@
 package com.mhabzda.todolist.data.di
 
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mhabzda.todolist.data.repository.FirestoreTodoItemRepository
 import com.mhabzda.todolist.domain.repository.TodoItemRepository
 import dagger.Binds
@@ -24,6 +23,6 @@ internal abstract class DataModule {
     companion object {
         @Provides
         fun provideTodoCollection(): CollectionReference =
-            Firebase.firestore.collection("todo_items")
+            FirebaseFirestore.getInstance().collection("todo_items")
     }
 }

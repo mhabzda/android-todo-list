@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,9 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,9 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pullrefresh.PullRefreshIndicator
-import androidx.compose.material3.pullrefresh.pullRefresh
-import androidx.compose.material3.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,11 +46,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.mhabzda.todolist.R
 import com.mhabzda.todolist.domain.model.TodoItem
 import com.mhabzda.todolist.list.ListContract.ListEffect
@@ -88,6 +85,7 @@ fun ListScreen(
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun ListScreen(
     pagingFlow: Flow<PagingData<TodoItem>>,
     viewState: StateFlow<ListViewState>,
@@ -119,17 +117,13 @@ fun ListScreen(
             val refreshLoadState = lazyPagingItems.loadState.refresh
             val appendLoadState = lazyPagingItems.loadState.append
             val isRefreshing = refreshLoadState == LoadState.Loading || state.value.showDeleteLoading
-            val pullRefreshState = rememberPullRefreshState(
-                refreshing = isRefreshing,
-                onRefresh = { lazyPagingItems.refresh() },
-            )
 
             val itemToDeleteId = remember { mutableStateOf<String?>(null) }
 
-            Box(
-                modifier = Modifier
-                    .padding(top = it.calculateTopPadding())
-                    .pullRefresh(pullRefreshState),
+            PullToRefreshBox(
+                modifier = Modifier.padding(top = it.calculateTopPadding()),
+                isRefreshing = isRefreshing,
+                onRefresh = { lazyPagingItems.refresh() },
             ) {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(count = lazyPagingItems.itemCount) { index ->
@@ -140,7 +134,7 @@ fun ListScreen(
                                 navigateToEditItem = navigateToEditItem,
                                 displayDeleteDialog = { itemId -> itemToDeleteId.value = itemId },
                             )
-                            Divider()
+                            HorizontalDivider()
                         }
                     }
 
@@ -177,12 +171,6 @@ fun ListScreen(
                         confirmAction = { lazyPagingItems.refresh() },
                     )
                 }
-
-                PullRefreshIndicator(
-                    refreshing = isRefreshing,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
 
                 itemToDeleteId.value?.let {
                     ListAlertDialog(

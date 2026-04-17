@@ -1,9 +1,8 @@
 ext {
     config = [
             minSdkVersion    : 28,
-            targetSdkVersion : 34,
-            compileSdkVersion: 34,
-            jvmToolchain     : 17,
-            javaVersion      : JavaVersion.VERSION_17,
+            targetSdkVersion : 36,
+            compileSdkVersion: 36,
+            javaVersion      : JavaVersion.VERSION_21,
     ]
 }

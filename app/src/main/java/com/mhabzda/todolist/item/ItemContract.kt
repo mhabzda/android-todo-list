@@ -14,7 +14,7 @@ interface ItemContract {
         data class InitDescription(val description: String) : ItemEffect()
         data class InitIconUrl(val iconUrl: String) : ItemEffect()
         data object DisplayTitleError : ItemEffect()
-        data class DisplayMessageRes(@StringRes val messageRes: Int) : ItemEffect()
+        data class DisplayMessageRes(@param:StringRes val messageRes: Int) : ItemEffect()
         data class DisplayMessage(val message: String) : ItemEffect()
         data object Close : ItemEffect()
     }

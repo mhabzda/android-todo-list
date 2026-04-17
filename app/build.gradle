@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias libs.plugins.android.application
     alias libs.plugins.google.services
     alias libs.plugins.junit5.android
-    alias libs.plugins.kotlin.android
-    alias libs.plugins.kotlin.kapt
+    alias libs.plugins.kotlin.compose
+    alias libs.plugins.ksp
     alias libs.plugins.hilt
     alias libs.plugins.ktlint
 }
@@ -11,7 +13,9 @@ plugins {
 apply from: "$rootDir/gradle/config.gradle"
 
 kotlin {
-    jvmToolchain config.jvmToolchain
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+    }
 }
 
 android {
@@ -33,8 +37,9 @@ android {
         compose true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    compileOptions {
+        sourceCompatibility config.javaVersion
+        targetCompatibility config.javaVersion
     }
 
     buildTypes {
@@ -61,21 +66,23 @@ dependencies {
     implementation libs.androidx.navigation.compose
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.compose.material3
-    implementation project(':libs:material3-pullrefresh')
+    implementation libs.androidx.compose.material.icons.core
     implementation libs.androidx.compose.ui.tooling.preview
     debugImplementation libs.androidx.compose.ui.tooling
 
     implementation libs.androidx.hilt.navigation.compose
     implementation libs.hilt.android
-    kapt libs.hilt.android.compiler
-    kapt libs.hilt.compiler
+    ksp libs.hilt.android.compiler
 
+    implementation platform(libs.firebase.bom)
     implementation libs.firestore
     implementation libs.coil.compose
+    implementation libs.coil.network.okhttp
     implementation libs.material
 
     testImplementation libs.junit5.api
     testRuntimeOnly libs.junit5.engine
+    testRuntimeOnly libs.junit.platform.launcher
     testImplementation libs.mockito.kotlin
     testImplementation libs.coroutines.test
     testImplementation libs.turbine

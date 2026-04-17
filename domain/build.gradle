@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'java-library'
     alias libs.plugins.kotlin.jvm
@@ -11,6 +13,12 @@ java {
     targetCompatibility = config.javaVersion
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+    }
+}
+
 test {
     useJUnitPlatform()
 }
@@ -20,6 +28,7 @@ dependencies {
 
     testImplementation libs.junit5.api
     testRuntimeOnly libs.junit5.engine
+    testRuntimeOnly libs.junit.platform.launcher
     testImplementation libs.mockito.kotlin
     testImplementation libs.coroutines.test
 }
